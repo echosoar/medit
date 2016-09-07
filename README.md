@@ -2,6 +2,6 @@
 
 A creative WYSIWYG rich text editor for mobile device by javascript.
 
-ä¸€ä¸ªåˆ›æ–°å‹çš„ç§»åŠ¨ç«¯æ‰€è§å³æ‰€å¾—å¯Œæ–‡æœ¬ç¼–è¾‘å™¨ã€‚
+Ò»¸ö´´ĞÂĞÍµÄÒÆ¶¯¶ËËù¼û¼´ËùµÃ¸»ÎÄ±¾±à¼­Æ÷¡£
 
 version : [1.0.0](https://github.com/echosoar/medit/tree/daily/1.0.0)
