@@ -1,4 +1,4 @@
-# medit
+# Medit
 
 A creative WYSIWYG rich text editor for mobile device by javascript. 
 
