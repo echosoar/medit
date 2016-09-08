@@ -1,5 +1,27 @@
 ;(function(obj, undefined){
 
+	var toolBar = (function(){
+		
+		var temTool = document.createElement("div");
+		temTool.setAttribute("id","medit-tool");
+		document.body.appendChild(temTool);
+		
+		var tool = document.getElementById("medit-tool");
+		
+		["addLeft","delete","style","ok","addRight"].forEach(function(v){
+			var temNode = document.createElement("span");
+			temNode.setAttribute("class","medit-tool-button medit-tool-"+v);
+			temNode.setAttribute("data-meditToolStyle",v);
+			temNode.setAttribute("data-meditToolDegree",1);
+			tool.appendChild(temNode);
+		})
+		
+		return tool;
+		
+	})();
+	
+	console.log(toolBar);
+
 	var container = [];
 	
 	var isType = function(ele, type){

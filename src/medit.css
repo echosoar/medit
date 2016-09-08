@@ -4,6 +4,7 @@
 	line-height: 20px;
 	border:1px solid #ccc;
 	height:300px;
+	margin-top:48px;
 }
 #medit span {
 	position: relative;
@@ -13,15 +14,25 @@
 	padding: 0 10px;
 	background: #ccccff;
 }
-.medit-editing:before {
-	content: " ";
-	position: absolute;
-	bottom: -15px;
-	left: 5px;
-	width:0;
-	height:0;
-	border: 8px solid #333;
-	border-left:6px solid transparent;
-	border-right:6px solid transparent;
-	border-top:6px solid transparent;
+
+#medit-tool {
+	position:fixed;
+	z-index:100;
+	width:100%;
+	left: 0;
+	top: 0;
+	height:40px;
+	white-space: nowrap;
+	overflow:auto;
+	background:#000;
+}
+
+.medit-tool-button {
+	width:32px;
+	display:inline-block;
+	height:30px;
+	margin-left:5px;
+	margin-top:5px;
+	background:#fff;
+	border-radius: 16px;
 }
