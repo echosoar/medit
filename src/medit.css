@@ -1,0 +1,27 @@
+#medit {
+	font-size: 15px;
+	padding: 10px;
+	line-height: 20px;
+	border:1px solid #ccc;
+	height:300px;
+}
+#medit span {
+	position: relative;
+}
+.medit-editing{
+	outline:none;
+	padding: 0 10px;
+	background: #ccccff;
+}
+.medit-editing:before {
+	content: " ";
+	position: absolute;
+	bottom: -15px;
+	left: 5px;
+	width:0;
+	height:0;
+	border: 8px solid #333;
+	border-left:6px solid transparent;
+	border-right:6px solid transparent;
+	border-top:6px solid transparent;
+}
