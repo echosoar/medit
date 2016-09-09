@@ -17,6 +17,7 @@
 
 #medit-tool {
 	position:fixed;
+	display: none;
 	z-index:100;
 	width:100%;
 	left: 0;
@@ -25,14 +26,35 @@
 	white-space: nowrap;
 	overflow:auto;
 	background:#000;
+	text-align: center;
 }
 
 .medit-tool-button {
-	width:32px;
+	width:28px;
 	display:inline-block;
-	height:30px;
-	margin-left:5px;
-	margin-top:5px;
-	background:#fff;
+	height:28px;
+	margin: 6px 8px;
 	border-radius: 16px;
+	cursor: pointer;
+}
+
+.medit-tool-addLeft, .medit-tool-addRight {
+	background:#fff url("./images/add.png") no-repeat center center;
+	background-size: 24px;
+}
+.medit-tool-delete {
+	background:#fff url("./images/close.png") no-repeat center center;
+	background-size: 24px;
+}
+.medit-tool-setting {
+	background:#fff url("./images/setting.png") no-repeat center center;
+	background-size: 24px;
+}
+.medit-tool-mode {
+	background:#fff url("./images/mode.png") no-repeat center center;
+	background-size: 24px;
+}
+.medit-tool-ok {
+	background:#fff url("./images/ok.png") no-repeat center center;
+	background-size: 24px;
 }
