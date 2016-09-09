@@ -5,6 +5,27 @@
 
 	var container = [];
 	
+	var regNodeId = /medit\-(\d+)\-(\d+)$/;
+	
+	var isToolMove = false;
+	
+	var nowMode = "text";
+	
+	
+	
+	var mode = {
+		"text":{
+			focus:function(node) {
+				node.setAttribute("contentEditable","true");
+				node.setAttribute("class","medit-editing");
+			},
+			blur:function(node) {
+				node.setAttribute("contentEditable","false");
+				node.setAttribute("class","");
+			}
+		}
+	}
+	
 	var isType = function(ele, type){
 		if(!ele || !type)return false;
 		return {}.toString.call(ele).slice(8, -1).toLowerCase() === type.toLowerCase();
@@ -42,8 +63,14 @@
 			temNode.setAttribute("data-meditToolDegree",1);
 			tool.appendChild(temNode);
 		});
-		
-		gevent(tool, ["touchstart"], function(e){
+		gevent(tool, ["touchmove"], function(e){
+			isToolMove = true;
+		});
+		gevent(tool, ["touchend"], function(e){
+			if(isToolMove){
+				isToolMove=false;
+				return;
+			} 
 			e = e || window.event;
 			var target = e.target || e.srcElement;
 			
@@ -60,10 +87,13 @@
 						toolBarHidden();
 						break;
 					case 'ok':
-						thisNode.setAttribute("contentEditable","false");
-						thisNode.setAttribute("class","");
+						if(mode[nowMode].blur){
+							mode[nowMode].blur(thisNode);
+						}
+
 						if(thisNode.innerHTML=="") contain.node.removeChild(thisNode);;
 						toolBarHidden();
+						contain.nodeCount++;
 						break;
 				}
 			}
@@ -97,12 +127,15 @@
 		container.push(this);
 		
 		gevent(this.node, ["touchstart"], this.editContainFocus);
-		gevent(this.node, ["keydown", "keyup"], console.log);
+		gevent(this.node, ["keydown", "keyup"], function(e){
+			console.log(e);
+		});
 	}
 	
 	medit.prototype.createSpan = function(nodeId){
 		var span =document.createElement("span");
 		span.setAttribute("data-medit","true");
+		span.setAttribute("data-meditMode","text");
 		span.setAttribute("id","medit-" + nodeId + "-" + meditId );
 		span.setAttribute("contentEditable","true");
 		span.setAttribute("class","medit-editing");
@@ -130,11 +163,23 @@
 				meditObj.preHTML = target.innerHTML;
 				target.innerHTML = "";
 				meditObj.createSpan(0);
+				return;
+			}else{
+				target = child[child.length-1];
 			}
-			
-			
 		}
 		
+		var idExecRes = regNodeId.exec(target.id);
+		meditId = Number(idExecRes[2]);
+		var meditObj = container[ meditId];
+		meditObj.nowNodeId = Number(idExecRes[1]);
+			
+			
+		var meditNodeMode = target.getAttribute("data-meditMode");
+		if(mode[meditNodeMode].focus){
+			mode[meditNodeMode].focus(target);
+		}
+			
 	}
 	
 	obj.Medit = obj.medit = medit;
