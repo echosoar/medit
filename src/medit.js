@@ -11,8 +11,6 @@
 	
 	var nowMode = "text";
 	
-	
-	
 	var mode = {
 		"text":{
 			focus:function(node) {
@@ -98,7 +96,6 @@
 				}
 			}
 			if(!contain.node.children.length) contain.node.innerHTML = contain.preHTML;
-			console.log(degree);
 		});
 		
 		return tool;
@@ -145,6 +142,17 @@
 	medit.prototype.editContainFocus = function(e) {
 	
 		toolBarDisplay();
+		
+		if(meditId != null) { // 在已经选择某个区块的时候选择其它的，会先调用这个区块的blur
+			var temObj = container[meditId];
+			var temNode = document.getElementById("medit-" + temObj.nowNodeId + "-" + meditId);
+			if(temNode){
+				var temNodeMode = temNode.getAttribute("data-meditMode");
+				if(mode[temNodeMode].blur){
+					mode[temNodeMode].blur(temNode);
+				}
+			}
+		}
 		
 		e = e || window.event;
 		var target = e.target || e.srcElement;
