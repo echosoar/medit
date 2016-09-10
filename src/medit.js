@@ -20,6 +20,9 @@
 			blur:function(node) {
 				node.setAttribute("contentEditable","false");
 				node.setAttribute("class","");
+			},
+			empty:function(node) {
+				return node.innerHTML == "";
 			}
 		}
 	}
@@ -94,10 +97,12 @@
 			var degree = target.getAttribute("data-meditToolDegree");
 			var contain = container[meditId];
 			var thisNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
+
 			if(degree == 1) {
 				switch(type){
 					case 'delete':
 						contain.node.removeChild(thisNode);
+						contain.updateId(contain.nowNodeId);
 						toolBarHidden();
 						break;
 					case 'ok':
@@ -108,6 +113,24 @@
 						if(thisNode.innerHTML=="") contain.node.removeChild(thisNode);;
 						toolBarHidden();
 						contain.nodeCount++;
+						break;
+					case 'addLeft':
+						if(thisNode.innerHTML==""){
+							return;
+						}
+						if(mode[nowMode].blur){
+							mode[nowMode].blur(thisNode);
+						}
+						contain.createSpan(contain.nowNodeId, thisNode, false);
+						break;
+					case 'addRight':
+						if(thisNode.innerHTML==""){
+							return;
+						}
+						if(mode[nowMode].blur){
+							mode[nowMode].blur(thisNode);
+						}
+						contain.createSpan(contain.nowNodeId, thisNode, true);
 						break;
 				}
 			}
@@ -147,33 +170,66 @@
 	
 	
 	
-	medit.prototype.createSpan = function(nodeId){
+	medit.prototype.createSpan = function(nodeId, fromNode, isAfter){
 		var span =document.createElement("span");
 		span.setAttribute("data-medit","true");
 		span.setAttribute("data-meditMode","text");
 		span.setAttribute("id","medit-" + nodeId + "-" + meditId );
 		span.setAttribute("contentEditable","true");
 		span.setAttribute("class","medit-editing");
-		this.node.appendChild(span);
+		if(fromNode){
+			if(!isAfter){
+				this.nowNodeId = nodeId;
+				this.node.insertBefore(span, fromNode);
+			}else{
+				this.nowNodeId = nodeId + 1;
+				if(!fromNode.nextSibling){
+					this.node.appendChild(span);
+				}else{
+					this.node.insertBefore(span, fromNode.nextSibling); 
+				}
+			}
+			this.updateId(nodeId);
+		}else{
+			this.node.appendChild(span);
+		}
+		var editor = document.getElementById("medit-" + nodeId + "-" + meditId);
+		editor.focus();
+	}
+	
+	medit.prototype.updateId = function(nodeId) {
+		
+		var child = this.node.children;
+		for(var i = nodeId; i<child.length; i++){
+			this.node.children[i].setAttribute("id","medit-" + i + "-" + meditId );
+		}
 	}
 	
 	medit.prototype.editContainFocus = function(e) {
 	
 		toolBarDisplay();
 		
+		e = e || window.event;
+		var target = e.target || e.srcElement;
+		
 		if(meditId != null) { // 在已经选择某个区块的时候选择其它的，会先调用这个区块的blur
 			var temObj = container[meditId];
 			var temNode = document.getElementById("medit-" + temObj.nowNodeId + "-" + meditId);
 			if(temNode){
 				var temNodeMode = temNode.getAttribute("data-meditMode");
-				if(mode[temNodeMode].blur){
-					mode[temNodeMode].blur(temNode);
+				if(mode[temNodeMode].empty && mode[temNodeMode].empty(temNode) && temNode != target){
+					temObj.node.removeChild(temNode);
+					temObj.updateId(temObj.nowNodeId);
+				}else{
+					if(mode[temNodeMode].blur){
+						mode[temNodeMode].blur(temNode);
+					}
 				}
+				
 			}
 		}
 		
-		e = e || window.event;
-		var target = e.target || e.srcElement;
+		
 		
 		var type = target.getAttribute("data-medit");
 		if(!type && target.getAttribute("data-meditId")){ // target is container
@@ -202,8 +258,7 @@
 		var idExecRes = regNodeId.exec(target.id);
 		meditId = Number(idExecRes[2]);
 		var meditObj = container[ meditId];
-		meditObj.nowNodeId = Number(idExecRes[1]);
-			
+		meditObj.nowNodeId = Number(idExecRes[1]);		
 			
 		var meditNodeMode = target.getAttribute("data-meditMode");
 		if(mode[meditNodeMode].focus){

@@ -5,6 +5,7 @@
 	border:1px solid #ccc;
 	height:300px;
 	margin-top:48px;
+	word-break:break-all;
 }
 #medit span {
 	position: relative;
@@ -13,7 +14,7 @@
 .medit-editing{
 	outline:none;
 	padding: 0 20px;
-	background: #ccccff;
+	background: #eeddff;
 	
 }
 
