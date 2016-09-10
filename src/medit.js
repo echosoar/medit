@@ -45,6 +45,22 @@
 		}
 	}
 	
+	var initFromData = function(target){ // 如果原来容器内有数据的话，那么根据原来数据进行初始化
+	
+		var contain = target.parentNode;
+		
+		meditId = contain.getAttribute("data-meditid");
+		
+		contain = container[meditId];
+		contain.nodeCount = contain.node.children.length;
+		for(var i = 0;i<contain.nodeCount;i++ ){
+			if(target === contain.node.children[i]){
+				contain.nowNodeId = i;
+			}
+			contain.node.children[i].setAttribute("id","medit-" + i + "-" + meditId );
+		}
+	}
+	
 	var toolBar = (function(){
 		
 		var temTool = document.createElement("div");
@@ -95,7 +111,7 @@
 						break;
 				}
 			}
-			if(!contain.node.children.length) contain.node.innerHTML = contain.preHTML;
+			if(!contain.node.children.length) contain.node.innerHTML = contain.preHTML || "Medit";
 		});
 		
 		return tool;
@@ -129,6 +145,8 @@
 		});
 	}
 	
+	
+	
 	medit.prototype.createSpan = function(nodeId){
 		var span =document.createElement("span");
 		span.setAttribute("data-medit","true");
@@ -158,14 +176,10 @@
 		var target = e.target || e.srcElement;
 		
 		var type = target.getAttribute("data-medit");
-		
-		if(!type){ // target is container
-			while(!target.getAttribute("data-meditId")){
-				target = target.parentNode;
-			}
+		if(!type && target.getAttribute("data-meditId")){ // target is container
+			
 			meditId = target.getAttribute("data-meditId"); // 全局存贮当前medit容器ID
 			var meditObj = container[ meditId];
-			
 			var child = target.children;
 			if(!child.length){ // 如果点击了容器发现没有结点，那么就保存原有内容，并且创建新的span
 				meditObj.preHTML = target.innerHTML;
@@ -175,6 +189,14 @@
 			}else{
 				target = child[child.length-1];
 			}
+		}else{ // target is 内部包含结点
+			while(!target.getAttribute("data-medit")){
+				target = target.parentNode;
+			}
+		}
+		
+		if(!target.id) {
+			initFromData(target);
 		}
 		
 		var idExecRes = regNodeId.exec(target.id);

@@ -8,11 +8,13 @@
 }
 #medit span {
 	position: relative;
+	outline:none;
 }
 .medit-editing{
 	outline:none;
 	padding: 0 20px;
 	background: #ccccff;
+	
 }
 
 #medit-tool {
