@@ -32,6 +32,14 @@
 	text-align: center;
 }
 
+[data-meditMode=br] {
+	height: 15px;
+	width: 10px;
+	border-radius: 3px;
+	background:url("./images/icon-br.png") no-repeat center center;
+	background-size: contain;
+}
+
 .medit-tool-button {
 	width:28px;
 	display:inline-block;
@@ -59,5 +67,14 @@
 }
 .medit-tool-ok {
 	background:#fff url("./images/ok.png") no-repeat center center;
+	background-size: 24px;
+}
+
+.medit-tool-addBr {
+	background:#fff url("./images/br.png") no-repeat center center;
+	background-size: 24px;
+}
+.medit-tool-return {
+	background:#fff url("./images/return.png") no-repeat center center;
 	background-size: 24px;
 }

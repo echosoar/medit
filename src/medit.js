@@ -7,7 +7,21 @@
 	
 	var regNodeId = /medit\-(\d+)\-(\d+)$/;
 	
+	var regContent = /\s*(class|id|contenteditable)(=".*?")?/g; // 获得内容时去除id，class和可编辑状态
+	
+	var regIsContentEmpty = /^<.*?>$/; // 获得内容时检测是否是纯文本
+	
 	var isToolMove = false;
+	
+	var toolBarCatch = null;
+
+	var returnButtonHtml = function(from){
+		return '<span id="medit-tool-button-'+from+'" class="medit-tool-button  medit-tool-return" data-meditToolStyle="return" data-meditToolDegree="1"></span>';
+	}
+	
+	
+	
+	var mainButton = ["addLeft","delete","setting","mode","ok","addRight","addBr"];
 	
 	var nowMode = "text";
 	
@@ -23,6 +37,68 @@
 			},
 			empty:function(node) {
 				return node.innerHTML == "";
+			},
+			setting:[
+				{
+					name:"bold",
+					icon:"../src/images/text/bold.png",
+					doWhat:function(node){
+						var style = node.getAttribute("style");
+						var reg = /font\-weight\s*:\s*(.*?)\s*;/i;
+						if(reg.test(style)){
+							var regRes = reg.exec(style);
+							if(regRes[1] == "bold"){
+								node.style.fontWeight = "normal";
+								return;
+							}
+						}
+						node.style.fontWeight = "bold";
+					}
+				},
+				{
+					name:"italic",
+					icon:"../src/images/text/italic.png",
+					doWhat:function(node){
+						var style = node.getAttribute("style");
+						var reg = /font\-style\s*:\s*(.*?)\s*;/i;
+						if(reg.test(style)){
+							var regRes = reg.exec(style);
+							if(regRes[1] == "italic"){
+								node.style.fontStyle = "normal";
+								return;
+							}
+						}
+						node.style.fontStyle = "italic";
+					}
+				},
+				{
+					name:"underline",
+					icon:"../src/images/text/underline.png",
+					doWhat:function(node){
+						var style = node.getAttribute("style");
+						var reg = /text\-decoration\s*:\s*(.*?)\s*;/i;
+						if(reg.test(style)){
+							var regRes = reg.exec(style);
+							if(regRes[1] == "underline"){
+								node.style.textDecoration = "normal";
+								return;
+							}
+						}
+						node.style.textDecoration = "underline";
+					}
+				}
+			]
+		},
+		"br":{
+			focus:function(node) {
+				document.getElementById("medit-tool-button-setting-1").style.display= "none";
+				document.getElementById("medit-tool-button-mode-1").style.display= "none";
+				node.style.backgroundColor = "#e5e5e5";
+			},
+			blur:function(node) {
+				document.getElementById("medit-tool-button-setting-1").style.display= "inline-block";
+				document.getElementById("medit-tool-button-mode-1").style.display= "inline-block";
+				node.style.backgroundColor = "";
 			}
 		}
 	}
@@ -72,9 +148,9 @@
 		
 		var tool = document.getElementById("medit-tool");
 		
-		var mainButton = ["addLeft","delete","setting","mode","ok","addRight"];
 		mainButton.forEach(function(v){
 			var temNode = document.createElement("span");
+			temNode.setAttribute("id","medit-tool-button-"+v+"-"+"1");
 			temNode.setAttribute("class","medit-tool-button medit-tool-"+v);
 			temNode.setAttribute("data-meditToolStyle",v);
 			temNode.setAttribute("data-meditToolDegree",1);
@@ -95,9 +171,19 @@
 			if(!type) return false;
 			
 			var degree = target.getAttribute("data-meditToolDegree");
+			
+			mainDo(degree, type, target);
+			
+		});
+		
+		return tool;
+		
+	})();
+	
+	var mainDo = function(degree, type, target) {
 			var contain = container[meditId];
 			var thisNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
-
+			nowMode = thisNode.getAttribute("data-meditMode");
 			if(degree == 1) {
 				switch(type){
 					case 'delete':
@@ -132,14 +218,58 @@
 						}
 						contain.createSpan(contain.nowNodeId, thisNode, true);
 						break;
+					case 'addBr':
+						if(thisNode.innerHTML==""){
+							toBr(thisNode);
+							return;
+						}
+						if(mode[nowMode].blur){
+							mode[nowMode].blur(thisNode);
+						}
+						contain.createSpan(contain.nowNodeId, thisNode, true);
+						
+						var brNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
+						toBr(brNode);
+						
+						contain.createSpan(contain.nowNodeId, brNode, true);
+						
+						break;
+					case 'setting':
+						if(mode[nowMode].setting.length!=0){
+							toolBarCatch = toolBar.innerHTML;
+							toolBar.innerHTML = returnButtonHtml("return-main") + mode[nowMode].setting.map(function(v,index){
+								return '<span id="medit-tool-button-'+nowMode+'-setting-'+index+'" class="medit-tool-button" style="background:#fff url('+v.icon+') no-repeat center center;background-size: 24px;" data-meditToolStyle="'+nowMode+'-'+v.name+'" data-meditToolDegree="2"></span>';
+							}).join("");
+						}
+						
+						break;
+						
+					case 'return':
+						var nodePath = target.getAttribute("id").replace("medit-tool-button-return-","").split("-");
+						if(nodePath[0]=="main"){
+							toolBar.innerHTML = toolBarCatch;
+						}
+						console.log(nodePath);
+						break;
+				}
+			}else{
+				var path = target.getAttribute("id").replace("medit-tool-button-","").split("-");
+				var pathTo = null;
+				var doWhat = mode;
+				while(pathTo = path.shift()){
+					doWhat = doWhat[pathTo];
+				}
+				doWhat = doWhat.doWhat;
+				if(doWhat){
+					if(isType(doWhat,"array")){ // 更深层次
+					
+					}else{
+						doWhat(thisNode);
+					}
 				}
 			}
 			if(!contain.node.children.length) contain.node.innerHTML = contain.preHTML || "Medit";
-		});
-		
-		return tool;
-		
-	})();
+	}
 	
 	var toolBarDisplay = function() {
 		toolBar.style.display = "block";
@@ -148,6 +278,36 @@
 	var toolBarHidden = function() {
 		toolBar.style.display = "none";
 	}
+	
+	var toBr = function(node){
+		node.setAttribute("style","display:block");
+		node.setAttribute("data-meditMode","br");
+		node.setAttribute("contentEditable","false");
+		node.setAttribute("class","");
+		node.innerHTML = " ";
+	}
+	
+	var nodeFocus = function(node){
+	node.onfocus = function() {
+    window.setTimeout(function() {
+			var sel, range;
+			if (window.getSelection && document.createRange) {
+				range = document.createRange();
+				range.selectNodeContents(node);
+				range.collapse(true);
+				sel = window.getSelection();
+				sel.removeAllRanges();
+				sel.addRange(range);
+			} else if (document.body.createTextRange) {
+				range = document.body.createTextRange();
+				range.moveToElementText(node);
+				range.collapse(true);
+				range.select();
+			}
+		}, 0);
+	};
+	node.focus();
+}
 	
 	var medit = function(node) {
 		if(!(this instanceof medit)) return new medit(node);
@@ -158,13 +318,30 @@
 		this.nodeCount = 0; // 容器所有子元素数目
 		this.nowNodeId = 0;	// 容器当前子元素ID
 		
+		this.getContent = medit.prototype.getContent;
+		
 		this.node.setAttribute("data-meditId",container.length);
 		
 		container.push(this);
 		
 		gevent(this.node, ["touchstart"], this.editContainFocus);
-		gevent(this.node, ["keydown", "keyup"], function(e){
-			console.log(e);
+		gevent(this.node, ["keydown"], function(e){
+			e = e || window.event;
+			if(e.keyCode == 13){
+				e.preventDefault();
+				var contain = container[meditId];
+				var thisNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
+				nowMode = thisNode.getAttribute("data-meditMode");
+				if(mode[nowMode].blur){
+					mode[nowMode].blur(thisNode);
+				}
+				contain.createSpan(contain.nowNodeId, thisNode, true);
+						
+				var brNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
+				toBr(brNode);
+						
+				contain.createSpan(contain.nowNodeId, brNode, true);
+			}
 		});
 	}
 	
@@ -193,8 +370,8 @@
 		}else{
 			this.node.appendChild(span);
 		}
-		var editor = document.getElementById("medit-" + nodeId + "-" + meditId);
-		editor.focus();
+		var editor = document.getElementById("medit-" + this.nowNodeId + "-" + meditId);
+		nodeFocus(editor);
 	}
 	
 	medit.prototype.updateId = function(nodeId) {
@@ -204,6 +381,21 @@
 			this.node.children[i].setAttribute("id","medit-" + i + "-" + meditId );
 		}
 	}
+	
+	medit.prototype.getContent = function(){
+		if(toolBar.style.display == "block"){
+			mainDo(1, "ok");
+		}
+		var html = this.node.innerHTML;
+		if(regIsContentEmpty.test(html))
+			return html.replace(regContent, "");
+		return "";
+	}
+	
+	medit.prototype.autoSave = function(callBack){// 自动保存 callBack(data, timeStamp)
+	
+	}
+		
 	
 	medit.prototype.editContainFocus = function(e) {
 	
