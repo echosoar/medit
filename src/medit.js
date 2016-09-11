@@ -187,6 +187,10 @@
 			if(degree == 1) {
 				switch(type){
 					case 'delete':
+						if(mode[nowMode].blur){
+							mode[nowMode].blur(thisNode);
+						}
+						
 						contain.node.removeChild(thisNode);
 						contain.updateId(contain.nowNodeId);
 						toolBarHidden();
@@ -398,7 +402,7 @@
 		
 	
 	medit.prototype.editContainFocus = function(e) {
-	
+		
 		toolBarDisplay();
 		
 		e = e || window.event;
