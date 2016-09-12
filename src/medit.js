@@ -292,27 +292,29 @@
 	}
 	
 	var nodeFocus = function(node){
-	node.onfocus = function() {
-    window.setTimeout(function() {
-			var sel, range;
-			if (window.getSelection && document.createRange) {
-				range = document.createRange();
-				range.selectNodeContents(node);
-				range.collapse(true);
-				sel = window.getSelection();
-				sel.removeAllRanges();
-				sel.addRange(range);
-			} else if (document.body.createTextRange) {
-				range = document.body.createTextRange();
-				range.moveToElementText(node);
-				range.collapse(true);
-				range.select();
-			}
-		}, 0);
-	};
-	node.focus();
-}
-	
+	/*
+		node.onfocus = function() {
+			window.setTimeout(function() {
+				var sel, range;
+				if (window.getSelection && document.createRange) {
+					range = document.createRange();
+					range.selectNodeContents(node);
+					range.collapse(true);
+					sel = window.getSelection();
+					sel.removeAllRanges();
+					sel.addRange(range);
+				} else if (document.body.createTextRange) {
+					range = document.body.createTextRange();
+					range.moveToElementText(node);
+					range.collapse(true);
+					range.select();
+				}
+			}, 0);
+		};
+		*/
+		node.focus();
+	}
+		
 	var medit = function(node) {
 		if(!(this instanceof medit)) return new medit(node);
 		
