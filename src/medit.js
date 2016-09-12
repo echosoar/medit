@@ -421,7 +421,6 @@
 				meditObj.preHTML = target.innerHTML;
 				target.innerHTML = "";
 				meditObj.createSpan(0);
-				nodeFocus(meditObj.node.firstChild); // 再次尝试自动唤起
 				return;
 			}else{
 				target = child[child.length-1];
