@@ -292,9 +292,13 @@
 	}
 	
 	var nodeFocus = function(node){
-	/*
+		setTimeout(function() {
+			node.focus();
+		}, 0);
+	
+		/*
 		node.onfocus = function() {
-			window.setTimeout(function() {
+			//window.setTimeout(function() {
 				var sel, range;
 				if (window.getSelection && document.createRange) {
 					range = document.createRange();
@@ -309,14 +313,11 @@
 					range.collapse(true);
 					range.select();
 				}
-			}, 0);
+				console.log(range);
+			//}, 0);
 		};
-		*/
-		
-		var event = document.createEvent("Event");
-		event.initEvent("touchstart",true,false);
-		node.dispatch(event);
 		node.focus();
+		*/
 	}
 		
 	var medit = function(node) {
