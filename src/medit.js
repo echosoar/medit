@@ -253,7 +253,7 @@
 						if(nodePath[0]=="main"){
 							toolBar.innerHTML = toolBarCatch;
 						}
-						console.log(nodePath);
+
 						break;
 				}
 			}else{
@@ -291,33 +291,10 @@
 		node.innerHTML = " ";
 	}
 	
-	var nodeFocus = function(node){
+	var nodeFocus = function(node){ // 使模块自动获取焦点 使用了很多方法，最后发现这个方法是在移动端最好的
 		setTimeout(function() {
 			node.focus();
 		}, 0);
-	
-		/*
-		node.onfocus = function() {
-			//window.setTimeout(function() {
-				var sel, range;
-				if (window.getSelection && document.createRange) {
-					range = document.createRange();
-					range.selectNodeContents(node);
-					range.collapse(true);
-					sel = window.getSelection();
-					sel.removeAllRanges();
-					sel.addRange(range);
-				} else if (document.body.createTextRange) {
-					range = document.body.createTextRange();
-					range.moveToElementText(node);
-					range.collapse(true);
-					range.select();
-				}
-				console.log(range);
-			//}, 0);
-		};
-		node.focus();
-		*/
 	}
 		
 	var medit = function(node) {
@@ -444,6 +421,7 @@
 				meditObj.preHTML = target.innerHTML;
 				target.innerHTML = "";
 				meditObj.createSpan(0);
+				nodeFocus(meditObj.node.firstChild); // 再次尝试自动唤起
 				return;
 			}else{
 				target = child[child.length-1];
