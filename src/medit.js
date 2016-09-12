@@ -312,6 +312,10 @@
 			}, 0);
 		};
 		*/
+		
+		var event = document.createEvent("Event");
+		event.initEvent("touchstart",true,false);
+		node.dispatch(event);
 		node.focus();
 	}
 		
