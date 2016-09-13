@@ -1,10 +1,5 @@
 #medit {
-	font-size: 15px;
-	padding: 10px;
-	line-height: 20px;
-	border:1px solid #ccc;
-	height:300px;
-	margin-top:48px;
+	font-size: 14px;
 	word-break:break-all;
 }
 #medit span {
@@ -44,6 +39,9 @@
 	width:28px;
 	display:inline-block;
 	height:28px;
+	line-height: 28px;
+	text-align:center;
+	font-size:12px;
 	margin: 6px 8px;
 	border-radius: 16px;
 	cursor: pointer;

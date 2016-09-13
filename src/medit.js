@@ -16,7 +16,7 @@
 	var toolBarCatch = null;
 
 	var returnButtonHtml = function(from){
-		return '<span id="medit-tool-button-'+from+'" class="medit-tool-button  medit-tool-return" data-meditToolStyle="return" data-meditToolDegree="1"></span>';
+		return '<span id="medit-tool-button-'+from+'" class="medit-tool-button  medit-tool-return" data-meditToolStyle="return" data-meditToolDegree="1">&nbsp;</span>';
 	}
 	
 	
@@ -80,12 +80,111 @@
 						if(reg.test(style)){
 							var regRes = reg.exec(style);
 							if(regRes[1] == "underline"){
-								node.style.textDecoration = "normal";
+								node.style.textDecoration = "none";
 								return;
 							}
 						}
 						node.style.textDecoration = "underline";
 					}
+				}
+				,
+				{
+					name:"size",
+					icon:"../src/images/text/size.png",
+					doWhat:[
+						{
+							name: "fontSizeBig",
+							icon:"../src/images/text/sizeBigger.png",
+							doWhat: function(node) {
+								var style = node.getAttribute("style");
+								var displaySize = document.getElementById("medit-tool-button-text-setting-3-doWhat-1");
+								var reg = /font\-size\s*:\s*(\d*)\s*(?:.*?)\s*;/i;
+								var size = 15;
+								if(reg.test(style)){
+									var regRes = reg.exec(style);
+									size = ++regRes[1];
+								}
+								
+								if(displaySize){
+									displaySize.innerHTML = size;
+								}
+								node.style.fontSize = size + "px";
+							}
+						},
+						{
+							name: "fontSizeValue",
+							icon: "",
+							defaultValue: "size"
+						},
+						{
+							name: "fontSizeSmall",
+							icon:"../src/images/text/sizeSmaller.png",
+							doWhat: function(node) {
+								var style = node.getAttribute("style");
+								var displaySize = document.getElementById("medit-tool-button-text-setting-3-doWhat-1");
+								var reg = /font\-size\s*:\s*(\d*)\s*(?:.*?)\s*;/i;
+								var size = 13;
+								if(reg.test(style)){
+									var regRes = reg.exec(style);
+									size = --regRes[1];
+									if(size<12)size=12;
+								}
+								
+								if(displaySize){
+									displaySize.innerHTML = size;
+								}
+								node.style.fontSize = size + "px";
+							}
+						}
+					]
+				},
+				{
+					name: "color",
+					icon:"../src/images/text/color.png",
+					doWhat:[
+						{
+							name: "black",
+							icon:"../src/images/text/colorBlack.png",
+							doWhat:function(node){
+								node.style.color = "#000000";
+							}
+						},
+						{
+							name: "red",
+							icon:"../src/images/text/colorRed.png",
+							doWhat:function(node){
+								node.style.color = "#ff0000";
+							}
+						},
+						{
+							name: "green",
+							icon:"../src/images/text/colorGreen.png",
+							doWhat:function(node){
+								node.style.color = "#00ff00";
+							}
+						},
+						{
+							name: "blue",
+							icon:"../src/images/text/colorBlue.png",
+							doWhat:function(node){
+								node.style.color = "#0000ff";
+							}
+						},
+						{
+							name: "yellow",
+							icon:"../src/images/text/colorYellow.png",
+							doWhat:function(node){
+								node.style.color = "#ffff00";
+							}
+						},
+						{
+							name: "pink",
+							icon:"../src/images/text/colorPink.png",
+							doWhat:function(node){
+								node.style.color = "#ff00ff";
+							}
+						}
+					]
 				}
 			]
 		},
@@ -154,6 +253,7 @@
 			temNode.setAttribute("class","medit-tool-button medit-tool-"+v);
 			temNode.setAttribute("data-meditToolStyle",v);
 			temNode.setAttribute("data-meditToolDegree",1);
+			temNode.innerHTML = "&nbsp;";
 			tool.appendChild(temNode);
 		});
 		gevent(tool, ["touchmove"], function(e){
@@ -242,7 +342,9 @@
 						if(mode[nowMode].setting.length!=0){
 							toolBarCatch = toolBar.innerHTML;
 							toolBar.innerHTML = returnButtonHtml("return-main") + mode[nowMode].setting.map(function(v,index){
-								return '<span id="medit-tool-button-'+nowMode+'-setting-'+index+'" class="medit-tool-button" style="background:#fff url('+v.icon+') no-repeat center center;background-size: 24px;" data-meditToolStyle="'+nowMode+'-'+v.name+'" data-meditToolDegree="2"></span>';
+								var defaultValue = v.defaultValue || "&nbsp;";
+							
+								return '<span id="medit-tool-button-'+nowMode+'-setting-'+index+'" class="medit-tool-button" style="background:#fff url('+v.icon+') no-repeat center center;background-size: 24px;" data-meditToolStyle="'+nowMode+'-'+v.name+'" data-meditToolDegree="2">'+defaultValue+'</span>';
 							}).join("");
 						}
 						
@@ -252,12 +354,38 @@
 						var nodePath = target.getAttribute("id").replace("medit-tool-button-return-","").split("-");
 						if(nodePath[0]=="main"){
 							toolBar.innerHTML = toolBarCatch;
+						}else{
+							
+						
+							var pathRes = nodePath.join("-");
+							pathRes = pathRes.replace(/(\-\d+\-\w+)$|(\-\d+)$/,"");
+							nodePath = pathRes.split("-");
+							
+							if(nodePath.length == 2){
+								toolBar.innerHTML = returnButtonHtml("return-main");
+							}else{
+								toolBar.innerHTML = returnButtonHtml("return-"+pathRes.replace(/\-doWhat$/,""));
+							}
+							
+							var pathTo = null;
+							var doWhat = mode;
+							
+							while(pathTo = nodePath.shift()){
+								doWhat = doWhat[pathTo];
+							}
+							toolBar.innerHTML += doWhat.map(function(v,index){
+								
+								var defaultValue = v.defaultValue || "&nbsp;";
+							
+								return '<span id="medit-tool-button-'+pathRes+"-"+index+'" class="medit-tool-button" style="background:#fff url('+v.icon+') no-repeat center center;background-size: 24px;" data-meditToolStyle="'+nowMode+'-'+v.name+'" data-meditToolDegree="'+(++degree)+'">'+defaultValue+'</span>';
+							}).join("");
 						}
 
 						break;
 				}
 			}else{
-				var path = target.getAttribute("id").replace("medit-tool-button-","").split("-");
+				var pathRes =  target.getAttribute("id").replace("medit-tool-button-","");
+				var path = pathRes.split("-");
 				var pathTo = null;
 				var doWhat = mode;
 				while(pathTo = path.shift()){
@@ -266,7 +394,12 @@
 				doWhat = doWhat.doWhat;
 				if(doWhat){
 					if(isType(doWhat,"array")){ // 更深层次
-					
+						toolBar.innerHTML = returnButtonHtml("return-"+pathRes) + doWhat.map(function(v,index){
+						
+								var defaultValue = v.defaultValue || "&nbsp;";
+								
+								return '<span id="medit-tool-button-'+pathRes+'-doWhat-'+index+'" class="medit-tool-button" style="background:#fff url('+v.icon+') no-repeat center center;background-size: 24px;" data-meditToolStyle="'+nowMode+'-'+v.name+'" data-meditToolDegree="'+(++degree)+'">'+defaultValue+'</span>';
+							}).join("");
 					}else{
 						doWhat(thisNode);
 					}
@@ -276,6 +409,8 @@
 	}
 	
 	var toolBarDisplay = function() {
+		if(toolBarCatch)
+			toolBar.innerHTML = toolBarCatch;
 		toolBar.style.display = "block";
 	}
 	
