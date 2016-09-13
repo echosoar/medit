@@ -8,6 +8,20 @@ Demo Adress : [Medit Demo](https://echosoar.github.io/medit/demo/demo.html)
 
 ***
 
+### How to use 如何使用：
+	
+	// first, import "medit.js" to your html file.
+    <script src="../src/medit.js"></script>
+	
+	// second, initial object,you can use "new medit(DOM Element)" or "medit(DOM Element)".
+	var meditObject = medit(document.getElementById("meditContainer"));
+	
+	// if you wanna get content
+	meditObject.getContent();
+	
+
+***
+
 ### Current support 目前支持:
 
 ***
