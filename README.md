@@ -38,5 +38,27 @@ Demo Adress : [Medit Demo](https://echosoar.github.io/medit/demo/demo.html)
 
 ![underline](./src/images/text/underline.png) Underline 下划线
 
+![size](./src/images/text/size.png) Font-size 文字大小
+
++ ![sizebigger](./src/images/text/sizeBigger.png) Enlarge Font-size 增大文字
+
++ ![sizeSmaller](./src/images/text/sizeSmaller.png) Narrow Font-size 缩小文字
+
+![color](./src/images/text/color.png) Color 文字颜色
+
++ ![black](./src/images/text/colorBlack.png) Black 黑色
+
++ ![red](./src/images/text/colorRed.png) Red 红色
+
++ ![green](./src/images/text/colorGreen.png) Green 绿色
+
++ ![blue](./src/images/text/colorBlue.png) Blue 蓝色
+
++ ![yellow](./src/images/text/colorYellow.png) Yellow 黄色
+
++ ![pink](./src/images/text/colorPink.png) Pink 粉色
+
+
+
  
 
