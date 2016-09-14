@@ -15,9 +15,15 @@
 	margin-top: 5px;
 	text-align: center;
 }
+#autoSaveInfo{
+	padding: 10px 0;
+	text-align:right;
+	font-size:12px;
+}
 </style>
 <div id="medit" class="medit">please click here and input!</div>
 <div class="btn" onClick="getContent()">Alert Content</div>
+<div id="autoSaveInfo"></div>
 <script src="../src/medit.js"></script>
 <script>
 var me = medit(document.getElementById("medit"));
@@ -25,6 +31,6 @@ function getContent(){
 	alert(me.getContent());
 }
 me.autoSave("edit", function(data, time){
-	console.log(data, time);
-})
+	document.getElementById("autoSaveInfo").innerHTML = "Auto save at " + (new Date(time)).toString().replace(/\(.*\)/,"");
+});
 </script>
