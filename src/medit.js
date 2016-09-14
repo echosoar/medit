@@ -525,8 +525,9 @@
 		}
 	}
 	
-	medit.prototype.getContent = function(){
-		if(toolBar.style.display == "block"){
+	medit.prototype.getContent = function(isEdit){
+		isEdit = isEdit || false;
+		if(!isEdit && toolBar.style.display == "block"){
 			mainDo(1, "ok");
 		}
 		var html = this.node.innerHTML;
@@ -535,8 +536,16 @@
 		return "";
 	}
 	
-	medit.prototype.autoSave = function(callBack){// 自动保存 callBack(data, timeStamp)
-	
+	medit.prototype.autoSave = function(appId, callBack){// 自动保存 callBack(data, timeStamp)
+		if(window.localStorage){
+			clearInterval(this.autoSaveInterval);
+			var _this = this;
+			this.autoSaveInterval = setInterval(function(){
+				var nowData = _this.getContent(true);
+				localStorage.setItem("medit-autosave-"+appId,nowData);
+				callBack(nowData, (new Date())-0);
+			},1000);
+		}
 	}
 		
 	

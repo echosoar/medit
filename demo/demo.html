@@ -24,4 +24,7 @@ var me = medit(document.getElementById("medit"));
 function getContent(){
 	alert(me.getContent());
 }
+me.autoSave("edit", function(data, time){
+	console.log(data, time);
+})
 </script>
