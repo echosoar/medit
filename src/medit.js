@@ -190,13 +190,11 @@
 		},
 		"br":{
 			focus:function(node) {
-				document.getElementById("medit-tool-button-setting-1").style.display= "none";
-				document.getElementById("medit-tool-button-mode-1").style.display= "none";
+				document.getElementById("medit-tool-button-mode").style.display= "none";
 				node.style.backgroundColor = "#e5e5e5";
 			},
 			blur:function(node) {
-				document.getElementById("medit-tool-button-setting-1").style.display= "inline-block";
-				document.getElementById("medit-tool-button-mode-1").style.display= "inline-block";
+				document.getElementById("medit-tool-button-mode").style.display= "inline-block";
 				node.style.backgroundColor = "";
 			}
 		}
@@ -247,15 +245,7 @@
 		
 		var tool = document.getElementById("medit-tool");
 		
-		mainButton.forEach(function(v){
-			var temNode = document.createElement("span");
-			temNode.setAttribute("id","medit-tool-button-"+v+"-"+"1");
-			temNode.setAttribute("class","medit-tool-button medit-tool-"+v);
-			temNode.setAttribute("data-meditToolStyle",v);
-			temNode.setAttribute("data-meditToolDegree",1);
-			temNode.innerHTML = "&nbsp;";
-			tool.appendChild(temNode);
-		});
+	
 		gevent(tool, ["touchmove"], function(e){
 			isToolMove = true;
 		});
@@ -351,61 +341,90 @@
 						break;
 						
 					case 'return':
-						var nodePath = target.getAttribute("id").replace("medit-tool-button-return-","").split("-");
-						if(nodePath[0]=="main"){
-							toolBar.innerHTML = toolBarCatch;
-						}else{
-							
+						var path = target.getAttribute("id").replace("medit-tool-button-","");
+						var nodePath = path.split("-");
+						var doWhat = mode;
+						var pathMode = null;
 						
-							var pathRes = nodePath.join("-");
-							pathRes = pathRes.replace(/(\-\d+\-\w+)$|(\-\d+)$/,"");
-							nodePath = pathRes.split("-");
-							
-							if(nodePath.length == 2){
-								toolBar.innerHTML = returnButtonHtml("return-main");
-							}else{
-								toolBar.innerHTML = returnButtonHtml("return-"+pathRes.replace(/\-doWhat$/,""));
-							}
-							
-							var pathTo = null;
-							var doWhat = mode;
-							
-							while(pathTo = nodePath.shift()){
-								doWhat = doWhat[pathTo];
-							}
-							toolBar.innerHTML += doWhat.map(function(v,index){
-								
-								var defaultValue = v.defaultValue || "&nbsp;";
-							
-								return '<span id="medit-tool-button-'+pathRes+"-"+index+'" class="medit-tool-button" style="background:#fff url('+v.icon+') no-repeat center center;background-size: 24px;" data-meditToolStyle="'+nowMode+'-'+v.name+'" data-meditToolDegree="'+(++degree)+'">'+defaultValue+'</span>';
-							}).join("");
+						if(nodePath.length === 3){
+							path = nodePath[0];
+							nodePath.pop();
 						}
+						
+						while(pathMode = nodePath.shift()){
+							doWhat = doWhat[pathMode];
+						}
+						
+						toolBarModeSetting(path, doWhat);
 
 						break;
 				}
 			}else{
 				var pathRes =  target.getAttribute("id").replace("medit-tool-button-","");
-				var path = pathRes.split("-");
-				var pathTo = null;
+				
+				var pathArr = pathRes.split("-");
+				
+				var pathMode = null;
+				
 				var doWhat = mode;
-				while(pathTo = path.shift()){
-					doWhat = doWhat[pathTo];
+				
+				while(pathMode = pathArr.shift()){
+					doWhat = doWhat[pathMode];
 				}
+				
 				doWhat = doWhat.doWhat;
-				if(doWhat){
-					if(isType(doWhat,"array")){ // 更深层次
-						toolBar.innerHTML = returnButtonHtml("return-"+pathRes) + doWhat.map(function(v,index){
-						
-								var defaultValue = v.defaultValue || "&nbsp;";
-								
-								return '<span id="medit-tool-button-'+pathRes+'-doWhat-'+index+'" class="medit-tool-button" style="background:#fff url('+v.icon+') no-repeat center center;background-size: 24px;" data-meditToolStyle="'+nowMode+'-'+v.name+'" data-meditToolDegree="'+(++degree)+'">'+defaultValue+'</span>';
-							}).join("");
-					}else{
-						doWhat(thisNode);
-					}
+				
+				if(isType(doWhat, "array")){
+					toolBarModeSetting(pathRes, doWhat);
+				}else{
+					doWhat(thisNode);
 				}
 			}
 			if(!contain.node.children.length) contain.node.innerHTML = contain.preHTML || "Medit";
+	}
+	
+	var toolBarModeSetting = function(path, list){
+	
+		var pathRes = path.split("-");
+		
+		var toolBarRes = [];
+		
+		if(pathRes.length === 1){
+			
+			mainButton.forEach(function(v,index){
+
+				if(v === "setting"){
+					if(list){
+						list.forEach(function(listv, listIndex){
+							
+							var defaultValue = listv.defaultValue || "&nbsp;";
+							
+							var style = listv.icon?' style="background:#fff url('+listv.icon+') no-repeat center center;background-size: 24px;"':'';
+							
+							toolBarRes.push('<span id="medit-tool-button-'+path+'-setting-'+listIndex+'" class="medit-tool-button" data-meditToolStyle="'+path+"-setting-"+listIndex+'"'+style+' data-meditToolDegree="2">'+defaultValue+'</span>');
+						});
+					}
+				}else{
+					toolBarRes.push('<span id="medit-tool-button-'+v+'" class="medit-tool-button medit-tool-'+v+'" data-meditToolStyle="'+v+'" data-meditToolDegree="1">&nbsp;</span>');
+				}
+			});
+			
+		}else{
+			toolBarRes.push(returnButtonHtml(path));
+			if(!!list.length){
+				list.forEach(function(listv, listIndex){
+							
+					var defaultValue = listv.defaultValue || "&nbsp;";
+							
+					var style = listv.icon?' style="background:#fff url('+listv.icon+') no-repeat center center;background-size: 24px;"':' style="background:#fff;"';
+							
+					toolBarRes.push('<span id="medit-tool-button-'+path+'-doWhat-'+listIndex+'" class="medit-tool-button" data-meditToolStyle="'+path+"-doWhat-"+listIndex+'"'+style+' data-meditToolDegree="2">'+defaultValue+'</span>');
+				});
+			}
+		}
+		
+		toolBar.innerHTML = toolBarRes.join("");
+		
 	}
 	
 	var toolBarDisplay = function() {
@@ -495,6 +514,7 @@
 		}
 		var editor = document.getElementById("medit-" + this.nowNodeId + "-" + meditId);
 		nodeFocus(editor);
+		toolBarModeSetting("text", mode["text"].setting);
 	}
 	
 	medit.prototype.updateId = function(nodeId) {
@@ -556,6 +576,7 @@
 				meditObj.preHTML = target.innerHTML;
 				target.innerHTML = "";
 				meditObj.createSpan(0);
+				
 				return;
 			}else{
 				target = child[child.length-1];
@@ -576,9 +597,14 @@
 		meditObj.nowNodeId = Number(idExecRes[1]);		
 			
 		var meditNodeMode = target.getAttribute("data-meditMode");
+		
+		toolBarModeSetting(meditNodeMode, mode[meditNodeMode].setting);
+		
 		if(mode[meditNodeMode].focus){
 			mode[meditNodeMode].focus(target);
 		}
+		
+		
 			
 	}
 	
