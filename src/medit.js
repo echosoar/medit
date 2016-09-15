@@ -577,7 +577,6 @@
 		
 		var type = target.getAttribute("data-medit");
 		if(!type && target.getAttribute("data-meditId")){ // target is container
-			
 			meditId = target.getAttribute("data-meditId"); // 全局存贮当前medit容器ID
 			var meditObj = container[ meditId];
 			var child = target.children;
@@ -588,7 +587,14 @@
 				
 				return;
 			}else{
-				target = child[child.length-1];
+				
+				var temTarget = child[child.length-1];
+				var temTargetMode = temTarget.getAttribute("data-meditMode");
+				if(!mode[temTargetMode].empty || !mode[temTargetMode].empty(temTarget)){
+					meditObj.createSpan(child.length-1,temTarget, true);
+					return;
+				}
+				target = temTarget;			
 			}
 		}else{ // target is 内部包含结点
 			while(!target.getAttribute("data-medit")){
@@ -612,8 +618,6 @@
 		if(mode[meditNodeMode].focus){
 			mode[meditNodeMode].focus(target);
 		}
-		
-		
 			
 	}
 	
