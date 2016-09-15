@@ -19,6 +19,11 @@ Demo Adress : [Medit Demo](https://echosoar.github.io/medit/demo/demo.html)
 	// if you wanna get content
 	meditObject.getContent();
 	
+	// if you wanna auto save
+	meditObject.autoSave("autoSaveId", function(data, timestamp){
+		console.log(data, timestamp);
+	});
+	
 
 ***
 
