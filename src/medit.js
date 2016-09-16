@@ -9,7 +9,7 @@
 	
 	var regContent = /\s*(class|id|contenteditable)(=".*?")?/g; // 获得内容时去除id，class和可编辑状态
 	
-	var regIsContentEmpty = /^<.*?>$/; // 获得内容时检测是否是纯文本
+	var regIsNotContentEmpty = /^<.*?>$/; // 获得内容时检测是否是纯文本
 	
 	var isToolMove = false;
 	
@@ -311,6 +311,7 @@
 							mode[nowMode].blur(thisNode);
 						}
 						contain.createSpan(contain.nowNodeId, thisNode, true);
+						
 						break;
 					case 'addBr':
 						if(thisNode.innerHTML==""){
@@ -448,7 +449,7 @@
 	var nodeFocus = function(node){ // 使模块自动获取焦点 使用了很多方法，最后发现这个方法是在移动端最好的
 		setTimeout(function() {
 			node.focus();
-		}, 0);
+		}, 10);
 	}
 		
 	var medit = function(node) {
@@ -518,6 +519,7 @@
 	}
 	
 	medit.prototype.updateId = function(nodeId) {
+		console.log(nodeId);
 		
 		var child = this.node.children;
 		for(var i = nodeId; i<child.length; i++){
@@ -531,13 +533,22 @@
 			mainDo(1, "ok");
 		}
 		var html = this.node.innerHTML;
-		if(regIsContentEmpty.test(html))
+		if(regIsNotContentEmpty.test(html))
 			return html.replace(regContent, "");
 		return "";
 	}
 	
-	medit.prototype.autoSave = function(appId, callBack){// 自动保存 callBack(data, timeStamp)
+	medit.prototype.autoSave = function(appId, callBack){// 自动保存 callBack(data, timeStamp),自动恢复已保存数据
 		if(window.localStorage){
+			
+			var oldData = localStorage.getItem("medit-autosave-"+appId);
+			var temData = this.getContent(true);
+			if(!regIsNotContentEmpty.test(temData) && oldData){
+				meditId = this.node.getAttribute("data-meditid");
+				this.node.innerHTML = oldData;
+				this.updateId(0);
+			}
+			
 			clearInterval(this.autoSaveInterval);
 			var _this = this;
 			this.autoSaveInterval = setInterval(function(){
