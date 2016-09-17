@@ -449,6 +449,9 @@
 	var nodeFocus = function(node){ // 使模块自动获取焦点 使用了很多方法，最后发现这个方法是在移动端最好的
 		setTimeout(function() {
 			node.focus();
+			setTimeout(function() {
+				node.focus();
+			}, 10);
 		}, 10);
 	}
 		
@@ -606,7 +609,6 @@
 				var temTargetMode = temTarget.getAttribute("data-meditMode");
 				if(!mode[temTargetMode].empty || !mode[temTargetMode].empty(temTarget)){
 					meditObj.createSpan(child.length-1,temTarget, true);
-					alert("aaa")
 					return;
 				}
 				target = temTarget;			
