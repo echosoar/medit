@@ -514,8 +514,11 @@
 			this.node.appendChild(span);
 		}
 		var editor = document.getElementById("medit-" + this.nowNodeId + "-" + meditId);
-		nodeFocus(editor);
+		
 		toolBarModeSetting("text", mode["text"].setting);
+		
+		nodeFocus(editor);
+		
 	}
 	
 	medit.prototype.updateId = function(nodeId) {
@@ -603,6 +606,7 @@
 				var temTargetMode = temTarget.getAttribute("data-meditMode");
 				if(!mode[temTargetMode].empty || !mode[temTargetMode].empty(temTarget)){
 					meditObj.createSpan(child.length-1,temTarget, true);
+					
 					return;
 				}
 				target = temTarget;			
