@@ -525,8 +525,6 @@
 	}
 	
 	medit.prototype.updateId = function(nodeId) {
-		console.log(nodeId);
-		
 		var child = this.node.children;
 		for(var i = nodeId; i<child.length; i++){
 			this.node.children[i].setAttribute("id","medit-" + i + "-" + meditId );
@@ -602,16 +600,18 @@
 				target.innerHTML = "";
 				meditObj.createSpan(0);
 				
-				return;
+				target = child[0];
 			}else{
 				
 				var temTarget = child[child.length-1];
 				var temTargetMode = temTarget.getAttribute("data-meditMode");
 				if(!mode[temTargetMode].empty || !mode[temTargetMode].empty(temTarget)){
 					meditObj.createSpan(child.length-1,temTarget, true);
-					return;
+					target = temTarget.nextSibling;
+				}else{
+					target = temTarget;		
 				}
-				target = temTarget;			
+					
 			}
 		}else{ // target is 内部包含结点
 			while(!target.getAttribute("data-medit")){
