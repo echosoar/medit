@@ -606,7 +606,7 @@
 				var temTargetMode = temTarget.getAttribute("data-meditMode");
 				if(!mode[temTargetMode].empty || !mode[temTargetMode].empty(temTarget)){
 					meditObj.createSpan(child.length-1,temTarget, true);
-					
+					alert("aaa")
 					return;
 				}
 				target = temTarget;			
