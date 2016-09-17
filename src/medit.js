@@ -599,15 +599,13 @@
 				meditObj.preHTML = target.innerHTML;
 				target.innerHTML = "";
 				meditObj.createSpan(0);
-				
-				target = child[0];
+				target = false;
 			}else{
-				
 				var temTarget = child[child.length-1];
 				var temTargetMode = temTarget.getAttribute("data-meditMode");
 				if(!mode[temTargetMode].empty || !mode[temTargetMode].empty(temTarget)){
 					meditObj.createSpan(child.length-1,temTarget, true);
-					target = temTarget.nextSibling;
+					target = false;
 				}else{
 					target = temTarget;		
 				}
@@ -619,23 +617,23 @@
 			}
 		}
 		
-		if(!target.id) {
-			initFromData(target);
-		}
-		
-		var idExecRes = regNodeId.exec(target.id);
-		meditId = Number(idExecRes[2]);
-		var meditObj = container[ meditId];
-		meditObj.nowNodeId = Number(idExecRes[1]);		
+		if(target){
+			if(!target.id) {
+				initFromData(target);
+			}
+			var idExecRes = regNodeId.exec(target.id);
+			meditId = Number(idExecRes[2]);
+			var meditObj = container[ meditId];
+			meditObj.nowNodeId = Number(idExecRes[1]);		
+				
+			var meditNodeMode = target.getAttribute("data-meditMode");
 			
-		var meditNodeMode = target.getAttribute("data-meditMode");
-		
-		toolBarModeSetting(meditNodeMode, mode[meditNodeMode].setting);
-		
-		if(mode[meditNodeMode].focus){
-			mode[meditNodeMode].focus(target);
-		}
+			toolBarModeSetting(meditNodeMode, mode[meditNodeMode].setting);
 			
+			if(mode[meditNodeMode].focus){
+				mode[meditNodeMode].focus(target);
+			}
+		}	
 	}
 	
 	obj.Medit = obj.medit = medit;
