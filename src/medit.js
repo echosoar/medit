@@ -296,7 +296,7 @@
 		
 		var styleArrA = styleA.split(";").sort();
 		var styleArrB = styleB.split(";").sort();
-		console.log(styleArrA, styleArrB)
+
 		if(styleArrA.length != styleArrB.length) return false;
 		
 		for(var i=0;i<styleArrA.length;i++){
@@ -710,8 +710,6 @@
 			this.node.appendChild(span);
 		}
 		
-		console.log("medit-" + this.nowNodeId + "-" + meditId);
-		
 		var editor = document.getElementById("medit-" + this.nowNodeId + "-" + meditId);
 		nowNode = editor;
 		toolBarModeSetting("text", mode["text"].setting);
@@ -758,7 +756,6 @@
 			var _this = this;
 			this.autoSaveInterval = setInterval(function(){
 				var nowData = _this.getContent(true);
-				console.log(nowData);
 				localStorage.setItem("medit-autosave-"+appId,nowData);
 				callBack(nowData, (new Date())-0);
 			},1000);
