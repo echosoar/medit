@@ -79,7 +79,7 @@ Demo Adress : [Medit Demo](https://echosoar.github.io/medit/demo/demo.html)
 
 + Text selected by gesture 文本手势选择
 
-	[bold](./demo/demo-gesture.gif)
+	![text select](./demo/demo-gesture.gif)
 
 
 
