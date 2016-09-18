@@ -76,3 +76,10 @@
 	background:#fff url("./images/return.png") no-repeat center center;
 	background-size: 24px;
 }
+
+
+/* text */
+.medit-text-select {
+	position:relative;
+	background:#9cf;
+}

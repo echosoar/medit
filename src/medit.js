@@ -11,9 +11,17 @@
 	
 	var regIsNotContentEmpty = /^<.*?>$/; // 获得内容时检测是否是纯文本
 	
+	var regNormalStyle = /(font\-style\s*:\s*normal\s*;)|(font\-weight\s*:\s*normal\s*;)|(\s*)/ig; // 正常的样式需要剔除
+	
 	var isToolMove = false;
 	
 	var toolBarCatch = null;
+	
+	var isContainMove = false;
+	
+	var mainTouchPoint = {};
+	
+	var nowNode = null; // 当前选择的可编辑结点
 
 	var returnButtonHtml = function(from){
 		return '<span id="medit-tool-button-'+from+'" class="medit-tool-button  medit-tool-return" data-meditToolStyle="return" data-meditToolDegree="1">&nbsp;</span>';
@@ -27,11 +35,13 @@
 	
 	var mode = {
 		"text":{
+			isMerge: true,
 			focus:function(node) {
 				node.setAttribute("contentEditable","true");
 				node.setAttribute("class","medit-editing");
 			},
 			blur:function(node) {
+				node.innerHTML = node.innerHTML.replace(/<span class="medit\-text\-select">(.*?)<\/span>/i,"$1");
 				node.setAttribute("contentEditable","false");
 				node.setAttribute("class","");
 			},
@@ -186,7 +196,76 @@
 						}
 					]
 				}
-			]
+			],
+			selecting : function(node, isAdd){
+				var selectReg = /<span class="medit\-text\-select">(.*?)<\/span>/i;
+				if(selectReg.test(node.innerHTML)){
+					var regRes = node.innerHTML.split(selectReg);
+					if(isAdd){
+						if(regRes[1].length>1){
+							regRes[0] = regRes[0] + regRes[1].slice(0, 1);
+							regRes[1] = regRes[1].slice(1);
+						}
+					}else{
+						if(regRes[1].length>1){
+							regRes[2] = regRes[1].slice(-1) + regRes[2];
+							regRes[1] = regRes[1].slice(0, -1);
+						}
+					}
+					
+					node.innerHTML = regRes[0] + '<span class="medit-text-select">' + regRes[1] + '</span>' + regRes[2];
+				}else{
+					node.innerHTML = '<span class="medit-text-select">' + node.innerHTML + '</span>';
+				}
+			},
+			selected: function(thisNode){
+				var selectReg = /<span class="medit\-text\-select">(.*?)<\/span>/i;
+				var newNode;
+				var contain = container[meditId];
+				if(selectReg.test(thisNode.innerHTML)) {
+					var thisId = regNodeId.exec(thisNode.getAttribute("id"))[1];
+					var regRes = thisNode.innerHTML.split(selectReg);
+					var style = thisNode.getAttribute("style");
+					if(regRes[0]!==''){
+						var spanPre =document.createElement("span");
+						spanPre.setAttribute("data-medit","true");
+						spanPre.setAttribute("data-meditMode","text");
+						spanPre.setAttribute("id","medit-" + thisId + "-" + meditId );
+						spanPre.setAttribute("style",style);
+						spanPre.innerHTML = regRes[0];
+						thisNode.parentNode.insertBefore(spanPre, thisNode);
+						thisId++;
+					}
+					if(regRes[2]!==''){
+						thisNode.innerHTML = regRes[2];
+						var span =document.createElement("span");
+						span.setAttribute("data-medit","true");
+						span.setAttribute("data-meditMode","text");
+						span.setAttribute("id","medit-" + thisId + "-" + meditId );
+						span.setAttribute("contentEditable","true");
+						span.setAttribute("class","medit-editing");
+						span.setAttribute("style",style);
+						span.innerHTML = regRes[1];
+						this.blur(thisNode);
+						thisNode.parentNode.insertBefore(span, thisNode);
+						newNode = thisNode.previousSibling;
+					}else{
+						thisNode.innerHTML = regRes[1];
+						
+						newNode = thisNode;
+					}
+					
+					contain.nowNodeId = thisId;
+					if(thisId>=2){
+						thisId -=2;
+					}
+					contain.updateId(thisId); // 未来需要合并相同style的span
+					nodeFocus(newNode);
+				}else{
+					newNode = thisNode;
+				}
+				return newNode;
+			}
 		},
 		"br":{
 			focus:function(node) {
@@ -203,6 +282,81 @@
 	var isType = function(ele, type){
 		if(!ele || !type)return false;
 		return {}.toString.call(ele).slice(8, -1).toLowerCase() === type.toLowerCase();
+	}
+	
+	var mergeStyleIsSimilar = function(styleA, styleB){
+		if(styleA){
+			styleA = styleA.replace(regNormalStyle, "");
+		}
+		if(styleB){
+			styleB = styleB.replace(regNormalStyle, "");
+		}
+		if(!styleA && !styleB) return true;
+		if(styleA && !styleB || !styleA && styleB) return false;
+		
+		var styleArrA = styleA.split(";").sort();
+		var styleArrB = styleB.split(";").sort();
+		console.log(styleArrA, styleArrB)
+		if(styleArrA.length != styleArrB.length) return false;
+		
+		for(var i=0;i<styleArrA.length;i++){
+			if(styleArrA[i]!==styleArrB[i])return false;
+		}
+		return true;
+	}
+	
+	var mergeSimilarNextNode = function(node){
+		var nowMode = node.getAttribute("data-meditMode");
+		var nowStyle = node.getAttribute("style");
+		var nextNode = node.nextSibling;
+		if(!nextNode){
+			nodeFocus(node);
+			return node;
+		}
+		var nextMode = nextNode.getAttribute("data-meditMode");
+		if(nowMode==nextMode && nextNode && mode[nowMode].isMerge){
+			var nodeMode = nextNode.getAttribute("data-meditMode");
+			var nextStyle = nextNode.getAttribute("style");
+			if(mergeStyleIsSimilar(nowStyle, nextStyle) && !!node.innerHTML && !!nextNode.innerHTML){
+				var nowId = regNodeId.exec(node.getAttribute("id"))[1];
+				node.innerHTML = node.innerHTML + nextNode.innerHTML;
+				node.parentNode.removeChild(nextNode);
+				container[meditId].updateId(nowId);
+				nodeFocus(node);
+				if(node.nextSibling){
+					return mergeSimilarNextNode(node);
+				}
+			}
+		}
+		return node;
+	}
+	 
+	var mergeSimilarPreNode = function(node){ // 160918
+		var nowMode = node.getAttribute("data-meditMode");
+		var nowStyle = node.getAttribute("style");
+		var previousNode = node.previousSibling;
+		if(!previousNode){
+			nodeFocus(node);
+			return node;
+		}
+		var previousMode = previousNode.getAttribute("data-meditMode");
+		if(previousMode==nowMode && previousNode && mode[nowMode].isMerge){
+			var nodeMode = previousNode.getAttribute("data-meditMode");
+			var previousStyle = previousNode.getAttribute("style");
+			if(mergeStyleIsSimilar(nowStyle, previousStyle)){
+				var nowId = regNodeId.exec(previousNode.getAttribute("id"))[1];
+				previousNode.innerHTML = previousNode.innerHTML + node.innerHTML;
+				previousNode.parentNode.removeChild(node);
+				
+				container[meditId].updateId(nowId);
+				nodeFocus(previousNode);
+				node = previousNode;
+				if(node.previousSibling){
+					return mergeSimilarPreNode(node);
+				}
+			}
+		}
+		return node;
 	}
 	
 	var gevent = function (ele,event,func){
@@ -271,8 +425,10 @@
 	})();
 	
 	var mainDo = function(degree, type, target) {
+			
 			var contain = container[meditId];
 			var thisNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
+			
 			nowMode = thisNode.getAttribute("data-meditMode");
 			if(degree == 1) {
 				switch(type){
@@ -293,6 +449,9 @@
 						if(thisNode.innerHTML=="") contain.node.removeChild(thisNode);;
 						toolBarHidden();
 						contain.nodeCount++;
+						
+						thisNode = mergeSimilarNextNode(thisNode);
+						mergeSimilarPreNode(thisNode);
 						break;
 					case 'addLeft':
 						if(thisNode.innerHTML==""){
@@ -301,7 +460,7 @@
 						if(mode[nowMode].blur){
 							mode[nowMode].blur(thisNode);
 						}
-						contain.createSpan(contain.nowNodeId, thisNode, false);
+						contain.createSpan(contain.nowNodeId, thisNode, false, true);
 						break;
 					case 'addRight':
 						if(thisNode.innerHTML==""){
@@ -310,7 +469,7 @@
 						if(mode[nowMode].blur){
 							mode[nowMode].blur(thisNode);
 						}
-						contain.createSpan(contain.nowNodeId, thisNode, true);
+						contain.createSpan(contain.nowNodeId, thisNode, true, true);
 						
 						break;
 					case 'addBr':
@@ -321,12 +480,12 @@
 						if(mode[nowMode].blur){
 							mode[nowMode].blur(thisNode);
 						}
-						contain.createSpan(contain.nowNodeId, thisNode, true);
+						contain.createSpan(contain.nowNodeId, thisNode, true, true);
 						
 						var brNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
 						toBr(brNode);
 						
-						contain.createSpan(contain.nowNodeId, brNode, true);
+						contain.createSpan(contain.nowNodeId, brNode, true, true);
 						
 						break;
 					case 'setting':
@@ -361,6 +520,11 @@
 						break;
 				}
 			}else{
+				
+				if( mode[nowMode].selected ){
+					thisNode = mode[nowMode].selected(thisNode);
+				}
+			
 				var pathRes =  target.getAttribute("id").replace("medit-tool-button-","");
 				
 				var pathArr = pathRes.split("-");
@@ -381,6 +545,7 @@
 					doWhat(thisNode);
 				}
 			}
+			
 			if(!contain.node.children.length) contain.node.innerHTML = contain.preHTML || "Medit";
 	}
 	
@@ -435,6 +600,7 @@
 	}
 	
 	var toolBarHidden = function() {
+		nowNode = null;
 		toolBar.style.display = "none";
 	}
 	
@@ -449,10 +615,19 @@
 	var nodeFocus = function(node){ // 使模块自动获取焦点 使用了很多方法，最后发现这个方法是在移动端最好的
 		setTimeout(function() {
 			node.focus();
-			setTimeout(function() {
-				node.focus();
-			}, 10);
+			container[meditId].nowNodeId = regNodeId.exec(node.getAttribute("id"))[1];
 		}, 10);
+	}
+	
+	var selectModeContent = function(isAdd){
+		if(nowNode){
+			var nodeMode = nowNode.getAttribute("data-meditmode");
+			var nodeModeObj = mode[nodeMode];
+			if(nodeModeObj.selecting){
+				nodeModeObj.selecting(nowNode, isAdd);
+			}
+			
+		}
 	}
 		
 	var medit = function(node) {
@@ -470,7 +645,25 @@
 		
 		container.push(this);
 		
-		gevent(this.node, ["touchstart"], this.editContainFocus);
+		
+		gevent(this.node, ["touchstart"], function(e){
+			mainTouchPoint = e.targetTouches[0];
+		});
+		
+		gevent(this.node, ["touchmove"], function(e){
+		
+			e = e || window.event;
+			var distance = e.targetTouches[0].clientX - mainTouchPoint.clientX;
+			
+			if(Math.abs(distance) > 50){
+				var isAdd = distance > 0? true: false; 
+				selectModeContent(isAdd);
+				mainTouchPoint = e.targetTouches[0];
+			}
+			isContainMove = true;
+		});
+		gevent(this.node, ["touchend"], this.editContainFocus);
+		
 		gevent(this.node, ["keydown"], function(e){
 			e = e || window.event;
 			if(e.keyCode == 13){
@@ -481,19 +674,19 @@
 				if(mode[nowMode].blur){
 					mode[nowMode].blur(thisNode);
 				}
-				contain.createSpan(contain.nowNodeId, thisNode, true);
+				contain.createSpan(contain.nowNodeId, thisNode, true, true);
 						
 				var brNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
 				toBr(brNode);
 						
-				contain.createSpan(contain.nowNodeId, brNode, true);
+				contain.createSpan(contain.nowNodeId, brNode, true, true);
 			}
 		});
 	}
 	
 	
 	
-	medit.prototype.createSpan = function(nodeId, fromNode, isAfter){
+	medit.prototype.createSpan = function(nodeId, fromNode, isAfter, isAutoFocus){ // 因为在内部创建span的时候不会自动focus，需要调用一下focus方法
 		var span =document.createElement("span");
 		span.setAttribute("data-medit","true");
 		span.setAttribute("data-meditMode","text");
@@ -505,7 +698,7 @@
 				this.nowNodeId = nodeId;
 				this.node.insertBefore(span, fromNode);
 			}else{
-				this.nowNodeId = nodeId + 1;
+				this.nowNodeId = nodeId - 0 + 1;
 				if(!fromNode.nextSibling){
 					this.node.appendChild(span);
 				}else{
@@ -516,11 +709,16 @@
 		}else{
 			this.node.appendChild(span);
 		}
+		
+		console.log("medit-" + this.nowNodeId + "-" + meditId);
+		
 		var editor = document.getElementById("medit-" + this.nowNodeId + "-" + meditId);
-		
+		nowNode = editor;
 		toolBarModeSetting("text", mode["text"].setting);
-		
-		nodeFocus(editor);
+	
+		if(isAutoFocus){
+			nodeFocus(editor);
+		}
 		
 	}
 	
@@ -537,8 +735,11 @@
 			mainDo(1, "ok");
 		}
 		var html = this.node.innerHTML;
-		if(regIsNotContentEmpty.test(html))
+		if(regIsNotContentEmpty.test(html)){
+			html = html.replace(/<span class="medit\-text\-select">(.*?)<\/span>/i,"$1");
 			return html.replace(regContent, "");
+		}
+			
 		return "";
 	}
 	
@@ -557,6 +758,7 @@
 			var _this = this;
 			this.autoSaveInterval = setInterval(function(){
 				var nowData = _this.getContent(true);
+				console.log(nowData);
 				localStorage.setItem("medit-autosave-"+appId,nowData);
 				callBack(nowData, (new Date())-0);
 			},1000);
@@ -566,10 +768,17 @@
 	
 	medit.prototype.editContainFocus = function(e) {
 		
-		toolBarDisplay();
-		
 		e = e || window.event;
 		var target = e.target || e.srcElement;
+		
+		if(isContainMove){
+			e.preventDefault();
+			e.stopPropagation();
+			isContainMove = false;
+			return;
+		}
+		
+		toolBarDisplay();
 		
 		if(meditId != null) { // 在已经选择某个区块的时候选择其它的，会先调用这个区块的blur
 			var temObj = container[meditId];
@@ -598,7 +807,9 @@
 			if(!child.length){ // 如果点击了容器发现没有结点，那么就保存原有内容，并且创建新的span
 				meditObj.preHTML = target.innerHTML;
 				target.innerHTML = "";
+				
 				meditObj.createSpan(0);
+				
 				target = false;
 			}else{
 				var temTarget = child[child.length-1];
@@ -608,6 +819,7 @@
 					target = false;
 				}else{
 					target = temTarget;		
+					nowNode = target;
 				}
 					
 			}
@@ -615,6 +827,7 @@
 			while(!target.getAttribute("data-medit")){
 				target = target.parentNode;
 			}
+			nowNode = target;
 		}
 		
 		if(target){
