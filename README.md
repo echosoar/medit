@@ -77,9 +77,9 @@ Demo Adress : [Medit Demo](https://echosoar.github.io/medit/demo/demo.html)
 
 + ![pink](./src/images/text/colorPink.png) Pink 粉色
 
-+ Text selected by gesture 文本手势选择
+Text selected by gesture 文本手势选择
 
-	![text select](./demo/demo-gesture.gif)
+![text select](./demo/demo-gesture.gif)
 
 
 

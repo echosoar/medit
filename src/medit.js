@@ -1,6 +1,5 @@
 ;(function(obj, undefined){
 
-	
 	var meditId = null;
 
 	var container = [];
@@ -12,6 +11,8 @@
 	var regIsNotContentEmpty = /^<.*?>$/; // 获得内容时检测是否是纯文本
 	
 	var regNormalStyle = /(font\-style\s*:\s*normal\s*;)|(font\-weight\s*:\s*normal\s*;)|(\s*)/ig; // 正常的样式需要剔除
+	
+	var selectTextReg = /<span class="medit\-text\-select">(.*?)<\/span>/i;
 	
 	var isToolMove = false;
 	
@@ -27,21 +28,27 @@
 		return '<span id="medit-tool-button-'+from+'" class="medit-tool-button  medit-tool-return" data-meditToolStyle="return" data-meditToolDegree="1">&nbsp;</span>';
 	}
 	
+	var toArray = function(obj){
+		return [].slice.call(obj);
+	}
 	
-	
-	var mainButton = ["addLeft","delete","setting","mode","ok","addRight","addBr"];
+	var mainButton = ["addLeft","delete","setting","mode","ok","addRight"];
 	
 	var nowMode = "text";
 	
 	var mode = {
 		"text":{
+			icon: '../src/images/mode/text.png',
+			doWhat: function(node){
+				console.log(node);
+			},
 			isMerge: true,
 			focus:function(node) {
 				node.setAttribute("contentEditable","true");
 				node.setAttribute("class","medit-editing");
 			},
 			blur:function(node) {
-				node.innerHTML = node.innerHTML.replace(/<span class="medit\-text\-select">(.*?)<\/span>/i,"$1");
+				node.innerHTML = node.innerHTML.replace(selectTextReg,"$1");
 				node.setAttribute("contentEditable","false");
 				node.setAttribute("class","");
 			},
@@ -198,18 +205,32 @@
 				}
 			],
 			selecting : function(node, isAdd){
-				var selectReg = /<span class="medit\-text\-select">(.*?)<\/span>/i;
+				var selectReg = selectTextReg;
 				if(selectReg.test(node.innerHTML)){
 					var regRes = node.innerHTML.split(selectReg);
 					if(isAdd){
 						if(regRes[1].length>1){
-							regRes[0] = regRes[0] + regRes[1].slice(0, 1);
-							regRes[1] = regRes[1].slice(1);
+							if(/^<(.*?)\s(.*?)>(.*?)<\/(.*?)>/.test(regRes[1])){
+								var innerTagReg = /^<(.*?)\s(.*?)>(.*?)<\/(.*?)>/.exec(regRes[1]);
+								var replaceHTML = innerTagReg[0];
+								regRes[0] += replaceHTML;
+								regRes[1] = regRes[1].replace(/^<(.*?)\s(.*?)>(.*?)<\/(.*?)>/, "");
+							}else{
+								regRes[0] = regRes[0] + regRes[1].slice(0, 1);
+								regRes[1] = regRes[1].slice(1);
+							}
 						}
 					}else{
 						if(regRes[1].length>1){
-							regRes[2] = regRes[1].slice(-1) + regRes[2];
-							regRes[1] = regRes[1].slice(0, -1);
+							if(/<(.*?)\s(.*?)>(.*?)<\/(.*?)>$/.test(regRes[1])){
+								var innerTagReg = /<(.*?)\s(.*?)>(.*?)<\/(.*?)>$/.exec(regRes[1]);
+								var replaceHTML = innerTagReg[0];
+								regRes[2] = replaceHTML + regRes[2];
+								regRes[1] = regRes[1].replace(/<(.*?)\s(.*?)>(.*?)<\/(.*?)>$/, "");
+							}else{
+								regRes[2] = regRes[1].slice(-1) + regRes[2];
+								regRes[1] = regRes[1].slice(0, -1);
+							}
 						}
 					}
 					
@@ -219,7 +240,7 @@
 				}
 			},
 			selected: function(thisNode){
-				var selectReg = /<span class="medit\-text\-select">(.*?)<\/span>/i;
+				var selectReg = selectTextReg;
 				var newNode;
 				var contain = container[meditId];
 				if(selectReg.test(thisNode.innerHTML)) {
@@ -268,6 +289,10 @@
 			}
 		},
 		"br":{
+			icon: '../src/images/mode/br.png',
+			doWhat: function(node){
+			
+			},
 			focus:function(node) {
 				document.getElementById("medit-tool-button-mode").style.display= "none";
 				node.style.backgroundColor = "#e5e5e5";
@@ -437,7 +462,7 @@
 							mode[nowMode].blur(thisNode);
 						}
 						
-						contain.node.removeChild(thisNode);
+						thisNode.parentNode.removeChild(thisNode);
 						contain.updateId(contain.nowNodeId);
 						toolBarHidden();
 						break;
@@ -446,7 +471,7 @@
 							mode[nowMode].blur(thisNode);
 						}
 
-						if(thisNode.innerHTML=="") contain.node.removeChild(thisNode);;
+						if(thisNode.innerHTML=="") thisNode.parentNode.removeChild(thisNode);;
 						toolBarHidden();
 						contain.nodeCount++;
 						
@@ -472,31 +497,17 @@
 						contain.createSpan(contain.nowNodeId, thisNode, true, true);
 						
 						break;
-					case 'addBr':
-						if(thisNode.innerHTML==""){
-							toBr(thisNode);
-							return;
-						}
-						if(mode[nowMode].blur){
-							mode[nowMode].blur(thisNode);
-						}
-						contain.createSpan(contain.nowNodeId, thisNode, true, true);
-						
-						var brNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
-						toBr(brNode);
-						
-						contain.createSpan(contain.nowNodeId, brNode, true, true);
-						
-						break;
-					case 'setting':
-						if(mode[nowMode].setting.length!=0){
-							toolBarCatch = toolBar.innerHTML;
-							toolBar.innerHTML = returnButtonHtml("return-main") + mode[nowMode].setting.map(function(v,index){
-								var defaultValue = v.defaultValue || "&nbsp;";
+					case 'mode':
+						var toolBarRes = [];
+						//toolBarRes.push(returnButtonHtml(path)); // 晚上继续这里
+						for(var modeType in mode){
+							if(mode.hasOwnProperty(modeType)){
+								var style = mode[modeType].icon?' style="background:#fff url('+ mode[modeType].icon+') no-repeat center center;background-size: 24px;"':'';
 							
-								return '<span id="medit-tool-button-'+nowMode+'-setting-'+index+'" class="medit-tool-button" style="background:#fff url('+v.icon+') no-repeat center center;background-size: 24px;" data-meditToolStyle="'+nowMode+'-'+v.name+'" data-meditToolDegree="2">'+defaultValue+'</span>';
-							}).join("");
+								toolBarRes.push('<span id="medit-tool-button-'+modeType+'" class="medit-tool-button" data-meditToolStyle="'+modeType+'"'+style+' data-meditToolDegree="2">&nbsp;</span>');
+							}
 						}
+						console.log(toolBarRes.join(""))
 						
 						break;
 						
@@ -684,7 +695,11 @@
 		});
 	}
 	
-	
+	var returnNextNodeId = function(node){
+		var child = node.children;
+		if(child.length) return returnNextNodeId(child[child.length-1]);
+		return Number(regNodeId.exec(node.getAttribute("id"))[1])+1;
+	}
 	
 	medit.prototype.createSpan = function(nodeId, fromNode, isAfter, isAutoFocus){ // 因为在内部创建span的时候不会自动focus，需要调用一下focus方法
 		var span =document.createElement("span");
@@ -696,20 +711,19 @@
 		if(fromNode){
 			if(!isAfter){
 				this.nowNodeId = nodeId;
-				this.node.insertBefore(span, fromNode);
+				fromNode.parentNode.insertBefore(span, fromNode);
 			}else{
-				this.nowNodeId = nodeId - 0 + 1;
+				this.nowNodeId = returnNextNodeId(fromNode);
 				if(!fromNode.nextSibling){
-					this.node.appendChild(span);
+					fromNode.parentNode.appendChild(span);
 				}else{
-					this.node.insertBefore(span, fromNode.nextSibling); 
+					fromNode.parentNode.insertBefore(span, fromNode.nextSibling); 
 				}
 			}
 			this.updateId(nodeId);
 		}else{
 			this.node.appendChild(span);
 		}
-		
 		var editor = document.getElementById("medit-" + this.nowNodeId + "-" + meditId);
 		nowNode = editor;
 		toolBarModeSetting("text", mode["text"].setting);
@@ -721,10 +735,19 @@
 	}
 	
 	medit.prototype.updateId = function(nodeId) {
-		var child = this.node.children;
-		for(var i = nodeId; i<child.length; i++){
-			this.node.children[i].setAttribute("id","medit-" + i + "-" + meditId );
-		}
+			
+		
+		var child = toArray(this.node.children);
+		var index = 0;
+		child.forEach(function(v){
+			v.setAttribute("id","medit-" + (index++) + "-" + meditId );
+			var secondChild = toArray(v.children);
+			if(secondChild.length){
+				secondChild.forEach(function(sv){
+					sv.setAttribute("id","medit-" + (index++) + "-" + meditId );
+				});
+			}
+		});
 	}
 	
 	medit.prototype.getContent = function(isEdit){
@@ -734,7 +757,7 @@
 		}
 		var html = this.node.innerHTML;
 		if(regIsNotContentEmpty.test(html)){
-			html = html.replace(/<span class="medit\-text\-select">(.*?)<\/span>/i,"$1");
+			html = html.replace(selectTextReg,"$1");
 			return html.replace(regContent, "");
 		}
 			
@@ -783,7 +806,7 @@
 			if(temNode){
 				var temNodeMode = temNode.getAttribute("data-meditMode");
 				if(mode[temNodeMode].empty && mode[temNodeMode].empty(temNode) && temNode != target){
-					temObj.node.removeChild(temNode);
+					temNode.parentNode.removeChild(temNode);
 					temObj.updateId(temObj.nowNodeId);
 				}else{
 					if(mode[temNodeMode].blur){
@@ -793,8 +816,6 @@
 				
 			}
 		}
-		
-		
 		
 		var type = target.getAttribute("data-medit");
 		if(!type && target.getAttribute("data-meditId")){ // target is container
@@ -829,7 +850,12 @@
 		
 		if(target){
 			if(!target.id) {
-				initFromData(target);
+				var parentNode = target.parentNode;
+				while(!parentNode.getAttribute("data-meditid")){
+					parentNode = parentNode.parentNode;
+				}
+				meditId = parentNode.getAttribute("data-meditid");
+				container[meditId].updateId();
 			}
 			var idExecRes = regNodeId.exec(target.id);
 			meditId = Number(idExecRes[2]);
