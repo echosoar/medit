@@ -40,7 +40,14 @@
 		"text":{
 			icon: '../src/images/mode/text.png',
 			doWhat: function(node){
-				console.log(node);
+				mode[node.getAttribute("data-meditmode")].blur(node);
+				node.style.display = null;
+				node.style.backgroundColor = null;
+				node.setAttribute("data-meditmode", "text");
+				mode["text"].focus(node);
+				nodeFocus(node);
+				toolBarModeSetting("text",mode["text"].setting);
+				nowMode = "text";
 			},
 			isMerge: true,
 			focus:function(node) {
@@ -210,11 +217,11 @@
 					var regRes = node.innerHTML.split(selectReg);
 					if(isAdd){
 						if(regRes[1].length>1){
-							if(/^<(.*?)\s(.*?)>(.*?)<\/(.*?)>/.test(regRes[1])){
-								var innerTagReg = /^<(.*?)\s(.*?)>(.*?)<\/(.*?)>/.exec(regRes[1]);
+							if(/^&nbsp;|^<(.*?)\s(.*?)>(.*?)<\/(.*?)>/.test(regRes[1])){
+								var innerTagReg = /^&nbsp;|^<(.*?)\s(.*?)>(.*?)<\/(.*?)>/.exec(regRes[1]);
 								var replaceHTML = innerTagReg[0];
 								regRes[0] += replaceHTML;
-								regRes[1] = regRes[1].replace(/^<(.*?)\s(.*?)>(.*?)<\/(.*?)>/, "");
+								regRes[1] = regRes[1].replace(/^&nbsp;|^<(.*?)\s(.*?)>(.*?)<\/(.*?)>/, "");
 							}else{
 								regRes[0] = regRes[0] + regRes[1].slice(0, 1);
 								regRes[1] = regRes[1].slice(1);
@@ -222,11 +229,11 @@
 						}
 					}else{
 						if(regRes[1].length>1){
-							if(/<(.*?)\s(.*?)>(.*?)<\/(.*?)>$/.test(regRes[1])){
-								var innerTagReg = /<(.*?)\s(.*?)>(.*?)<\/(.*?)>$/.exec(regRes[1]);
+							if(/<(.*?)\s(.*?)>(.*?)<\/(.*?)>$|&nbsp;$/.test(regRes[1])){
+								var innerTagReg = /<(.*?)\s(.*?)>(.*?)<\/(.*?)>$|&nbsp;$/.exec(regRes[1]);
 								var replaceHTML = innerTagReg[0];
 								regRes[2] = replaceHTML + regRes[2];
-								regRes[1] = regRes[1].replace(/<(.*?)\s(.*?)>(.*?)<\/(.*?)>$/, "");
+								regRes[1] = regRes[1].replace(/<(.*?)\s(.*?)>(.*?)<\/(.*?)>$|&nbsp;$/, "");
 							}else{
 								regRes[2] = regRes[1].slice(-1) + regRes[2];
 								regRes[1] = regRes[1].slice(0, -1);
@@ -290,15 +297,20 @@
 		},
 		"br":{
 			icon: '../src/images/mode/br.png',
-			doWhat: function(node){
-			
+			doWhat: function(node){ // 需要继续
+				mode[node.getAttribute("data-meditmode")].blur(node);
+				node.style.display = "block";
+				node.innerHTML = " ";
+				node.setAttribute("data-meditmode", "br");
+				mode["br"].focus(node);
+				nodeFocus(node);
+				toolBarModeSetting("br",[]);
+				nowMode = "br";
 			},
 			focus:function(node) {
-				document.getElementById("medit-tool-button-mode").style.display= "none";
 				node.style.backgroundColor = "#e5e5e5";
 			},
 			blur:function(node) {
-				document.getElementById("medit-tool-button-mode").style.display= "inline-block";
 				node.style.backgroundColor = "";
 			}
 		}
@@ -499,16 +511,15 @@
 						break;
 					case 'mode':
 						var toolBarRes = [];
-						//toolBarRes.push(returnButtonHtml(path)); // 晚上继续这里
+						toolBarRes.push(returnButtonHtml(nowMode + "-setting-1"));
 						for(var modeType in mode){
-							if(mode.hasOwnProperty(modeType)){
+							if(mode.hasOwnProperty(modeType) && modeType != nowMode){
 								var style = mode[modeType].icon?' style="background:#fff url('+ mode[modeType].icon+') no-repeat center center;background-size: 24px;"':'';
 							
 								toolBarRes.push('<span id="medit-tool-button-'+modeType+'" class="medit-tool-button" data-meditToolStyle="'+modeType+'"'+style+' data-meditToolDegree="2">&nbsp;</span>');
 							}
 						}
-						console.log(toolBarRes.join(""))
-						
+						toolBar.innerHTML = toolBarRes.join("");
 						break;
 						
 					case 'return':
