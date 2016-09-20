@@ -29,10 +29,10 @@
 
 [data-meditMode=br] {
 	height: 15px;
-	width: 10px;
+	width: 24px;
 	border-radius: 3px;
-	background:url("./images/icon-br.png") no-repeat center center;
-	background-size: contain;
+	background:url("./images/icon-br.png") no-repeat center;
+	background-size: 14px;
 }
 
 .medit-tool-button {
@@ -85,17 +85,29 @@
 }
 
 /* Link */
-#medit-link-left {
-	display: inline-block;
-	width: 24px;
-	height:14px;
-	background:url("./images/link-left.png") no-repeat center center;
-	background-size: contain;
+
+.medit-link {
+	outline:none;
+	padding: 0 20px;
+	background: #eeddff;
 }
-#medit-link-right {
-	display: inline-block;
-	width: 24px;
-	height:14px;
-	background:url("./images/link-right.png") no-repeat center center;
-	background-size: contain;
+.medit-link:before {
+	content: " ";
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 20px;
+	height:12px;
+	background:url("./images/link/link-left.png") no-repeat center center;
+	background-size: 10px;
+}
+.medit-link:after {
+	content: " ";
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 20px;
+	height:12px;
+	background:url("./images/link/link-right.png") no-repeat center center;
+	background-size: 10px;
 }

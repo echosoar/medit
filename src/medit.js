@@ -37,7 +37,7 @@
 	var nowMode = "text";
 	
 	var mode = {
-		"text":{
+		"text": {
 			icon: '../src/images/mode/text.png',
 			doWhat: function(node){
 				mode[node.getAttribute("data-meditmode")].blur(node);
@@ -297,7 +297,7 @@
 		},
 		"br":{
 			icon: '../src/images/mode/br.png',
-			doWhat: function(node){ // 需要继续
+			doWhat: function(node) { // 需要继续
 				mode[node.getAttribute("data-meditmode")].blur(node);
 				node.style.display = "block";
 				node.innerHTML = " ";
@@ -305,6 +305,7 @@
 				mode["br"].focus(node);
 				nodeFocus(node);
 				toolBarModeSetting("br",[]);
+				container[meditId].updateId();
 				nowMode = "br";
 			},
 			focus:function(node) {
@@ -312,6 +313,26 @@
 			},
 			blur:function(node) {
 				node.style.backgroundColor = "";
+			}
+		},
+		"link":{
+			icon: '../src/images/mode/link.png',
+			doWhat: function(node) {
+				mode[node.getAttribute("data-meditmode")].blur(node);
+				node.style.display = null;
+				node.setAttribute("data-meditmode", "link");
+				mode["link"].focus(node);
+				nodeFocus(node);
+				toolBarModeSetting("link",[]);
+				nowMode = "link";
+			},
+			focus: function(node){
+				node.setAttribute("contentEditable","true");
+				node.setAttribute("class","medit-link");
+			},
+			blur:function(node){
+				node.setAttribute("contentEditable","false");
+				node.setAttribute("class",null);
 			}
 		}
 	}
