@@ -23,6 +23,10 @@
 	var mainTouchPoint = {};
 	
 	var nowNode = null; // 当前选择的可编辑结点
+	
+	var getNodeById = function(id){
+		return document.getElementById(id);
+	}
 
 	var returnButtonHtml = function(from){
 		return '<span id="medit-tool-button-'+from+'" class="medit-tool-button  medit-tool-return" data-meditToolStyle="return" data-meditToolDegree="1">&nbsp;</span>';
@@ -120,7 +124,7 @@
 							icon:"../src/images/text/sizeBigger.png",
 							doWhat: function(node) {
 								var style = node.getAttribute("style");
-								var displaySize = document.getElementById("medit-tool-button-text-setting-3-doWhat-1");
+								var displaySize = getNodeById("medit-tool-button-text-setting-3-doWhat-1");
 								var reg = /font\-size\s*:\s*(\d*)\s*(?:.*?)\s*;/i;
 								var size = 15;
 								if(reg.test(style)){
@@ -144,7 +148,7 @@
 							icon:"../src/images/text/sizeSmaller.png",
 							doWhat: function(node) {
 								var style = node.getAttribute("style");
-								var displaySize = document.getElementById("medit-tool-button-text-setting-3-doWhat-1");
+								var displaySize = getNodeById("medit-tool-button-text-setting-3-doWhat-1");
 								var reg = /font\-size\s*:\s*(\d*)\s*(?:.*?)\s*;/i;
 								var size = 13;
 								if(reg.test(style)){
@@ -278,15 +282,11 @@
 						newNode = thisNode.previousSibling;
 					}else{
 						thisNode.innerHTML = regRes[1];
-						
 						newNode = thisNode;
 					}
-					
+					contain.updateId();
 					contain.nowNodeId = thisId;
-					if(thisId>=2){
-						thisId -=2;
-					}
-					contain.updateId(thisId); 
+					
 					nodeFocus(newNode);
 				}else{
 					newNode = thisNode;
@@ -342,16 +342,16 @@
 					name: "setting",
 					icon: "../src/images/link/setting.png",
 					doWhat: function(node){
-						var src = node.getAttribute("src");
-						var srcHtml = '';
-						if(src){
-							srcHtml = ' value="'+src+'"';
+						var href = node.getAttribute("data-meditHref");
+						var hrefHtml = '';
+						if(href){
+							hrefHtml = ' value="'+href+'"';
 						}
-						var html = '链接地址 Link Address:<br /><input type="text" id="medit-settingPage-input-link"'+srcHtml+'/>';
+						var html = '链接地址 Link Address:<br /><input type="text" id="medit-settingPage-input-link"'+hrefHtml+'/>';
 						settingPageDisplay('超链接设置 Link Setting',html,function(){
-							var src = document.getElementById("medit-settingPage-input-link");
-							if(src){
-								node.setAttribute("src", src.value);
+							var href = getNodeById("medit-settingPage-input-link");
+							if(href){
+								node.setAttribute("data-meditHref", href.value);
 							}
 						});
 					}
@@ -359,13 +359,24 @@
 				{
 					name: "cancellink",
 					icon: "../src/images/link/cancel-link.png",
-					doWhat: function(node){ // 需要继续
-						console.log("cancel link")
+					doWhat: function(node){
+						var childs = toArray(node.children);
+						var temNode = childs[0];
+						var temMode = temNode.getAttribute("data-meditmode");
+						childs.forEach(function(child){
+							node.parentNode.insertBefore(child, node);
+						});
+						node.parentNode.removeChild(node);
+						container[meditId].updateId();
+						
+						toolBarModeSetting(temMode,mode[temMode].setting);
+						mode[temMode].focus(temNode);
+						nodeFocus(temNode);
 					}
 				}
 			],
 			focus: function(node){
-				document.getElementById("medit-tool-button-mode").style.display = "none";
+				getNodeById("medit-tool-button-mode").style.display = "none";
 				node.setAttribute("class","medit-link");
 			},
 			blur:function(node){
@@ -374,12 +385,12 @@
 		}
 	}
 	
-	var isType = function(ele, type){
+	var isType = function(ele, type){ // 输入一个对象和一个type值，返回这个对象是不是这种type
 		if(!ele || !type)return false;
 		return {}.toString.call(ele).slice(8, -1).toLowerCase() === type.toLowerCase();
 	}
 	
-	var mergeStyleIsSimilar = function(styleA, styleB){
+	var mergeStyleIsSimilar = function(styleA, styleB){ // 判断合并的两个模块样式是否相同
 		if(styleA){
 			styleA = styleA.replace(regNormalStyle, "");
 		}
@@ -400,7 +411,7 @@
 		return true;
 	}
 	
-	var mergeSimilarNextNode = function(node){
+	var mergeSimilarNextNode = function(node){ // 向后合并相似模块结点
 		var nowMode = node.getAttribute("data-meditMode");
 		var nowStyle = node.getAttribute("style");
 		var nextNode = node.nextSibling;
@@ -413,10 +424,9 @@
 			var nodeMode = nextNode.getAttribute("data-meditMode");
 			var nextStyle = nextNode.getAttribute("style");
 			if(mergeStyleIsSimilar(nowStyle, nextStyle) && !!node.innerHTML && !!nextNode.innerHTML){
-				var nowId = regNodeId.exec(node.getAttribute("id"))[1];
 				node.innerHTML = node.innerHTML + nextNode.innerHTML;
 				node.parentNode.removeChild(nextNode);
-				container[meditId].updateId(nowId);
+				container[meditId].updateId();
 				nodeFocus(node);
 				if(node.nextSibling){
 					return mergeSimilarNextNode(node);
@@ -426,7 +436,7 @@
 		return node;
 	}
 	 
-	var mergeSimilarPreNode = function(node){ // 向前合并相似结点
+	var mergeSimilarPreNode = function(node){ // 向前合并相似模块结点
 		var nowMode = node.getAttribute("data-meditMode");
 		var nowStyle = node.getAttribute("style");
 		var previousNode = node.previousSibling;
@@ -443,7 +453,7 @@
 				previousNode.innerHTML = previousNode.innerHTML + node.innerHTML;
 				previousNode.parentNode.removeChild(node);
 				
-				container[meditId].updateId(nowId);
+				container[meditId].updateId();
 				nodeFocus(previousNode);
 				node = previousNode;
 				if(node.previousSibling){
@@ -454,7 +464,7 @@
 		return node;
 	}
 	
-	var gevent = function (ele,event,func){
+	var gevent = function (ele,event,func){ // 通用事件处理模块
 		if(isType(event, "array")){
 			event.forEach(function(v){
 				gevent(ele, v, func);
@@ -472,18 +482,13 @@
 	
 	var initFromData = function(target){ // 如果原来容器内有数据的话，那么根据原来数据进行初始化
 	
-		var contain = target.parentNode;
+		var contain = target.parentNode;	// 获取容器对象
 		
-		meditId = contain.getAttribute("data-meditid");
+		meditId = contain.getAttribute("data-meditid"); // 获取容器 meditID
 		
-		contain = container[meditId];
-		contain.nodeCount = contain.node.children.length;
-		for(var i = 0;i<contain.nodeCount;i++ ){
-			if(target === contain.node.children[i]){
-				contain.nowNodeId = i;
-			}
-			contain.node.children[i].setAttribute("id","medit-" + i + "-" + meditId );
-		}
+		contain = container[meditId]; // 由于所有容器对象均存放于container中，通过此ID进行获取
+
+		contain.updateId();
 	}
 	
 	var toolBar = (function(){
@@ -492,7 +497,7 @@
 		temTool.setAttribute("id","medit-tool");
 		document.body.appendChild(temTool);
 		
-		var tool = document.getElementById("medit-tool");
+		var tool = getNodeById("medit-tool");
 		
 	
 		gevent(tool, ["touchmove"], function(e){
@@ -525,7 +530,7 @@
 		temSettingPage.innerHTML = '<div id="medit-settingPage-main"></div>';
 		document.body.appendChild(temSettingPage);
 		
-		var setingObj = document.getElementById("medit-settingPage");
+		var setingObj = getNodeById("medit-settingPage");
 		
 		gevent(setingObj, ["touchmove"], function(e){
 			e = e || window.event;
@@ -571,7 +576,7 @@
 		html.push(title?'<div id="medit-settingPage-title">'+title+'</div>':'');
 		html.push('<div id="medit-settingPage-content">'+content+'</div>');
 		html.push('<div id="medit-settingPage-button"><i id="medit-settingPage-button-ok">确定 Ok</i><i id="medit-settingPage-button-cancel">取消 Cancel</i></div>');
-		document.getElementById("medit-settingPage-main").innerHTML = html.join("");
+		getNodeById("medit-settingPage-main").innerHTML = html.join("");
 		settingPageOk = okCallBack;
 		settingPage.style.display = "block";
 	}
@@ -579,7 +584,7 @@
 	var mainDo = function(degree, type, target) {
 			
 			var contain = container[meditId];
-			var thisNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
+			var thisNode = getNodeById("medit-" + contain.nowNodeId + "-" + meditId);
 			
 			nowMode = thisNode.getAttribute("data-meditMode");
 			if(degree == 1) {
@@ -593,7 +598,7 @@
 							thisNode = thisNode.parentNode;
 						}
 						thisNode.parentNode.removeChild(thisNode);
-						contain.updateId(contain.nowNodeId);
+						contain.updateId();
 						toolBarHidden();
 						break;
 					case 'ok':
@@ -767,7 +772,6 @@
 			if(nodeModeObj.selecting){
 				nodeModeObj.selecting(nowNode, isAdd);
 			}
-			
 		}
 	}
 		
@@ -809,14 +813,14 @@
 			if(e.keyCode == 13){
 				e.preventDefault();
 				var contain = container[meditId];
-				var thisNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
+				var thisNode = getNodeById("medit-" + contain.nowNodeId + "-" + meditId);
 				nowMode = thisNode.getAttribute("data-meditMode");
 				if(mode[nowMode].blur){
 					mode[nowMode].blur(thisNode);
 				}
 				contain.createSpan(contain.nowNodeId, thisNode, true, true);
 						
-				var brNode = document.getElementById("medit-" + contain.nowNodeId + "-" + meditId);
+				var brNode = getNodeById("medit-" + contain.nowNodeId + "-" + meditId);
 				toBr(brNode);
 						
 				contain.createSpan(contain.nowNodeId, brNode, true, true);
@@ -849,11 +853,11 @@
 					fromNode.parentNode.insertBefore(span, fromNode.nextSibling); 
 				}
 			}
-			this.updateId(nodeId);
+			this.updateId();
 		}else{
 			this.node.appendChild(span);
 		}
-		var editor = document.getElementById("medit-" + this.nowNodeId + "-" + meditId);
+		var editor = getNodeById("medit-" + this.nowNodeId + "-" + meditId);
 		nowNode = editor;
 		toolBarModeSetting("text", mode["text"].setting);
 	
@@ -862,19 +866,22 @@
 		}
 	}
 	
-	medit.prototype.updateId = function(nodeId) {
+	medit.prototype.updateId = function(nodeId, list) {
 
-		var child = toArray(this.node.children);
-		var index = 0;
+		var child = list || toArray(this.node.children);
+		var index = nodeId || 0;
 		child.forEach(function(v){
+			if(v.getAttribute("href")){ // 防止超链接在内部触发
+				v.setAttribute("data-meditHref",v.getAttribute("href"));
+				v.removeAttribute("href");
+			}
 			v.setAttribute("id","medit-" + (index++) + "-" + meditId );
 			var secondChild = toArray(v.children);
 			if(secondChild.length){
-				secondChild.forEach(function(sv){
-					sv.setAttribute("id","medit-" + (index++) + "-" + meditId );
-				});
+				index = container[meditId].updateId(index, secondChild);
 			}
 		});
+		return index;
 	}
 	
 	medit.prototype.getContent = function(isEdit){
@@ -884,6 +891,7 @@
 		}
 		var html = this.node.innerHTML;
 		if(regIsNotContentEmpty.test(html)){
+			html = html.replace(/\sdata\-meditHref="(.*?)"/ig," href=\"$1\"");
 			html = html.replace(selectTextReg,"$1");
 			return html.replace(regContent, "");
 		}
@@ -899,7 +907,7 @@
 			if(!regIsNotContentEmpty.test(temData) && oldData){
 				meditId = this.node.getAttribute("data-meditid");
 				this.node.innerHTML = oldData;
-				this.updateId(0);
+				this.updateId();
 			}
 			
 			clearInterval(this.autoSaveInterval);
@@ -910,8 +918,7 @@
 				callBack(nowData, (new Date())-0);
 			},1000);
 		}
-	}
-		
+	}	
 	
 	medit.prototype.editContainFocus = function(e) {
 		
@@ -929,12 +936,12 @@
 		
 		if(meditId != null) { // 在已经选择某个区块的时候选择其它的，会先调用这个区块的blur
 			var temObj = container[meditId];
-			var temNode = document.getElementById("medit-" + temObj.nowNodeId + "-" + meditId);
+			var temNode = getNodeById("medit-" + temObj.nowNodeId + "-" + meditId);
 			if(temNode){
 				var temNodeMode = temNode.getAttribute("data-meditMode");
 				if(mode[temNodeMode].empty && mode[temNodeMode].empty(temNode) && temNode != target){
 					temNode.parentNode.removeChild(temNode);
-					temObj.updateId(temObj.nowNodeId);
+					temObj.updateId();
 				}else{
 					if(mode[temNodeMode].blur){
 						mode[temNodeMode].blur(temNode);
@@ -996,7 +1003,7 @@
 			if(mode[meditNodeMode].focus){
 				mode[meditNodeMode].focus(target);
 			}
-		}	
+		}
 	}
 	
 	obj.Medit = obj.medit = medit;

@@ -39,8 +39,6 @@ Demo Adress : [Medit Demo](https://echosoar.github.io/medit/demo/demo.html)
 
 ![ok](./src/images/ok.png) Ok 完成当前块编辑
 
-![setting](./src/images/setting.png) Setting 设置当前块样式
-
 ![mode](./src/images/mode.png) Mode 选择当前块类型
 
 ![add right](./src/images/add.png) Add To Right 向当前块右部添加内容
@@ -81,6 +79,15 @@ Text selected by gesture 文本手势选择
 
 ![text select](./demo/demo-gesture.gif)
 
+***
+
+##### Super Links 超链接:
+
+![setting](./src/images/link/setting.png) Setting 超链接设置
+
+![/cancel-link](./src/images/link/cancel-link.png) Cancel Super Link 取消超链接
+
+![link demo](./demo/demo-link.gif)
 
 
 

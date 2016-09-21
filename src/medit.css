@@ -27,7 +27,7 @@
 	text-align: center;
 }
 
-[data-meditMode=br] {
+#medit [data-meditMode=br] {
 	height: 15px;
 	width: 24px;
 	border-radius: 3px;

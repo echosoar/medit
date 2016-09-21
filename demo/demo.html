@@ -23,13 +23,15 @@
 }
 </style>
 <div id="medit" class="medit"></div>
-<div class="btn" onClick="getContent()">Alert Content</div>
+<div class="btn" onClick="getContent()">预览 Preview</div>
 <div id="autoSaveInfo"></div>
+<div id="res"></div>
 <script src="../src/medit.js"></script>
 <script>
 var me = medit(document.getElementById("medit"));
 function getContent(){
-	alert(me.getContent());
+	var res = me.getContent();
+	document.getElementById("res").innerHTML = '<hr />预览 Preview:<hr />' + res;
 }
 
 me.autoSave("edit", function(data, time){
@@ -38,3 +40,4 @@ me.autoSave("edit", function(data, time){
 
 
 </script>
+
