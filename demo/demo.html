@@ -21,6 +21,9 @@
 	text-align:right;
 	font-size:12px;
 }
+#res{
+	word-break:break-all;
+}
 </style>
 <div id="medit" class="medit"></div>
 <div class="btn" onClick="getContent()">预览 Preview</div>
@@ -31,7 +34,6 @@
 var me = medit(document.getElementById("medit"));
 function getContent(){
 	var res = me.getContent();
-	alert(res);
 	document.getElementById("res").innerHTML = '<hr />预览 Preview:<hr />' + res;
 }
 

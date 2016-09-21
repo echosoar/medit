@@ -10,7 +10,7 @@
 	
 	var regIsNotContentEmpty = /^<.*?>$/; // 获得内容时检测是否是纯文本
 	
-	var regNormalStyle = /(font\-style\s*:\s*normal\s*;)|(font\-weight\s*:\s*normal\s*;)|(\s*)/ig; // 正常的样式需要剔除
+	var regNormalStyle = /(font\-style\s*:\s*normal\s*;)|(font\-weight\s*:\s*normal\s*;)|(color:\s*rgb\(0,\s*0,\s*0\);)|(\s*)/ig; // 正常的样式需要剔除
 	
 	var selectTextReg = /<span class="medit\-text\-select">(.*?)<\/span>/i;
 	
@@ -352,11 +352,22 @@
 						if(href){
 							hrefHtml = ' value="'+href+'"';
 						}
-						var html = '链接地址 Link Address:<br /><input type="text" id="medit-settingPage-input-link"'+hrefHtml+'/>';
+						var target = node.getAttribute("target");
+						if(target && target != "_blank"){
+							target = "";
+						}else{
+							target = " checked";
+						}
+
+						var html = '链接地址 Link Address:<br /><input type="text" id="medit-settingPage-input-link"'+hrefHtml+'/><br /><br /><input type="checkbox" id="medit-settingPage-check-link"'+target+'>新窗口打开 Open in a new window';
 						settingPageDisplay('超链接设置 Link Setting',html,function(){
 							var href = getNodeById("medit-settingPage-input-link");
 							if(href){
 								node.setAttribute("data-meditHref", href.value);
+							}
+							var checkbox = getNodeById("medit-settingPage-check-link");
+							if(checkbox.checked){
+								node.setAttribute("target", "_blank");
 							}
 						});
 					}

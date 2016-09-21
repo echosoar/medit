@@ -33,7 +33,7 @@ Demo Adress : [Medit Demo](https://echosoar.github.io/medit/demo/demo.html)
 
 ##### Basic function 基础功能:
 
-![add left](./src/images/add.png) Add To Left 向当前块左部添加内容
+![add left](./src/images/add-left.png) Add To Left 向当前块左部添加内容
 
 ![delete](./src/images/close.png) Delete 删除当前块
 
@@ -41,9 +41,7 @@ Demo Adress : [Medit Demo](https://echosoar.github.io/medit/demo/demo.html)
 
 ![mode](./src/images/mode.png) Mode 选择当前块类型
 
-![add right](./src/images/add.png) Add To Right 向当前块右部添加内容
-
-![Add To Next Line](./src/images/br.png) Add To Next Line 添加至下一行
+![add right](./src/images/add-right.png) Add To Right 向当前块右部添加内容
 
 ***
 

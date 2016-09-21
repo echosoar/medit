@@ -47,8 +47,12 @@
 	cursor: pointer;
 }
 
-.medit-tool-addLeft, .medit-tool-addRight {
-	background:#fff url("./images/add.png") no-repeat center center;
+.medit-tool-addLeft {
+	background:#fff url("./images/add-left.png") no-repeat center center;
+	background-size: 24px;
+}
+.medit-tool-addRight {
+	background:#fff url("./images/add-right.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-delete {
@@ -125,6 +129,7 @@
 	width:100%;
 	height:100%;
 	background:rgba(0,0,0,.6);
+	font-size:14px;
 }
 
 #medit-settingPage-main{
@@ -170,12 +175,15 @@
 	height:32px;
 	line-height:32px;
 	text-align:center;
+	
 	margin-top:8px;
 	color:#fff;
 	overflow:hidden;
+	border-radius:3px;
 }
 #medit-settingPage-button-ok {
 	background:#36f;
+	
 }
 #medit-settingPage-button-cancel {
 	background:#f63;
