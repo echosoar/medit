@@ -287,7 +287,7 @@
 					if(thisId>=2){
 						thisId -=2;
 					}
-					contain.updateId(thisId); // 未来需要合并相同style的span
+					contain.updateId(thisId); 
 					nodeFocus(newNode);
 				}else{
 					newNode = thisNode;
@@ -297,7 +297,7 @@
 		},
 		"br":{
 			icon: '../src/images/mode/br.png',
-			doWhat: function(node) { // 需要继续
+			doWhat: function(node) {
 				mode[node.getAttribute("data-meditmode")].blur(node);
 				node.style.display = "block";
 				node.innerHTML = " ";
@@ -315,23 +315,43 @@
 				node.style.backgroundColor = "";
 			}
 		},
-		"link":{
+		"link":{ // 明天继续
 			icon: '../src/images/mode/link.png',
 			doWhat: function(node) {
+				var parent = node;
+				while(parent.parentNode.getAttribute("data-medit")){
+					parent = parent.parentNode;
+				}
+				if(parent.nodeName.toLowerCase() == "a"){
+					return;
+				}
+				
+				var linkNode = document.createElement("a");
+				linkNode.setAttribute("data-medit","true");
+				linkNode.setAttribute("data-meditmode","link");
 				mode[node.getAttribute("data-meditmode")].blur(node);
-				node.style.display = null;
-				node.setAttribute("data-meditmode", "link");
-				mode["link"].focus(node);
-				nodeFocus(node);
+				node.parentNode.insertBefore(linkNode,node);
+				node.parentNode.removeChild(node);
+				linkNode.appendChild(node);
 				toolBarModeSetting("link",[]);
+				mode["link"].focus(linkNode);
+				container[meditId].updateId();
 				nowMode = "link";
 			},
+			setting: [
+				{
+					name: "setting",
+					icon: "../src/images/link/setting.png",
+					doWhat: function(node){
+						console.log(node);
+					}
+				}
+			],
 			focus: function(node){
-				node.setAttribute("contentEditable","true");
+				document.getElementById("medit-tool-button-mode").style.display = "none";
 				node.setAttribute("class","medit-link");
 			},
 			blur:function(node){
-				node.setAttribute("contentEditable","false");
 				node.setAttribute("class",null);
 			}
 		}
@@ -389,7 +409,7 @@
 		return node;
 	}
 	 
-	var mergeSimilarPreNode = function(node){ // 160918
+	var mergeSimilarPreNode = function(node){ // 向前合并相似结点
 		var nowMode = node.getAttribute("data-meditMode");
 		var nowStyle = node.getAttribute("style");
 		var previousNode = node.previousSibling;
@@ -495,6 +515,9 @@
 							mode[nowMode].blur(thisNode);
 						}
 						
+						while(thisNode.parentNode.getAttribute("data-medit") && thisNode.parentNode.children.length === 1){
+							thisNode = thisNode.parentNode;
+						}
 						thisNode.parentNode.removeChild(thisNode);
 						contain.updateId(contain.nowNodeId);
 						toolBarHidden();
@@ -533,12 +556,13 @@
 					case 'mode':
 						var toolBarRes = [];
 						toolBarRes.push(returnButtonHtml(nowMode + "-setting-1"));
+						
 						for(var modeType in mode){
 							if(mode.hasOwnProperty(modeType) && modeType != nowMode){
 								var style = mode[modeType].icon?' style="background:#fff url('+ mode[modeType].icon+') no-repeat center center;background-size: 24px;"':'';
-							
+								
 								toolBarRes.push('<span id="medit-tool-button-'+modeType+'" class="medit-tool-button" data-meditToolStyle="'+modeType+'"'+style+' data-meditToolDegree="2">&nbsp;</span>');
-							}
+							}					
 						}
 						toolBar.innerHTML = toolBarRes.join("");
 						break;

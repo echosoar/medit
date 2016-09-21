@@ -85,13 +85,16 @@
 }
 
 /* Link */
-
 .medit-link {
+	background: #fcc;
+}
+#medit a {
+	position: relative;
 	outline:none;
 	padding: 0 20px;
-	background: #eeddff;
+	text-decoration:underline;
 }
-.medit-link:before {
+#medit a:before {
 	content: " ";
 	position: absolute;
 	left: 0;
@@ -99,15 +102,14 @@
 	width: 20px;
 	height:12px;
 	background:url("./images/link/link-left.png") no-repeat center center;
-	background-size: 10px;
+	background-size: 12px;
 }
-.medit-link:after {
+#medit a:after {
 	content: " ";
 	position: absolute;
-	right: 0;
 	bottom: 0;
 	width: 20px;
 	height:12px;
 	background:url("./images/link/link-right.png") no-repeat center center;
-	background-size: 10px;
+	background-size: 12px;
 }
