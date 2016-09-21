@@ -24,6 +24,8 @@
 	
 	var nowNode = null; // 当前选择的可编辑结点
 	
+	var nodeFocusTimeout = null; // nodeFocus延时 
+	
 	var getNodeById = function(id){
 		return document.getElementById(id);
 	}
@@ -286,7 +288,6 @@
 					}
 					contain.updateId();
 					contain.nowNodeId = thisId;
-					
 					nodeFocus(newNode);
 				}else{
 					newNode = thisNode;
@@ -317,6 +318,7 @@
 		"link":{
 			icon: '../src/images/mode/link.png',
 			doWhat: function(node) {
+				
 				var parent = node;
 				while(parent.parentNode.getAttribute("data-medit")){
 					parent = parent.parentNode;
@@ -324,7 +326,7 @@
 				if(parent.nodeName.toLowerCase() == "a"){
 					return;
 				}
-				
+
 				var linkNode = document.createElement("a");
 				linkNode.setAttribute("data-medit","true");
 				linkNode.setAttribute("data-meditmode","link");
@@ -335,7 +337,10 @@
 				toolBarModeSetting("link",mode['link'].setting);
 				mode["link"].focus(linkNode);
 				container[meditId].updateId();
+				container[meditId].nowNodeId = regNodeId.exec(linkNode.getAttribute("id"))[1];
 				nowMode = "link";
+				clearTimeout(nodeFocusTimeout);
+				nowNode = linkNode;
 			},
 			setting: [
 				{
@@ -368,9 +373,9 @@
 						});
 						node.parentNode.removeChild(node);
 						container[meditId].updateId();
-						
 						toolBarModeSetting(temMode,mode[temMode].setting);
 						mode[temMode].focus(temNode);
+						nowNode = temNode;
 						nodeFocus(temNode);
 					}
 				}
@@ -584,7 +589,7 @@
 	var mainDo = function(degree, type, target) {
 			
 			var contain = container[meditId];
-			var thisNode = getNodeById("medit-" + contain.nowNodeId + "-" + meditId);
+			var thisNode = getNodeById("medit-" + contain.nowNodeId + "-" + meditId); // 这里有个已经修复的bug，比如在超链接中，是在当前结点外部包了一层，那么thisNode需要更新到外层结点
 			
 			nowMode = thisNode.getAttribute("data-meditMode");
 			if(degree == 1) {
@@ -670,9 +675,9 @@
 				if( mode[nowMode].selected ){
 					thisNode = mode[nowMode].selected(thisNode);
 				}
-			
-				var pathRes =  target.getAttribute("id").replace("medit-tool-button-","");
 				
+				var pathRes =  target.getAttribute("id").replace("medit-tool-button-","");
+
 				var pathArr = pathRes.split("-");
 				
 				var pathMode = null;
@@ -691,7 +696,7 @@
 					doWhat(thisNode);
 				}
 			}
-			
+
 			if(!contain.node.children.length) contain.node.innerHTML = contain.preHTML || "Medit";
 	}
 	
@@ -759,13 +764,14 @@
 	}
 	
 	var nodeFocus = function(node){ // 使模块自动获取焦点 使用了很多方法，最后发现这个方法是在移动端最好的
-		setTimeout(function() {
+		nodeFocusTimeout = setTimeout(function() {
 			node.focus();
 			container[meditId].nowNodeId = regNodeId.exec(node.getAttribute("id"))[1];
 		}, 10);
 	}
 	
 	var selectModeContent = function(isAdd){
+		console.log(nowNode);
 		if(nowNode){
 			var nodeMode = nowNode.getAttribute("data-meditmode");
 			var nodeModeObj = mode[nodeMode];
@@ -894,8 +900,7 @@
 			html = html.replace(/\sdata\-meditHref="(.*?)"/ig," href=\"$1\"");
 			html = html.replace(selectTextReg,"$1");
 			return html.replace(regContent, "");
-		}
-			
+		}	
 		return "";
 	}
 	

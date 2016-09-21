@@ -31,6 +31,7 @@
 var me = medit(document.getElementById("medit"));
 function getContent(){
 	var res = me.getContent();
+	alert(res);
 	document.getElementById("res").innerHTML = '<hr />预览 Preview:<hr />' + res;
 }
 
