@@ -110,8 +110,7 @@
 						}
 						node.style.textDecoration = "underline";
 					}
-				}
-				,
+				},
 				{
 					name:"size",
 					icon:"../src/images/text/size.png",
@@ -315,7 +314,7 @@
 				node.style.backgroundColor = "";
 			}
 		},
-		"link":{ // 明天继续
+		"link":{
 			icon: '../src/images/mode/link.png',
 			doWhat: function(node) {
 				var parent = node;
@@ -333,7 +332,7 @@
 				node.parentNode.insertBefore(linkNode,node);
 				node.parentNode.removeChild(node);
 				linkNode.appendChild(node);
-				toolBarModeSetting("link",[]);
+				toolBarModeSetting("link",mode['link'].setting);
 				mode["link"].focus(linkNode);
 				container[meditId].updateId();
 				nowMode = "link";
@@ -343,7 +342,25 @@
 					name: "setting",
 					icon: "../src/images/link/setting.png",
 					doWhat: function(node){
-						console.log(node);
+						var src = node.getAttribute("src");
+						var srcHtml = '';
+						if(src){
+							srcHtml = ' value="'+src+'"';
+						}
+						var html = '链接地址 Link Address:<br /><input type="text" id="medit-settingPage-input-link"'+srcHtml+'/>';
+						settingPageDisplay('超链接设置 Link Setting',html,function(){
+							var src = document.getElementById("medit-settingPage-input-link");
+							if(src){
+								node.setAttribute("src", src.value);
+							}
+						});
+					}
+				},
+				{
+					name: "cancellink",
+					icon: "../src/images/link/cancel-link.png",
+					doWhat: function(node){ // 需要继续
+						console.log("cancel link")
 					}
 				}
 			],
@@ -501,6 +518,63 @@
 		return tool;
 		
 	})();
+	
+	var settingPage = (function(){
+		var temSettingPage = document.createElement("div");
+		temSettingPage.setAttribute("id","medit-settingPage");
+		temSettingPage.innerHTML = '<div id="medit-settingPage-main"></div>';
+		document.body.appendChild(temSettingPage);
+		
+		var setingObj = document.getElementById("medit-settingPage");
+		
+		gevent(setingObj, ["touchmove"], function(e){
+			e = e || window.event;
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		gevent(setingObj, ["touchend"], function(e){
+			
+			e = e || window.event;
+			var target = e.target || e.srcElement;
+			
+			var targetId = target.getAttribute("id");
+			
+			if(targetId === "medit-settingPage-button-cancel"){
+				e.preventDefault();
+				e.stopPropagation();
+				settingPageOk = null;
+				settingPage.style.display = "none";
+				return;
+			}
+			if(targetId === "medit-settingPage-button-ok"){
+				e.preventDefault();
+				e.stopPropagation();
+				settingPage.style.display = "none";
+				settingPageOk();
+				return;
+			}
+			if(mode[nowMode].settingPage){
+				mode[nowMode].settingPage(target);
+			}
+			
+		});
+		
+		return setingObj;
+	})();
+	
+	var settingPageOk = null;
+	
+	var settingPageDisplay = function(title,content,okCallBack) {
+	
+		var html = [];
+		html.push(title?'<div id="medit-settingPage-title">'+title+'</div>':'');
+		html.push('<div id="medit-settingPage-content">'+content+'</div>');
+		html.push('<div id="medit-settingPage-button"><i id="medit-settingPage-button-ok">确定 Ok</i><i id="medit-settingPage-button-cancel">取消 Cancel</i></div>');
+		document.getElementById("medit-settingPage-main").innerHTML = html.join("");
+		settingPageOk = okCallBack;
+		settingPage.style.display = "block";
+	}
 	
 	var mainDo = function(degree, type, target) {
 			
@@ -711,8 +785,7 @@
 		this.node.setAttribute("data-meditId",container.length);
 		
 		container.push(this);
-		
-		
+
 		gevent(this.node, ["touchstart"], function(e){
 			mainTouchPoint = e.targetTouches[0];
 		});
@@ -787,12 +860,10 @@
 		if(isAutoFocus){
 			nodeFocus(editor);
 		}
-		
 	}
 	
 	medit.prototype.updateId = function(nodeId) {
-			
-		
+
 		var child = toArray(this.node.children);
 		var index = 0;
 		child.forEach(function(v){
