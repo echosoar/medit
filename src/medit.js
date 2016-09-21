@@ -47,12 +47,16 @@
 			icon: '../src/images/mode/text.png',
 			doWhat: function(node){
 				mode[node.getAttribute("data-meditmode")].blur(node);
-				node.style.display = null;
-				node.style.backgroundColor = null;
-				node.setAttribute("data-meditmode", "text");
-				mode["text"].focus(node);
-				nodeFocus(node);
+				var temNode = document.createElement("span");
+				temNode.setAttribute("data-medit", "true");
+				temNode.setAttribute("data-meditmode", "text");
+				node.parentNode.insertBefore(temNode,node);
+				node.parentNode.removeChild(node);
+				mode["text"].focus(temNode);
+				nodeFocus(temNode);
+				nowNode = temNode;
 				toolBarModeSetting("text",mode["text"].setting);
+				container[meditId].updateId();
 				nowMode = "text";
 			},
 			isMerge: true,
@@ -62,8 +66,8 @@
 			},
 			blur:function(node) {
 				node.innerHTML = node.innerHTML.replace(selectTextReg,"$1");
-				node.setAttribute("contentEditable","false");
-				node.setAttribute("class","");
+				node.removeAttribute("contentEditable");
+				node.removeAttribute("class");
 			},
 			empty:function(node) {
 				return node.innerHTML == "";
@@ -299,11 +303,16 @@
 			icon: '../src/images/mode/br.png',
 			doWhat: function(node) {
 				mode[node.getAttribute("data-meditmode")].blur(node);
-				node.style.display = "block";
-				node.innerHTML = " ";
-				node.setAttribute("data-meditmode", "br");
-				mode["br"].focus(node);
-				nodeFocus(node);
+				var temNode = document.createElement("span");
+				temNode.style.display = "block";
+				temNode.innerHTML = " ";
+				temNode.setAttribute("data-medit", "true");
+				temNode.setAttribute("data-meditmode", "br");
+				node.parentNode.insertBefore(temNode,node);
+				node.parentNode.removeChild(node);
+				mode["br"].focus(temNode);
+				nodeFocus(temNode);
+				nowNode = temNode;
 				toolBarModeSetting("br",[]);
 				container[meditId].updateId();
 				nowMode = "br";
@@ -368,6 +377,8 @@
 							var checkbox = getNodeById("medit-settingPage-check-link");
 							if(checkbox.checked){
 								node.setAttribute("target", "_blank");
+							}else{
+								node.removeAttribute("target");
 							}
 						});
 					}
@@ -396,8 +407,40 @@
 				node.setAttribute("class","medit-link");
 			},
 			blur:function(node){
-				node.setAttribute("class",null);
+				node.removeAttribute("class");
 			}
+		},
+		"image":{
+			icon: "../src/images/mode/image.png",
+			doWhat:function(node){
+				mode[node.getAttribute("data-meditmode")].blur(node);
+				var temNode = document.createElement("img");
+				temNode.setAttribute("data-medit", "true");
+				temNode.setAttribute("data-meditmode", "image");
+				temNode.setAttribute("src", mode["image"].icon);
+				temNode.setAttribute("width",32);
+				temNode.setAttribute("height",32);
+				node.parentNode.insertBefore(temNode,node);
+				node.parentNode.removeChild(node);
+				mode["image"].focus(temNode);
+				nodeFocus(temNode);
+				nowNode = temNode;
+				toolBarModeSetting("image",[]);
+				container[meditId].updateId();
+				nowMode = "image";
+			},
+			focus: function(node){
+				node.setAttribute("class","medit-image");
+			},
+			blur:function(node){
+				node.removeAttribute("class");
+			},
+			setting:[
+				{
+					name:"setting",
+					icon:"../src/images/image/setting.png"
+				}
+			]
 		}
 	}
 	
@@ -622,7 +665,7 @@
 							mode[nowMode].blur(thisNode);
 						}
 
-						if(thisNode.innerHTML=="") thisNode.parentNode.removeChild(thisNode);;
+						if(mode[nowMode].empty && mode[nowMode].empty(thisNode)) thisNode.parentNode.removeChild(thisNode);
 						toolBarHidden();
 						contain.nodeCount++;
 						
@@ -630,7 +673,7 @@
 						mergeSimilarPreNode(thisNode);
 						break;
 					case 'addLeft':
-						if(thisNode.innerHTML==""){
+						if(mode[nowMode].empty && mode[nowMode].empty(thisNode)){
 							return;
 						}
 						if(mode[nowMode].blur){
@@ -639,7 +682,7 @@
 						contain.createSpan(contain.nowNodeId, thisNode, false, true);
 						break;
 					case 'addRight':
-						if(thisNode.innerHTML==""){
+						if(mode[nowMode].empty && mode[nowMode].empty(thisNode)){
 							return;
 						}
 						if(mode[nowMode].blur){

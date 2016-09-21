@@ -91,12 +91,13 @@
 /* Link */
 .medit-link {
 	background: #fcc;
+	border-bottom:1px dashed #709;
 }
 #medit a {
 	position: relative;
 	outline:none;
 	padding: 0 20px;
-	text-decoration:underline;
+	
 }
 #medit a:before {
 	content: " ";
@@ -187,4 +188,13 @@
 }
 #medit-settingPage-button-cancel {
 	background:#f63;
+}
+
+.medit-image {
+	
+}
+
+
+#medit [data-meditMode=image] {
+	background-color:#e5e5e5;
 }
