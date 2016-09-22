@@ -87,6 +87,17 @@ Text selected by gesture 文本手势选择
 
 ![link demo](./demo/demo-link.gif)
 
+***
+
+##### Image 图片:
+
+![setting](./src/images/image/setting.png) Setting 图像设置
+
+![biger](./src/images/image/biger.png) Increase size 尺寸增大
+
+![smaller](./src/images/image/smaller.png) Shrink size 尺寸缩小
+
+
 
 
 
