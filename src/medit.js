@@ -457,18 +457,23 @@
 							var address = getNodeById("medit-settingPage-image-address").value;
 							if(address){ // 传入网络图片需要进行宽高转换
 								getNodeById("medit-settingPage-button").style.display = "none";
+								getNodeById("medit-settingPage-content").innerHTML = "Loading Image...";
 								var newImg = new Image();
 								newImg.src = address;
 								newImg.onload = function(){
-									console.log(newImg.width , newImg.height);
+									var scale = newImg.width/ newImg.height;
+									if(newImg.width>100){
+										newImg.width = 100;
+										newImg.height = 100/scale;
+									}
 									settingPage.style.display = "none";
 									node.setAttribute("src",address);
+									node.setAttribute("width",newImg.width);
+									node.setAttribute("height",newImg.height);
 								}
 							}else{
 								settingPage.style.display = "none";
-							}
-							
-							
+							}	
 						});
 					}
 				},
