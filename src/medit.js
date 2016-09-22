@@ -6,7 +6,7 @@
 	
 	var regNodeId = /medit\-(\d+)\-(\d+)$/;
 	
-	var regContent = /\s*(class|id|contenteditable)(=".*?")?/g; // 获得内容时去除id，class和可编辑状态
+	var regContent = /\s(class|id|contenteditable)(=".*?")?/g; // 获得内容时去除id，class和可编辑状态
 	
 	var regIsNotContentEmpty = /^<.*?>$/; // 获得内容时检测是否是纯文本
 	
@@ -380,6 +380,7 @@
 							}else{
 								node.removeAttribute("target");
 							}
+							settingPage.style.display = "none";
 						});
 					}
 				},
@@ -418,14 +419,14 @@
 				temNode.setAttribute("data-medit", "true");
 				temNode.setAttribute("data-meditmode", "image");
 				temNode.setAttribute("src", mode["image"].icon);
-				temNode.setAttribute("width",32);
-				temNode.setAttribute("height",32);
+				temNode.setAttribute("width","64");
+				temNode.setAttribute("height","32");
 				node.parentNode.insertBefore(temNode,node);
 				node.parentNode.removeChild(node);
 				mode["image"].focus(temNode);
 				nodeFocus(temNode);
 				nowNode = temNode;
-				toolBarModeSetting("image",[]);
+				toolBarModeSetting("image",mode["image"].setting);
 				container[meditId].updateId();
 				nowMode = "image";
 			},
@@ -438,7 +439,58 @@
 			setting:[
 				{
 					name:"setting",
-					icon:"../src/images/image/setting.png"
+					icon:"../src/images/image/setting.png",
+					doWhat: function(node) {
+						var width = node.getAttribute("width");
+						var height = node.getAttribute("height");
+						var address = node.getAttribute("src");
+						var html = '宽度 Width:<br /><input type="text" id="medit-settingPage-image-width" value="'+width+'"><br /><br />高度 Height:<br /><input type="text" id="medit-settingPage-image-height" value="'+height+'"><br /><br />图像地址 Address:<br /><input type="text" id="medit-settingPage-image-address" value="'+address+'">';
+						settingPageDisplay('图像设置 Image Setting',html,function(){
+							var width = getNodeById("medit-settingPage-image-width").value;
+							if(width && width>0){
+								node.setAttribute("width",width);
+							}
+							var height = getNodeById("medit-settingPage-image-height").value;
+							if(height && height>0){
+								node.setAttribute("height",height);
+							}
+							var address = getNodeById("medit-settingPage-image-address").value;
+							if(address){ // 传入网络图片需要进行宽高转换
+								getNodeById("medit-settingPage-button").style.display = "none";
+								var newImg = new Image();
+								newImg.src = address;
+								newImg.onload = function(){
+									console.log(newImg.width , newImg.height);
+									settingPage.style.display = "none";
+									node.setAttribute("src",address);
+								}
+							}else{
+								settingPage.style.display = "none";
+							}
+							
+							
+						});
+					}
+				},
+				{
+					name: "biger",
+					icon: "../src/images/image/biger.png",
+					doWhat: function(node){
+						var width = node.getAttribute("width");
+						var height = node.getAttribute("height");
+						node.setAttribute("width",Math.ceil(width*1.1));
+						node.setAttribute("height",Math.ceil(height*1.1));
+					}
+				},
+				{
+					name: "smaller",
+					icon: "../src/images/image/smaller.png",
+					doWhat: function(node){
+						var width = node.getAttribute("width");
+						var height = node.getAttribute("height");
+						node.setAttribute("width",Math.ceil(width/1.1));
+						node.setAttribute("height",Math.ceil(height/1.1));
+					}
 				}
 			]
 		}
@@ -614,7 +666,6 @@
 			if(targetId === "medit-settingPage-button-ok"){
 				e.preventDefault();
 				e.stopPropagation();
-				settingPage.style.display = "none";
 				settingPageOk();
 				return;
 			}
@@ -953,7 +1004,8 @@
 		if(regIsNotContentEmpty.test(html)){
 			html = html.replace(/\sdata\-meditHref="(.*?)"/ig," href=\"$1\"");
 			html = html.replace(selectTextReg,"$1");
-			return html.replace(regContent, "");
+			return html.replace(regContent, " ");
+			
 		}	
 		return "";
 	}
