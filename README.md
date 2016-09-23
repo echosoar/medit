@@ -97,6 +97,8 @@ Text selected by gesture 文本手势选择
 
 ![smaller](./src/images/image/smaller.png) Shrink size 尺寸缩小
 
+![upload](./src/images/image/upload.png) Upload image from user local device 从用户本地上传图片
+
 
 
 
