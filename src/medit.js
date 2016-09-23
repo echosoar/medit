@@ -496,6 +496,13 @@
 						node.setAttribute("width",Math.ceil(width/1.1));
 						node.setAttribute("height",Math.ceil(height/1.1));
 					}
+				},
+				{
+					name: "upload",
+					icon: "../src/images/image/upload.png",
+					doWhat: function(node){
+						alert("upload is developing");
+					}
 				}
 			]
 		}
