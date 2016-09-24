@@ -41,6 +41,12 @@ me.autoSave("edit", function(data, time){
 	document.getElementById("autoSaveInfo").innerHTML = "Auto save at " + (new Date(time)).toString().replace(/\(.*\)/,"");
 });
 
+me.image({
+	method: "post",
+	size: 12360,
+	ext: ["png","jpeg","jpg"]
+});
+
 
 </script>
 

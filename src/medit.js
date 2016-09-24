@@ -501,7 +501,26 @@
 					name: "upload",
 					icon: "../src/images/image/upload.png",
 					doWhat: function(node){
-						alert("upload is developing");
+						var html = '<input type="file" id="medit-image-upload-file"/><div id="medit-image-upload-select-btn">选择图片 Select Image</div>';
+						settingPageDisplay('图像上传 Image upload',html,function(){
+							
+						});
+						
+						var btn = getNodeById("medit-image-upload-select-btn");
+						var fileInput = getNodeById("medit-image-upload-file");
+						
+						btn.onclick = function(){
+							fileInput.click();
+						}
+						fileInput.onchange = function(e){
+							e = e || window.event;
+							var  files=e.target.files||e.srcElement.files;
+							var file = files[0];
+							var size = file.size;
+							var name = file.name;
+							var type = file.type;
+							
+						}
 					}
 				}
 			]
@@ -911,6 +930,15 @@
 		
 		this.node.setAttribute("data-meditId",container.length);
 		
+		this.imageUpload = { // 默认图片上传设置，由于是文件上传，所以在跨域方法仅支持CORS
+			path:'',
+			size:0,
+			timeout:0,
+			ext:["jpg","jpeg","png","gif","bmp"],
+			success:function(){},
+			error:function(){}
+		}
+		
 		container.push(this);
 
 		gevent(this.node, ["touchstart"], function(e){
@@ -1042,6 +1070,15 @@
 			},1000);
 		}
 	}	
+	
+	medit.prototype.image = medit.prototype.imageUpload = function(option){ // 图片上传设置
+		console.log(this);
+		var meditId = this.node.getAttribute("data-meditid") - 0;
+		var contain = container[meditId];
+		
+		
+		
+	}
 	
 	medit.prototype.editContainFocus = function(e) {
 		

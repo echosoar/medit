@@ -198,3 +198,24 @@
 #medit [data-meditMode=image] {
 	background-color:#e5e5e5;
 }
+
+#medit-image-upload-select-btn {
+	width:70%;
+	overflow:none;
+	white-space:nowrap;
+	padding: 0 5%;
+	margin:20px auto;
+	height:32px;
+	line-height:32px;
+	color:#fff;
+	background:#3c9;
+	border-radius:3px;
+	text-align:center;
+}
+
+#medit-image-upload-file {
+	position:absolute;
+	left:-500px;
+	width:200px;
+	
+}
