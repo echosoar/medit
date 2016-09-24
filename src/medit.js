@@ -547,12 +547,12 @@
 								if(ext[type]){
 									var http = getXhr();
 									var form = new FormData(getNodeById("medit-image-upload-form"));
-									
+									getNodeById("medit-settingPage-button").style.display = "none";
+									getNodeById("medit-settingPage-content").innerHTML = '<div id="medit-settingPage-content-img-uploading">图片上传中 Image uploading...</div>';
 									http.upload.onprogress = function(v){
 										var progress = Math.floor(100*v.loaded/v.total) + "%";
 										var success = "";
-										if(progress == "100%") success ="上传成功，请稍后...<br />upload success,please waiting..."
-										getNodeById("medit-settingPage-button").style.display = "none";
+										if(progress == "100%") success ="上传成功，请稍后...<br />upload success,please waiting...";
 										getNodeById("medit-settingPage-content").innerHTML = '<div id="medit-settingPage-content-img-uploading">图片上传中 Image uploading...'+ progress +'<br /><i id="medit-settingPage-content-img-uploading-progress" style="width:' + progress + ';"></i>'+success+'</div>';
 									}
 									
