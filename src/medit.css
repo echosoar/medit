@@ -201,7 +201,7 @@
 
 #medit-image-upload-select-btn {
 	width:70%;
-	overflow:none;
+	overflow:hidden;
 	white-space:nowrap;
 	padding: 0 5%;
 	margin:20px auto;
@@ -218,4 +218,15 @@
 	left:-500px;
 	width:200px;
 	
+}
+#medit-settingPage-content-img-uploading{
+	padding: 20px 10px;
+	line-height:24px;
+}
+#medit-settingPage-content-img-uploading-progress {
+	display:block;
+	height:4px;
+	background:#c33;
+	border-radius:2px;
+	margin:10px 0;
 }

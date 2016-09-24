@@ -26,6 +26,14 @@
 	
 	var nodeFocusTimeout = null; // nodeFocus延时 
 	
+	var commonImageType = {
+		"jpeg":"image/jpeg",
+		"jpg":"image/jpeg",
+		"gif":"image/gif",
+		"png":"image/png",
+		"bmp":"image/bmp"
+	}
+	
 	var getNodeById = function(id){
 		return document.getElementById(id);
 	}
@@ -36,6 +44,24 @@
 	
 	var toArray = function(obj){
 		return [].slice.call(obj);
+	}
+	
+	
+	var getXhr = function(){
+		if(window.XMLHttpRequest){
+			var xhr=new XMLHttpRequest();
+		}else{
+			try{
+				var xhr=new ActiveXObject("Msxml2.XMLHTTP");
+			}catch(e){
+				try{
+					var xhr=new ActiveXObject("Microsoft.XMLHTTP");
+				}catch(e){
+					throw new TypeError('Unsupport XMLHttpRequest');
+				}
+			}
+		}
+		return xhr;
 	}
 	
 	var mainButton = ["addLeft","delete","setting","mode","ok","addRight"];
@@ -501,11 +527,60 @@
 					name: "upload",
 					icon: "../src/images/image/upload.png",
 					doWhat: function(node){
-						var html = '<input type="file" id="medit-image-upload-file"/><div id="medit-image-upload-select-btn">选择图片 Select Image</div>';
+						var config = container[meditId].imageUpload;
+						var html = '<form enctype="multipart/form-data" method="post" id="medit-image-upload-form"><input type="file" name="'+config.name+'" id="medit-image-upload-file"/></form><div id="medit-image-upload-select-btn">选择图片 Select Image</div>';
 						settingPageDisplay('图像上传 Image upload',html,function(){
 							
+							var files = getNodeById("medit-image-upload-file");
+							if(files.files.length <=0){
+								return;
+							}
+							var file = files.files[0];
+							var size = file.size;
+							var name = file.name;
+							var type = file.type;
+							var config = container[meditId].imageUpload;
+							var ext = {};
+							config.ext.forEach(function(v){ ext[commonImageType[v]] = true; });
+
+							if(config.size == 0 || config.size>=size){
+								if(ext[type]){
+									var http = getXhr();
+									var form = new FormData(getNodeById("medit-image-upload-form"));
+									
+									http.upload.onprogress = function(v){
+										var progress = Math.floor(100*v.loaded/v.total) + "%";
+										var success = "";
+										if(progress == "100%") success ="上传成功，请稍后...<br />upload success,please waiting..."
+										getNodeById("medit-settingPage-button").style.display = "none";
+										getNodeById("medit-settingPage-content").innerHTML = '<div id="medit-settingPage-content-img-uploading">图片上传中 Image uploading...'+ progress +'<br /><i id="medit-settingPage-content-img-uploading-progress" style="width:' + progress + ';"></i>'+success+'</div>';
+									}
+									
+									http.open("POST",config.path);
+									http.send(form);
+									
+									http.onreadystatechange = function(){
+										if(http.readyState === 4){
+											if(http.status === 200 || http.status>200 && http.status<400){
+												var res = JSON.parse(http.responseText);
+												if(res.code == "success"){
+													var scale = res.data.width/ res.data.height;
+													if(res.data.width>100){
+														res.data.width = 100;
+														res.data.height = 100/scale;
+													}
+													settingPage.style.display = "none";
+													node.setAttribute("src",res.data.url);
+													node.setAttribute("width",res.data.width);
+													node.setAttribute("height",res.data.height);
+												}
+											}
+										}
+									}
+								}else{ config.error("image type limit "+config.ext.join(",")); }
+							}else{ config.error("image size limit "+config.size); }
 						});
-						
+						getNodeById("medit-settingPage-button-ok").innerHTML = "上传 Upload";
 						var btn = getNodeById("medit-image-upload-select-btn");
 						var fileInput = getNodeById("medit-image-upload-file");
 						
@@ -514,12 +589,19 @@
 						}
 						fileInput.onchange = function(e){
 							e = e || window.event;
-							var  files=e.target.files||e.srcElement.files;
+							var files=e.target.files||e.srcElement.files;
 							var file = files[0];
 							var size = file.size;
 							var name = file.name;
 							var type = file.type;
+
+							var ext = {};
+							config.ext.forEach(function(v){ ext[commonImageType[v]] = true; });
 							
+							if(config.size == 0 || config.size>=size){
+								if(ext[type]){ btn.innerHTML = name;
+								}else{ config.error("image type limit "+config.ext.join(",")); }
+							}else{ config.error("image size limit "+config.size); }
 						}
 					}
 				}
@@ -907,7 +989,6 @@
 	}
 	
 	var selectModeContent = function(isAdd){
-		console.log(nowNode);
 		if(nowNode){
 			var nodeMode = nowNode.getAttribute("data-meditmode");
 			var nodeModeObj = mode[nodeMode];
@@ -931,7 +1012,8 @@
 		this.node.setAttribute("data-meditId",container.length);
 		
 		this.imageUpload = { // 默认图片上传设置，由于是文件上传，所以在跨域方法仅支持CORS
-			path:'',
+			path:'https://sm.ms/api/upload',
+			name:'smfile',
 			size:0,
 			timeout:0,
 			ext:["jpg","jpeg","png","gif","bmp"],
@@ -1072,7 +1154,6 @@
 	}	
 	
 	medit.prototype.image = medit.prototype.imageUpload = function(option){ // 图片上传设置
-		console.log(this);
 		var meditId = this.node.getAttribute("data-meditid") - 0;
 		var contain = container[meditId];
 		
