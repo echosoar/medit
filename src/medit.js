@@ -480,12 +480,12 @@
 							if(height && height>0){
 								node.setAttribute("height",height);
 							}
-							var address = getNodeById("medit-settingPage-image-address").value;
-							if(address){ // 传入网络图片需要进行宽高转换
+							var newAddress = getNodeById("medit-settingPage-image-address").value;
+							if(address != newAddress){ // 传入网络图片需要进行宽高转换
 								getNodeById("medit-settingPage-button").style.display = "none";
 								getNodeById("medit-settingPage-content").innerHTML = "Loading Image...";
 								var newImg = new Image();
-								newImg.src = address;
+								newImg.src = newAddress;
 								newImg.onload = function(){
 									var scale = newImg.width/ newImg.height;
 									if(newImg.width>100){
@@ -493,7 +493,7 @@
 										newImg.height = 100/scale;
 									}
 									settingPage.style.display = "none";
-									node.setAttribute("src",address);
+									node.setAttribute("src",newAddress);
 									node.setAttribute("width",newImg.width);
 									node.setAttribute("height",newImg.height);
 								}
