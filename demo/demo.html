@@ -42,9 +42,14 @@ me.autoSave("edit", function(data, time){
 });
 
 me.image({
-	method: "post",
-	size: 12360,
-	ext: ["png","jpeg","jpg"]
+	size: 102400000,
+	ext: ["png","jpeg","jpg"],
+	success:function(res){
+		console.log(res);
+	},
+	error:function(msg){
+		alert("error : " + msg);
+	}
 });
 
 

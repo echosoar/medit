@@ -563,7 +563,9 @@
 										if(http.readyState === 4){
 											if(http.status === 200 || http.status>200 && http.status<400){
 												var res = JSON.parse(http.responseText);
+												
 												if(res.code == "success"){
+													config.success(res);
 													var scale = res.data.width/ res.data.height;
 													if(res.data.width>100){
 														res.data.width = 100;
@@ -574,6 +576,8 @@
 													node.setAttribute("width",res.data.width);
 													node.setAttribute("height",res.data.height);
 												}
+											}else{
+												config.error("http status " + http.status);
 											}
 										}
 									}
@@ -588,6 +592,7 @@
 							fileInput.click();
 						}
 						fileInput.onchange = function(e){
+							
 							e = e || window.event;
 							var files=e.target.files||e.srcElement.files;
 							var file = files[0];
@@ -1156,9 +1161,11 @@
 	medit.prototype.image = medit.prototype.imageUpload = function(option){ // 图片上传设置
 		var meditId = this.node.getAttribute("data-meditid") - 0;
 		var contain = container[meditId];
-		
-		
-		
+		for(var item in option){
+			if(contain.imageUpload[item] != null){
+				contain.imageUpload[item] = option[item];
+			}
+		}
 	}
 	
 	medit.prototype.editContainFocus = function(e) {
