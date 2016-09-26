@@ -189,9 +189,18 @@
 #medit-settingPage-button-cancel {
 	background:#f63;
 }
-
-.medit-image {
-	
+.medit-image{
+	position:relative;
+}
+img:after {
+	content:" ";
+	position:absolute;
+	width:200px;
+	height:200px;
+	right:0;
+	bottom:0;
+	color:#fff;
+	background:#333;
 }
 
 

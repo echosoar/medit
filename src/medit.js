@@ -45,8 +45,7 @@
 	var toArray = function(obj){
 		return [].slice.call(obj);
 	}
-	
-	
+		
 	var getXhr = function(){
 		if(window.XMLHttpRequest){
 			var xhr=new XMLHttpRequest();
@@ -879,16 +878,13 @@
 						var nodePath = path.split("-");
 						var doWhat = mode;
 						var pathMode = null;
-						
-						if(nodePath.length === 3){
-							path = nodePath[0];
-							nodePath.pop();
-						}
-						
+
+						nodePath.pop();
+						path = path.replace(/\-[a-zA-Z]*\-\d*$/,'');
+
 						while(pathMode = nodePath.shift()){
 							doWhat = doWhat[pathMode];
 						}
-						
 						toolBarModeSetting(path, doWhat);
 
 						break;
@@ -912,7 +908,6 @@
 				}
 				
 				doWhat = doWhat.doWhat;
-				
 				if(isType(doWhat, "array")){
 					toolBarModeSetting(pathRes, doWhat);
 				}else{
