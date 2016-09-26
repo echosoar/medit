@@ -608,6 +608,33 @@
 							}else{ config.error("image size limit "+config.size); }
 						}
 					}
+				},
+				{
+					name: 'verticalAlign',
+					icon: '../src/images/image/vertical-align.png',
+					doWhat:[
+						{
+							name: 'top',
+							icon: '../src/images/image/top-align.png',
+							doWhat:function(node){
+								node.style.verticalAlign = "top";
+							}
+						},
+						{
+							name: 'middle',
+							icon: '../src/images/image/middle-align.png',
+							doWhat:function(node){
+								node.style.verticalAlign = "middle";
+							}
+						},
+						{
+							name: 'bottom',
+							icon: '../src/images/image/bottom-align.png',
+							doWhat:function(node){
+								node.style.verticalAlign = "bottom";
+							}
+						}
+					]
 				}
 			]
 		}
