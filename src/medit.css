@@ -239,3 +239,20 @@ img:after {
 	border-radius:2px;
 	margin:10px 0;
 }
+
+#medit ul {
+	position:relative;
+	padding: 15px 0;
+	border-left:20px solid #eee;
+}
+#medit ul:before{
+	content: "List";
+	position:absolute;
+	height:12px;
+	line-height:12px;
+	left:-17px;
+	color:#999;
+	width:15px;
+	font-size: 10px;
+	top:3px;
+}

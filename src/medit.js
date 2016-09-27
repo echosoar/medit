@@ -444,7 +444,7 @@
 				temNode.setAttribute("data-medit", "true");
 				temNode.setAttribute("data-meditmode", "image");
 				temNode.setAttribute("src", mode["image"].icon);
-				temNode.setAttribute("width","64");
+				temNode.setAttribute("width","32");
 				temNode.setAttribute("height","32");
 				node.parentNode.insertBefore(temNode,node);
 				node.parentNode.removeChild(node);
@@ -646,7 +646,7 @@
 			blur:function(node){
 				node.style.backgroundColor = null;
 			},
-			doWhat:function(){
+			doWhat:function(node){
 				mode[node.getAttribute("data-meditmode")].blur(node);
 				var temNode = document.createElement("ul");
 				temNode.setAttribute("data-medit", "true");
