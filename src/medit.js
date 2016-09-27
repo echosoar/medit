@@ -637,6 +637,29 @@
 					]
 				}
 			]
+		},
+		"list":{
+			icon: "../src/images/mode/list.png",
+			focus:function(node){
+				
+			},
+			blur:function(node){
+				
+			},
+			doWhat:function(){
+				mode[node.getAttribute("data-meditmode")].blur(node);
+				var temNode = document.createElement("ul");
+				temNode.setAttribute("data-medit", "true");
+				temNode.setAttribute("data-meditmode", "list");
+				node.parentNode.insertBefore(temNode,node);
+				node.parentNode.removeChild(node);
+				mode["list"].focus(temNode);
+				nodeFocus(temNode);
+				nowNode = temNode;
+				toolBarModeSetting("list",[]);
+				container[meditId].updateId();
+				nowMode = "list";
+			}
 		}
 	}
 	
