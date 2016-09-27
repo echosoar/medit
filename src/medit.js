@@ -641,10 +641,10 @@
 		"list":{
 			icon: "../src/images/mode/list.png",
 			focus:function(node){
-				
+				node.style.backgroundColor = "#e5e5e5";
 			},
 			blur:function(node){
-				
+				node.style.backgroundColor = null;
 			},
 			doWhat:function(){
 				mode[node.getAttribute("data-meditmode")].blur(node);
