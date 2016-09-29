@@ -27,6 +27,7 @@
 </style>
 <div id="medit" class="medit"></div>
 <div class="btn" onClick="getContent()">预览 Preview</div>
+<div class="btn" onClick="cancel()">清空 Cancel</div>
 <div id="autoSaveInfo"></div>
 <div id="res"></div>
 <script src="../src/medit.js"></script>
@@ -36,7 +37,9 @@ function getContent(){
 	var res = me.getContent();
 	document.getElementById("res").innerHTML = '<hr />预览 Preview:<hr />' + res;
 }
-
+function cancel(){
+	me.clear();
+}
 me.autoSave("edit", function(data, time){
 	document.getElementById("autoSaveInfo").innerHTML = "Auto save at " + (new Date(time)).toString().replace(/\(.*\)/,"");
 });

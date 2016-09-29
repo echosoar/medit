@@ -1184,7 +1184,7 @@
 	
 	medit.prototype.autoSave = function(appId, callBack){// 自动保存 callBack(data, timeStamp),自动恢复已保存数据
 		if(window.localStorage){
-			
+			this.appId = appId;
 			var oldData = localStorage.getItem("medit-autosave-"+appId);
 			var temData = this.getContent(true);
 			if(!regIsNotContentEmpty.test(temData) && oldData){
@@ -1211,6 +1211,14 @@
 				contain.imageUpload[item] = option[item];
 			}
 		}
+	}
+	
+	medit.prototype.clear = function(){
+		this.node.innerHTML = "";
+		if(this.appId!=null){
+			localStorage.setItem("medit-autosave-"+this.appId,"");
+		}
+		
 	}
 	
 	medit.prototype.editContainFocus = function(e) {
