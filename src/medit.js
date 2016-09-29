@@ -71,7 +71,7 @@
 	
 	var mode = {
 		"text": {
-			icon: '../src/images/mode/text.png',
+			icon: meditToolImage + 'images/mode/text.png',
 			doWhat: function(node){
 				mode[node.getAttribute("data-meditmode")].blur(node);
 				var temNode = document.createElement("span");
@@ -327,7 +327,7 @@
 			}
 		},
 		"br":{
-			icon: '../src/images/mode/br.png',
+			icon:  meditToolImage + 'images/mode/br.png',
 			doWhat: function(node) {
 				mode[node.getAttribute("data-meditmode")].blur(node);
 				var temNode = document.createElement("span");
@@ -352,7 +352,7 @@
 			}
 		},
 		"link":{
-			icon: '../src/images/mode/link.png',
+			icon:  meditToolImage + 'images/mode/link.png',
 			doWhat: function(node) {
 				
 				var parent = node;
@@ -613,25 +613,25 @@
 				},
 				{
 					name: 'verticalAlign',
-					icon: '../src/images/image/vertical-align.png',
+					icon:  meditToolImage + 'images/image/vertical-align.png',
 					doWhat:[
 						{
 							name: 'top',
-							icon: '../src/images/image/top-align.png',
+							icon:  meditToolImage + 'images/image/top-align.png',
 							doWhat:function(node){
 								node.style.verticalAlign = "top";
 							}
 						},
 						{
 							name: 'middle',
-							icon: '../src/images/image/middle-align.png',
+							icon:  meditToolImage + 'images/image/middle-align.png',
 							doWhat:function(node){
 								node.style.verticalAlign = "middle";
 							}
 						},
 						{
 							name: 'bottom',
-							icon: '../src/images/image/bottom-align.png',
+							icon:  meditToolImage + 'images/image/bottom-align.png',
 							doWhat:function(node){
 								node.style.verticalAlign = "bottom";
 							}
