@@ -1,5 +1,7 @@
 ;(function(obj, undefined){
-
+	
+	var meditToolImage = obj.meditToolImage || "./src/";// 工具条图片位置
+	
 	var meditId = null;
 
 	var container = [];
@@ -100,7 +102,7 @@
 			setting:[
 				{
 					name:"bold",
-					icon:"../src/images/text/bold.png",
+					icon: meditToolImage + "images/text/bold.png",
 					doWhat:function(node){
 						var style = node.getAttribute("style");
 						var reg = /font\-weight\s*:\s*(.*?)\s*;/i;
@@ -116,7 +118,7 @@
 				},
 				{
 					name:"italic",
-					icon:"../src/images/text/italic.png",
+					icon: meditToolImage + "images/text/italic.png",
 					doWhat:function(node){
 						var style = node.getAttribute("style");
 						var reg = /font\-style\s*:\s*(.*?)\s*;/i;
@@ -132,7 +134,7 @@
 				},
 				{
 					name:"underline",
-					icon:"../src/images/text/underline.png",
+					icon: meditToolImage + "images/text/underline.png",
 					doWhat:function(node){
 						var style = node.getAttribute("style");
 						var reg = /text\-decoration\s*:\s*(.*?)\s*;/i;
@@ -148,11 +150,11 @@
 				},
 				{
 					name:"size",
-					icon:"../src/images/text/size.png",
+					icon: meditToolImage + "images/text/size.png",
 					doWhat:[
 						{
 							name: "fontSizeBig",
-							icon:"../src/images/text/sizeBigger.png",
+							icon: meditToolImage + "images/text/sizeBigger.png",
 							doWhat: function(node) {
 								var style = node.getAttribute("style");
 								var displaySize = getNodeById("medit-tool-button-text-setting-3-doWhat-1");
@@ -176,7 +178,7 @@
 						},
 						{
 							name: "fontSizeSmall",
-							icon:"../src/images/text/sizeSmaller.png",
+							icon: meditToolImage + "images/text/sizeSmaller.png",
 							doWhat: function(node) {
 								var style = node.getAttribute("style");
 								var displaySize = getNodeById("medit-tool-button-text-setting-3-doWhat-1");
@@ -198,46 +200,46 @@
 				},
 				{
 					name: "color",
-					icon:"../src/images/text/color.png",
+					icon: meditToolImage + "images/text/color.png",
 					doWhat:[
 						{
 							name: "black",
-							icon:"../src/images/text/colorBlack.png",
+							icon: meditToolImage + "images/text/colorBlack.png",
 							doWhat:function(node){
 								node.style.color = "#000000";
 							}
 						},
 						{
 							name: "red",
-							icon:"../src/images/text/colorRed.png",
+							icon: meditToolImage + "images/text/colorRed.png",
 							doWhat:function(node){
 								node.style.color = "#ff0000";
 							}
 						},
 						{
 							name: "green",
-							icon:"../src/images/text/colorGreen.png",
+							icon: meditToolImage + "images/text/colorGreen.png",
 							doWhat:function(node){
 								node.style.color = "#00ff00";
 							}
 						},
 						{
 							name: "blue",
-							icon:"../src/images/text/colorBlue.png",
+							icon: meditToolImage + "images/text/colorBlue.png",
 							doWhat:function(node){
 								node.style.color = "#0000ff";
 							}
 						},
 						{
 							name: "yellow",
-							icon:"../src/images/text/colorYellow.png",
+							icon: meditToolImage + "images/text/colorYellow.png",
 							doWhat:function(node){
 								node.style.color = "#ffff00";
 							}
 						},
 						{
 							name: "pink",
-							icon:"../src/images/text/colorPink.png",
+							icon: meditToolImage + "images/text/colorPink.png",
 							doWhat:function(node){
 								node.style.color = "#ff00ff";
 							}
@@ -379,7 +381,7 @@
 			setting: [
 				{
 					name: "setting",
-					icon: "../src/images/link/setting.png",
+					icon:  meditToolImage + "images/link/setting.png",
 					doWhat: function(node){
 						var href = node.getAttribute("data-meditHref");
 						var hrefHtml = '';
@@ -411,7 +413,7 @@
 				},
 				{
 					name: "cancellink",
-					icon: "../src/images/link/cancel-link.png",
+					icon:  meditToolImage + "images/link/cancel-link.png",
 					doWhat: function(node){
 						var childs = toArray(node.children);
 						var temNode = childs[0];
@@ -437,7 +439,7 @@
 			}
 		},
 		"image":{
-			icon: "../src/images/mode/image.png",
+			icon:  meditToolImage + "images/mode/image.png",
 			doWhat:function(node){
 				mode[node.getAttribute("data-meditmode")].blur(node);
 				var temNode = document.createElement("img");
@@ -464,7 +466,7 @@
 			setting:[
 				{
 					name:"setting",
-					icon:"../src/images/image/setting.png",
+					icon: meditToolImage + "images/image/setting.png",
 					doWhat: function(node) {
 						var width = node.getAttribute("width");
 						var height = node.getAttribute("height");
@@ -504,7 +506,7 @@
 				},
 				{
 					name: "biger",
-					icon: "../src/images/image/biger.png",
+					icon:  meditToolImage + "images/image/biger.png",
 					doWhat: function(node){
 						var width = node.getAttribute("width");
 						var height = node.getAttribute("height");
@@ -514,7 +516,7 @@
 				},
 				{
 					name: "smaller",
-					icon: "../src/images/image/smaller.png",
+					icon:  meditToolImage + "images/image/smaller.png",
 					doWhat: function(node){
 						var width = node.getAttribute("width");
 						var height = node.getAttribute("height");
@@ -524,7 +526,7 @@
 				},
 				{
 					name: "upload",
-					icon: "../src/images/image/upload.png",
+					icon:  meditToolImage + "images/image/upload.png",
 					doWhat: function(node){
 						var config = container[meditId].imageUpload;
 						var html = '<form enctype="multipart/form-data" method="post" id="medit-image-upload-form"><input type="file" name="'+config.name+'" id="medit-image-upload-file"/></form><div id="medit-image-upload-select-btn">选择图片 Select Image</div>';
@@ -639,7 +641,7 @@
 			]
 		},
 		"list":{
-			icon: "../src/images/mode/list.png",
+			icon:  meditToolImage + "images/mode/list.png",
 			focus:function(node){
 				node.style.backgroundColor = "#e5e5e5";
 			},
