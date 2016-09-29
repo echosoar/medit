@@ -1187,7 +1187,7 @@
 	medit.prototype.autoSave = function(appId, callBack){// 自动保存 callBack(data, timeStamp),自动恢复已保存数据
 		if(window.localStorage){
 			this.appId = appId;
-			var oldData = localStorage.getItem("medit-autosave-"+appId);
+			var oldData = localStorage.getItem("meditAutosave"+appId); // repair bug: id is need not exits '-'
 			var temData = this.getContent(true);
 			if(!regIsNotContentEmpty.test(temData) && oldData){
 				meditId = this.node.getAttribute("data-meditid");
@@ -1199,7 +1199,7 @@
 			var _this = this;
 			this.autoSaveInterval = setInterval(function(){
 				var nowData = _this.getContent(true);
-				localStorage.setItem("medit-autosave-"+appId,nowData);
+				localStorage.setItem("meditAutosave"+appId,nowData);
 				callBack(nowData, (new Date())-0);
 			},1000);
 		}
@@ -1215,12 +1215,13 @@
 		}
 	}
 	
-	medit.prototype.clear = function(){
-		this.node.innerHTML = "";
+	medit.prototype.clear = function(data){
+		data = data||"";
+		clearInterval(this.autoSaveInterval);
+		this.node.innerHTML = data;
 		if(this.appId!=null){
-			localStorage.setItem("medit-autosave-"+this.appId,"");
+			localStorage.removeItem("meditAutosave"+this.appId);
 		}
-		
 	}
 	
 	medit.prototype.editContainFocus = function(e) {
