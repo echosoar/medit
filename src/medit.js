@@ -643,10 +643,11 @@
 		"list":{
 			icon:  meditToolImage + "images/mode/list.png",
 			focus:function(node){
-				node.style.backgroundColor = "#e5e5e5";
+				node.setAttribute("class","medit-list");
+				getNodeById("medit-tool-button-mode").style.display = "none";
 			},
 			blur:function(node){
-				node.style.backgroundColor = null;
+				node.removeAttribute("class");
 			},
 			doWhat:function(node){
 				mode[node.getAttribute("data-meditmode")].blur(node);
@@ -655,13 +656,60 @@
 				temNode.setAttribute("data-meditmode", "list");
 				node.parentNode.insertBefore(temNode,node);
 				node.parentNode.removeChild(node);
-				mode["list"].focus(temNode);
 				nodeFocus(temNode);
 				nowNode = temNode;
-				toolBarModeSetting("list",[]);
+				toolBarModeSetting("list",mode["list"].setting);
+				mode["list"].focus(temNode);
 				container[meditId].updateId();
 				nowMode = "list";
-			}
+			},
+			setting:[
+				{
+					name:"newLi",
+					icon: meditToolImage + "images/list/newli.png",
+					doWhat:function(node){
+						mode["list"].blur(node);
+						var temNode = document.createElement("li");
+						temNode.setAttribute("data-medit", "true");
+						temNode.setAttribute("data-meditmode", "li"); 
+						node.appendChild(temNode);
+						
+						nodeFocus(temNode);
+						nowNode = temNode;
+						toolBarModeSetting("li",mode["li"].setting);
+						container[meditId].updateId();
+						nowMode = "li";
+						mode["li"].focus(temNode);
+					}
+				}
+			]
+		},
+		"li":{
+			focus:function(node){
+				node.setAttribute("class","medit-list");
+				getNodeById("medit-tool-button-mode").style.display = "none";
+				getNodeById("medit-tool-button-addLeft").style.display = "none";
+				getNodeById("medit-tool-button-addRight").style.display = "none";
+			},
+			blur:function(node){
+				node.removeAttribute("class");
+			},
+			setting:[
+				{
+					name:"addLeft",
+					icon: meditToolImage + "images/add-left.png",
+					doWhat:function(node){
+						
+					}
+				},
+				{
+					name:"addRight",
+					icon: meditToolImage + "images/add-right.png",
+					doWhat:function(node){
+						
+					}
+				}
+			]
 		}
 	}
 	

@@ -242,8 +242,10 @@ img:after {
 
 #medit ul {
 	position:relative;
-	padding: 15px 0;
+	padding: 5px 0;
+	margin:0;
 	border-left:20px solid #eee;
+	min-height:30px;
 }
 #medit ul:before{
 	content: "List";
@@ -254,5 +256,30 @@ img:after {
 	color:#999;
 	width:15px;
 	font-size: 10px;
-	top:3px;
+	top:0px;
+}
+.medit-list {
+	background:#ddd;
+}
+#medit li {
+	position:relative;
+	margin:0;
+	padding:0;
+	list-style:none;
+	padding-left:20px;
+	min-height:20px;
+	margin:5px 2px;
+	border-left:20px solid #efefef;
+}
+#medit li:before{
+	content: "li";
+	position:absolute;
+	height:20px;
+	line-height:20px;
+	left:-20px;
+	color:#999;
+	text-align:center;
+	width:20px;
+	font-size: 10px;
+	top:0px;
 }
