@@ -103,6 +103,8 @@ Text selected by gesture 文本手势选择
 
 ##### List 列表:
 
+![newLi](./src/images/list/newLi.png) Add New List Item 添加新的列表项
+
 
 
 
