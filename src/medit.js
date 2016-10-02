@@ -686,6 +686,13 @@
 			},
 			setting:[
 				{
+					name:"setting",
+					icon: meditToolImage + "images/list/setting.png",
+					doWhat:function(node){
+						
+					}
+				},
+				{
 					name:"newLi",
 					icon: meditToolImage + "images/list/newli.png",
 					doWhat:function(node){
