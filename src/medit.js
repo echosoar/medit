@@ -68,7 +68,28 @@
 	var mainButton = ["addLeft","delete","setting","mode","ok","addRight"];
 	
 	var nowMode = "text";
+	/*
+	mode 属性：
 	
+	icon: [String] 类型选择icon url
+	
+	isMerge: [Bollean] 是否开启相同内容自动合并
+	notDisplay: [Bollean] 在选择模式的时候不显示,
+	emptyNotDelete: [Bollean] 如果当前块只存在一个子节点并且这个子节点要删除的时候是否开启递归删除
+	
+	doWhat: [Function] 转换到此类型时会自动做哪些转换
+	focus：[Function] 点击或此模块获取焦点时自动触发的函数
+	blur：[Function] 此模块失去焦点时自动触发的函数
+	empty: [Function] 什么时候当前模块为空
+	selecting：[Function] 选择当前模块并且手指在屏幕上移动时触发的操作
+	selected：[Function] 手指移动结束执行的操作
+	setting: [Array(Object)] 当前模块可以进行哪些操作
+	 --	name: [String] 操作名称
+	 --	icon: [String] 操作按钮icon url
+	 --	doWhat: [Function/Array] 点击此操作按钮执行什么，或者是存在更深层次操作
+		
+	
+	*/
 	var mode = {
 		"text": {
 			icon: meditToolImage + 'images/mode/text.png',
@@ -685,28 +706,68 @@
 			]
 		},
 		"li":{
+			notDisplay:true,
+			emptyNotDelete: true,
 			focus:function(node){
 				node.setAttribute("class","medit-list");
+				if(!node.children.length){
+					node.setAttribute("contentEditable",true);
+				}
 				getNodeById("medit-tool-button-mode").style.display = "none";
 				getNodeById("medit-tool-button-addLeft").style.display = "none";
 				getNodeById("medit-tool-button-addRight").style.display = "none";
 			},
 			blur:function(node){
 				node.removeAttribute("class");
+				node.removeAttribute("contentEditable");
+				if(!node.children.length){
+					if(!/^\s*$/.test(node.innerHTML.replace(/&nbsp;/g,""))){
+
+						var span =document.createElement("span");
+						span.setAttribute("data-medit","true");
+						span.setAttribute("data-meditMode","text");
+						span.innerHTML = node.innerHTML;
+						node.innerHTML = "";
+						node.appendChild(span);
+						container[meditId].updateId();
+					}else{
+						node.innerHTML = "";
+					}
+				}
 			},
 			setting:[
 				{
 					name:"addLeft",
-					icon: meditToolImage + "images/add-left.png",
+					icon: meditToolImage + "images/list/add-top.png",
 					doWhat:function(node){
-						
+						mode["list"].blur(node);
+						var temNode = document.createElement("li");
+						temNode.setAttribute("data-medit", "true");
+						temNode.setAttribute("data-meditmode", "li"); 
+						node.parentNode.insertBefore(temNode, node);
+						nodeFocus(temNode);
+						nowNode = temNode;
+						container[meditId].updateId();
+						mode["li"].focus(temNode);
 					}
 				},
 				{
 					name:"addRight",
-					icon: meditToolImage + "images/add-right.png",
+					icon: meditToolImage + "images/list/add-bottom.png",
 					doWhat:function(node){
-						
+						mode["list"].blur(node);
+						var temNode = document.createElement("li");
+						temNode.setAttribute("data-medit", "true");
+						temNode.setAttribute("data-meditmode", "li"); 
+						if(node.nextSibling){
+							node.parentNode.insertBefore(temNode, node.nextSibling);
+						}else{
+							node.parentNode.appendChild(temNode);
+						}
+						nodeFocus(temNode);
+						nowNode = temNode;
+						container[meditId].updateId();
+						mode["li"].focus(temNode);
 					}
 				}
 			]
@@ -921,7 +982,7 @@
 							mode[nowMode].blur(thisNode);
 						}
 						
-						while(thisNode.parentNode.getAttribute("data-medit") && thisNode.parentNode.children.length === 1){
+						while(thisNode.parentNode.getAttribute("data-medit") && thisNode.parentNode.children.length === 1 && !mode[thisNode.parentNode.getAttribute("data-meditMode")].emptyNotDelete){
 							thisNode = thisNode.parentNode;
 						}
 						thisNode.parentNode.removeChild(thisNode);
@@ -964,7 +1025,7 @@
 						toolBarRes.push(returnButtonHtml(nowMode + "-setting-1"));
 						
 						for(var modeType in mode){
-							if(mode.hasOwnProperty(modeType) && modeType != nowMode){
+							if(mode.hasOwnProperty(modeType) && modeType != nowMode && !mode[modeType].notDisplay){
 								var style = mode[modeType].icon?' style="background:#fff url('+ mode[modeType].icon+') no-repeat center center;background-size: 24px;"':'';
 								
 								toolBarRes.push('<span id="medit-tool-button-'+modeType+'" class="medit-tool-button" data-meditToolStyle="'+modeType+'"'+style+' data-meditToolDegree="2">&nbsp;</span>');

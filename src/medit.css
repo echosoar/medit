@@ -2,6 +2,9 @@
 	font-size: 14px;
 	word-break:break-all;
 }
+#medit * {
+	outline:none;
+}
 #medit span {
 	position: relative;
 	outline:none;
@@ -243,7 +246,7 @@ img:after {
 #medit ul {
 	position:relative;
 	padding: 5px 0;
-	margin:0;
+	margin:3px 0;
 	border-left:20px solid #eee;
 	min-height:30px;
 }
@@ -266,9 +269,9 @@ img:after {
 	margin:0;
 	padding:0;
 	list-style:none;
-	padding-left:20px;
+	padding:5px;
 	min-height:20px;
-	margin:5px 2px;
+	margin:3px;
 	border-left:20px solid #efefef;
 }
 #medit li:before{
