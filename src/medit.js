@@ -689,7 +689,10 @@
 					name:"setting",
 					icon: meditToolImage + "images/list/setting.png",
 					doWhat:function(node){
-						
+						var html = '无序列表 Unorder List：<br /><input type="radio" value="disc" name="medit-list-mode-style">disc 实心圆<br /><input type="radio" value="circle" name="medit-list-mode-style">circle 空心圆<br /><input type="radio" value="square" name="medit-list-mode-style">square 实心方块<br /><hr />有序列表 Order List：<br /><input type="radio" value="1" name="medit-list-mode-style">1、2、3、4<br /><input type="radio" value="a" name="medit-list-mode-style">a、b、c、d<br /><input type="radio" value="A" name="medit-list-mode-style">A、B、C、D<br /><input type="radio" value="i" name="medit-list-mode-style">i, ii, iii, iv<br /><input type="radio" value="I" name="medit-list-mode-style">I, II, III, IV';
+						settingPageDisplay('列表类型 List Mode',html,function(){
+							settingPage.style.display = "none";
+						});
 					}
 				},
 				{

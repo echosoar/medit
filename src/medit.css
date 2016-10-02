@@ -251,7 +251,7 @@ img:after {
 	min-height:30px;
 }
 #medit ul:before{
-	content: "List";
+	content: "Li st";
 	position:absolute;
 	height:12px;
 	line-height:12px;
