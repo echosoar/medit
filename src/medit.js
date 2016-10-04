@@ -675,6 +675,7 @@
 				var temNode = document.createElement("ul");
 				temNode.setAttribute("data-medit", "true");
 				temNode.setAttribute("data-meditmode", "list");
+				temNode.setAttribute("type", "disc");
 				node.parentNode.insertBefore(temNode,node);
 				node.parentNode.removeChild(node);
 				nodeFocus(temNode);
@@ -689,8 +690,37 @@
 					name:"setting",
 					icon: meditToolImage + "images/list/setting.png",
 					doWhat:function(node){
-						var html = '无序列表 Unorder List：<br /><input type="radio" value="disc" name="medit-list-mode-style">disc 实心圆<br /><input type="radio" value="circle" name="medit-list-mode-style">circle 空心圆<br /><input type="radio" value="square" name="medit-list-mode-style">square 实心方块<br /><hr />有序列表 Order List：<br /><input type="radio" value="1" name="medit-list-mode-style">1、2、3、4<br /><input type="radio" value="a" name="medit-list-mode-style">a、b、c、d<br /><input type="radio" value="A" name="medit-list-mode-style">A、B、C、D<br /><input type="radio" value="i" name="medit-list-mode-style">i, ii, iii, iv<br /><input type="radio" value="I" name="medit-list-mode-style">I, II, III, IV';
+						var type = node.getAttribute("type").toLowerCase();
+						var nodeType = node.nodeName.toLowerCase();
+						var html = '无序列表 Unorder List：<br /><input type="radio" class="medit-list-mode-style-ul" value="disc" name="medit-list-mode-style"'+(type=="disc"?" checked":"")+'>disc 实心圆<br /><input type="radio" class="medit-list-mode-style-ul" value="circle" name="medit-list-mode-style"'+(type=="circle"?" checked":"")+'>circle 空心圆<br /><input type="radio" class="medit-list-mode-style-ul" value="square" name="medit-list-mode-style"'+(type=="square"?" checked":"")+'>square 实心方块<br /><hr />有序列表 Order List：<br /><input type="radio" class="medit-list-mode-style-ol" value="1" name="medit-list-mode-style"'+(type=="1"?" checked":"")+'>1、2、3、4<br /><input type="radio" class="medit-list-mode-style-ol" value="a" name="medit-list-mode-style"'+(type=="a"?" checked":"")+'>a、b、c、d<br /><input type="radio" class="medit-list-mode-style-ol" value="A" name="medit-list-mode-style"'+(type=="A"?" checked":"")+'>A、B、C、D<br /><input type="radio" value="i" class="medit-list-mode-style-ol" name="medit-list-mode-style"'+(type=="i"?" checked":"")+'>i, ii, iii, iv<br /><input type="radio" class="medit-list-mode-style-ol" value="I" name="medit-list-mode-style"'+(type=="I"?" checked":"")+'>I, II, III, IV';
 						settingPageDisplay('列表类型 List Mode',html,function(){
+							var radio = getNodeById("medit-settingPage-content").getElementsByTagName("input");
+							var input = null;
+							for(var i = 0; i<radio.length; i++){
+								if(radio[i].checked){
+									input = radio[i];
+									break;
+								}
+							}
+							var newType = input.getAttribute("class").split("-").pop();
+							if(nodeType == newType){
+								node.setAttribute("type",input.value);
+							}else{
+								var temNode = document.createElement(newType);
+								temNode.setAttribute("data-medit", "true");
+								temNode.setAttribute("data-meditmode", "list");
+								temNode.setAttribute("type", input.value);
+								node.parentNode.insertBefore(temNode,node);
+								var childNode = toArray(node.children);
+								childNode.forEach(function(v){
+									temNode.appendChild(v);
+								});
+								node.parentNode.removeChild(node);
+								nodeFocus(temNode);
+								nowNode = temNode;
+								mode["list"].focus(temNode);
+								container[meditId].updateId();
+							}
 							settingPage.style.display = "none";
 						});
 					}

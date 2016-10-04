@@ -243,14 +243,14 @@ img:after {
 	margin:10px 0;
 }
 
-#medit ul {
+#medit ul, #medit ol {
 	position:relative;
 	padding: 5px 0;
 	margin:3px 0;
 	border-left:20px solid #eee;
 	min-height:30px;
 }
-#medit ul:before{
+#medit ul:before, #medit ol:before {
 	content: "Li st";
 	position:absolute;
 	height:12px;
