@@ -6,6 +6,8 @@ A creative WYSIWYG rich text editor for mobile device by javascript.
 
 Demo Adress : [Medit Demo](https://echosoar.github.io/medit/demo/demo.html)
 
+##### 仅支持移动端 Only Support Mobile!
+
 ***
 
 ### How to use 如何使用：
