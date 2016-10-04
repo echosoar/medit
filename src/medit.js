@@ -727,7 +727,7 @@
 				},
 				{
 					name:"newLi",
-					icon: meditToolImage + "images/list/newli.png",
+					icon: meditToolImage + "images/list/newLi.png",
 					doWhat:function(node){
 						mode["list"].blur(node);
 						var temNode = document.createElement("li");
@@ -770,8 +770,11 @@
 						node.innerHTML = "";
 						node.appendChild(span);
 						container[meditId].updateId();
+						container[meditId].nowNodeId++;
+						return span;
 					}else{
 						node.innerHTML = "";
+						return {exit:true};
 					}
 				}
 			},
@@ -1250,7 +1253,11 @@
 				var thisNode = getNodeById("medit-" + contain.nowNodeId + "-" + meditId);
 				nowMode = thisNode.getAttribute("data-meditMode");
 				if(mode[nowMode].blur){
-					mode[nowMode].blur(thisNode);
+					var newNode = mode[nowMode].blur(thisNode); // 如果当前按下回车按钮的块需要对内容进行处理，或者是结点进行改变了
+					if(newNode){
+						if(newNode.exit) return; // 不需要继续创建新的结点了
+						thisNode = newNode;
+					}
 				}
 				contain.createSpan(contain.nowNodeId, thisNode, true, true);
 						
