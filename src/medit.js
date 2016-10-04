@@ -662,6 +662,7 @@
 			]
 		},
 		"list":{
+			emptyNotDelete: true,
 			icon:  meditToolImage + "images/mode/list.png",
 			focus:function(node){
 				node.setAttribute("class","medit-list");
