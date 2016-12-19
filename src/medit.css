@@ -1,4 +1,5 @@
 #medit {
+	font-family:微软雅黑,黑体,Helvetica,华文黑体;
 	font-size: 14px;
 	word-break:break-all;
 }
@@ -28,6 +29,7 @@
 	overflow:auto;
 	background:#428bca;
 	text-align: left;
+	font-family:微软雅黑,黑体,Helvetica,华文黑体;
 }
 
 #medit [data-meditMode=br] {
@@ -44,42 +46,43 @@
 	height:40px;
 	line-height: 40px;
 	text-align:center;
-	font-size:12px;
+	font-size:13px;
 	cursor: pointer;
-	background-color:#333;
+	color:#fff;
+	font-weight:bold;
 }
 
 .medit-tool-addLeft {
-	background:#333 url("./images/add-left.png") no-repeat center center;
+	background:url("./images/add-left.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-addRight {
-	background:#333 url("./images/add-right.png") no-repeat center center;
+	background:url("./images/add-right.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-delete {
-	background:#333 url("./images/close.png") no-repeat center center;
+	background:url("./images/close.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-setting {
-	background:#333 url("./images/setting.png") no-repeat center center;
+	background:url("./images/setting.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-mode {
-	background:#333 url("./images/mode.png") no-repeat center center;
+	background:url("./images/mode.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-ok {
-	background:#333 url("./images/ok.png") no-repeat center center;
+	background:url("./images/ok.png") no-repeat center center;
 	background-size: 24px;
 }
 
 .medit-tool-link {
-	background:#333 url("./images/link.png") no-repeat center center;
+	background:url("./images/link.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-return {
-	background:#333 url("./images/return.png") no-repeat center center;
+	background:url("./images/return.png") no-repeat center center;
 	background-size: 24px;
 }
 

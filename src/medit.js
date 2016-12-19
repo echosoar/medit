@@ -1156,7 +1156,7 @@
 							
 					var defaultValue = listv.defaultValue || "&nbsp;";
 							
-					var style = listv.icon?' style="background:#428bca url('+listv.icon+') no-repeat center center;background-size: 24px;"':' style="background:#fff;"';
+					var style = listv.icon?' style="background:#428bca url('+listv.icon+') no-repeat center center;background-size: 24px;"':' style="background:#428bca;"';
 							
 					toolBarRes.push('<span id="medit-tool-button-'+path+'-doWhat-'+listIndex+'" class="medit-tool-button" data-meditToolStyle="'+path+"-doWhat-"+listIndex+'"'+style+' data-meditToolDegree="2">'+defaultValue+'</span>');
 				});
