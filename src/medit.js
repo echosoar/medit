@@ -1070,7 +1070,7 @@
 						
 						for(var modeType in mode){
 							if(mode.hasOwnProperty(modeType) && modeType != nowMode && !mode[modeType].notDisplay){
-								var style = mode[modeType].icon?' style="background:#fff url('+ mode[modeType].icon+') no-repeat center center;background-size: 24px;"':'';
+								var style = mode[modeType].icon?' style="background:#428bca url('+ mode[modeType].icon+') no-repeat center center;background-size: 24px;"':'';
 								
 								toolBarRes.push('<span id="medit-tool-button-'+modeType+'" class="medit-tool-button" data-meditToolStyle="'+modeType+'"'+style+' data-meditToolDegree="2">&nbsp;</span>');
 							}					
@@ -1139,7 +1139,7 @@
 							
 							var defaultValue = listv.defaultValue || "&nbsp;";
 							
-							var style = listv.icon?' style="background:#fff url('+listv.icon+') no-repeat center center;background-size: 24px;"':'';
+							var style = listv.icon?' style="background:#428bca url('+listv.icon+') no-repeat center center;background-size: 24px;"':'';
 							
 							toolBarRes.push('<span id="medit-tool-button-'+path+'-setting-'+listIndex+'" class="medit-tool-button" data-meditToolStyle="'+path+"-setting-"+listIndex+'"'+style+' data-meditToolDegree="2">'+defaultValue+'</span>');
 						});
@@ -1156,7 +1156,7 @@
 							
 					var defaultValue = listv.defaultValue || "&nbsp;";
 							
-					var style = listv.icon?' style="background:#fff url('+listv.icon+') no-repeat center center;background-size: 24px;"':' style="background:#fff;"';
+					var style = listv.icon?' style="background:#428bca url('+listv.icon+') no-repeat center center;background-size: 24px;"':' style="background:#fff;"';
 							
 					toolBarRes.push('<span id="medit-tool-button-'+path+'-doWhat-'+listIndex+'" class="medit-tool-button" data-meditToolStyle="'+path+"-doWhat-"+listIndex+'"'+style+' data-meditToolDegree="2">'+defaultValue+'</span>');
 				});

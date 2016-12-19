@@ -26,8 +26,8 @@
 	height:40px;
 	white-space: nowrap;
 	overflow:auto;
-	background:#000;
-	text-align: center;
+	background:#428bca;
+	text-align: left;
 }
 
 #medit [data-meditMode=br] {
@@ -39,51 +39,54 @@
 }
 
 .medit-tool-button {
-	width:28px;
+	width:40px;
 	display:inline-block;
-	height:28px;
-	line-height: 28px;
+	height:40px;
+	line-height: 40px;
 	text-align:center;
 	font-size:12px;
-	margin: 6px 8px;
-	border-radius: 16px;
 	cursor: pointer;
+	background-color:#333;
 }
 
 .medit-tool-addLeft {
-	background:#fff url("./images/add-left.png") no-repeat center center;
+	background:#333 url("./images/add-left.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-addRight {
-	background:#fff url("./images/add-right.png") no-repeat center center;
+	background:#333 url("./images/add-right.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-delete {
-	background:#fff url("./images/close.png") no-repeat center center;
+	background:#333 url("./images/close.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-setting {
-	background:#fff url("./images/setting.png") no-repeat center center;
+	background:#333 url("./images/setting.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-mode {
-	background:#fff url("./images/mode.png") no-repeat center center;
+	background:#333 url("./images/mode.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-ok {
-	background:#fff url("./images/ok.png") no-repeat center center;
+	background:#333 url("./images/ok.png") no-repeat center center;
 	background-size: 24px;
 }
 
 .medit-tool-link {
-	background:#fff url("./images/link.png") no-repeat center center;
+	background:#333 url("./images/link.png") no-repeat center center;
 	background-size: 24px;
 }
 .medit-tool-return {
-	background:#fff url("./images/return.png") no-repeat center center;
+	background:#333 url("./images/return.png") no-repeat center center;
 	background-size: 24px;
 }
 
+.medit-tool-button{
+	border-right: 1px solid #357ebd;
+	background-color: #428bca;
+}
 
 /* text */
 .medit-text-select {
