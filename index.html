@@ -1,0 +1,57 @@
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+
+<link rel="stylesheet" type="text/css" href="./src/medit.css" />
+<style>
+#medit {
+	padding: 10px;
+	border:1px solid #ccc;
+	height:300px;
+	margin-top:48px;
+	overflow: auto;
+}
+.btn {
+	padding: 6px 10px;
+	background: #e5e5e5;
+	border-radius: 3px;
+	margin-top: 5px;
+	text-align: center;
+}
+#autoSaveInfo{
+	padding: 10px 0;
+	text-align:right;
+	font-size:12px;
+}
+#res{
+	word-break:break-all;
+}
+</style>
+<div id="medit" class="medit"></div>
+<div class="btn" onClick="getContent()">‘§¿¿ Preview</div>
+<div class="btn" onClick="cancel()">«Âø’ Cancel</div>
+<div id="autoSaveInfo"></div>
+<div id="res"></div>
+<Script>var meditToolImage = "./src/";</script>
+<script src="./src/medit.js"></script>
+<script>
+var me = medit(document.getElementById("medit"));
+function getContent(){
+	var res = me.getContent();
+	document.getElementById("res").innerHTML = '<hr />‘§¿¿ Preview:<hr />' + res;
+}
+function cancel(){
+	me.clear();
+}
+me.autoSave("edit", function(data, time){
+	document.getElementById("autoSaveInfo").innerHTML = "Auto save at " + (new Date(time)).toString().replace(/\(.*\)/,"");
+});
+me.image({
+	size: 102400000,
+	ext: ["png","jpeg","jpg"],
+	success:function(res){
+		console.log(res);
+	},
+	error:function(msg){
+		alert("error : " + msg);
+	}
+});
+</script>
