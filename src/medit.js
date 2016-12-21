@@ -1,6 +1,7 @@
-;(function(obj, undefined){
+require("./medit.css")
+	var obj = window;
 	
-	var meditToolImage = obj.meditToolImage || "./src/";// 工具条图片位置
+	var meditToolImage = obj.meditToolImage || "./";// 工具条图片位置
 	
 	var meditId = null;
 
@@ -1467,6 +1468,6 @@
 		}
 	}
 	
-	obj.Medit = obj.medit = medit;
+obj.Medit = obj.medit = medit;
 	
-})(this);
+module.exports = medit;

@@ -64,10 +64,7 @@
 	background:url("./images/close.png") no-repeat center center;
 	background-size: 24px;
 }
-.medit-tool-setting {
-	background:url("./images/setting.png") no-repeat center center;
-	background-size: 24px;
-}
+
 .medit-tool-mode {
 	background:url("./images/mode.png") no-repeat center center;
 	background-size: 24px;
@@ -77,10 +74,6 @@
 	background-size: 24px;
 }
 
-.medit-tool-link {
-	background:url("./images/link.png") no-repeat center center;
-	background-size: 24px;
-}
 .medit-tool-return {
 	background:url("./images/return.png") no-repeat center center;
 	background-size: 24px;
