@@ -3,17 +3,17 @@
 
 A creative WYSIWYG rich text editor for mobile device by javascript.
 
-Ò»¸ö´´ĞÂĞÍµÄÒÆ¶¯¶ËËù¼û¼´ËùµÃ¸»ÎÄ±¾±à¼­Æ÷¡£
+ä¸€ä¸ªåˆ›æ–°å‹çš„ç§»åŠ¨ç«¯æ‰€è§å³æ‰€å¾—å¯Œæ–‡æœ¬ç¼–è¾‘å™¨ã€‚
 
-Demo Adress : [Medit Demo](https://echosoar.github.io/medit/demo.html)
+Demo Adress : [Medit Demo](https://echosoar.github.io/medit/)
 
 Publish: [v1.0.0](https://github.com/echosoar/medit/tree/publish/1.0.0)
 
-##### ½öÖ§³ÖÒÆ¶¯¶Ë Only Support Mobile!
+##### ä»…æ”¯æŒç§»åŠ¨ç«¯ Only Support Mobile!
 
 ***
 
-### How to use ÈçºÎÊ¹ÓÃ£º
+### How to use å¦‚ä½•ä½¿ç”¨ï¼š
 	
 	// first, import "medit.js" to your html file.
     <script src="../src/medit.js"></script>
@@ -32,85 +32,85 @@ Publish: [v1.0.0](https://github.com/echosoar/medit/tree/publish/1.0.0)
 
 ***
 
-### Current support Ä¿Ç°Ö§³Ö:
+### Current support ç›®å‰æ”¯æŒ:
 
 ***
 
-##### Basic function »ù´¡¹¦ÄÜ:
+##### Basic function åŸºç¡€åŠŸèƒ½:
 
-![add left](./src/images/add-left.png) Add To Left Ïòµ±Ç°¿é×ó²¿Ìí¼ÓÄÚÈİ
+![add left](./src/images/add-left.png) Add To Left å‘å½“å‰å—å·¦éƒ¨æ·»åŠ å†…å®¹
 
-![delete](./src/images/close.png) Delete É¾³ıµ±Ç°¿é
+![delete](./src/images/close.png) Delete åˆ é™¤å½“å‰å—
 
-![ok](./src/images/ok.png) Ok Íê³Éµ±Ç°¿é±à¼­
+![ok](./src/images/ok.png) Ok å®Œæˆå½“å‰å—ç¼–è¾‘
 
-![mode](./src/images/mode.png) Mode Ñ¡Ôñµ±Ç°¿éÀàĞÍ
+![mode](./src/images/mode.png) Mode é€‰æ‹©å½“å‰å—ç±»å‹
 
-![add right](./src/images/add-right.png) Add To Right Ïòµ±Ç°¿éÓÒ²¿Ìí¼ÓÄÚÈİ
+![add right](./src/images/add-right.png) Add To Right å‘å½“å‰å—å³éƒ¨æ·»åŠ å†…å®¹
 
 ***
 
-##### Text Edit ÎÄ±¾±à¼­:
+##### Text Edit æ–‡æœ¬ç¼–è¾‘:
 
-![bold](./src/images/text/bold.png) Bold ¼Ó´Ö
+![bold](./src/images/text/bold.png) Bold åŠ ç²—
 
-![italic](./src/images/text/italic.png) Italic Ğ±Ìå
+![italic](./src/images/text/italic.png) Italic æ–œä½“
 
-![underline](./src/images/text/underline.png) Underline ÏÂ»®Ïß
+![underline](./src/images/text/underline.png) Underline ä¸‹åˆ’çº¿
 
-![size](./src/images/text/size.png) Font-size ÎÄ×Ö´óĞ¡
+![size](./src/images/text/size.png) Font-size æ–‡å­—å¤§å°
 
-+ ![sizebigger](./src/images/text/sizeBigger.png) Enlarge Font-size Ôö´óÎÄ×Ö
++ ![sizebigger](./src/images/text/sizeBigger.png) Enlarge Font-size å¢å¤§æ–‡å­—
 
-+ ![sizeSmaller](./src/images/text/sizeSmaller.png) Narrow Font-size ËõĞ¡ÎÄ×Ö
++ ![sizeSmaller](./src/images/text/sizeSmaller.png) Narrow Font-size ç¼©å°æ–‡å­—
 
-![color](./src/images/text/color.png) Color ÎÄ×ÖÑÕÉ«
+![color](./src/images/text/color.png) Color æ–‡å­—é¢œè‰²
 
-+ ![black](./src/images/text/colorBlack.png) Black ºÚÉ«
++ ![black](./src/images/text/colorBlack.png) Black é»‘è‰²
 
-+ ![red](./src/images/text/colorRed.png) Red ºìÉ«
++ ![red](./src/images/text/colorRed.png) Red çº¢è‰²
 
-+ ![green](./src/images/text/colorGreen.png) Green ÂÌÉ«
++ ![green](./src/images/text/colorGreen.png) Green ç»¿è‰²
 
-+ ![blue](./src/images/text/colorBlue.png) Blue À¶É«
++ ![blue](./src/images/text/colorBlue.png) Blue è“è‰²
 
-+ ![yellow](./src/images/text/colorYellow.png) Yellow »ÆÉ«
++ ![yellow](./src/images/text/colorYellow.png) Yellow é»„è‰²
 
-+ ![pink](./src/images/text/colorPink.png) Pink ·ÛÉ«
++ ![pink](./src/images/text/colorPink.png) Pink ç²‰è‰²
 
-Text selected by gesture ÎÄ±¾ÊÖÊÆÑ¡Ôñ
+Text selected by gesture æ–‡æœ¬æ‰‹åŠ¿é€‰æ‹©
 
 ![text select](./demo/demo-gesture.gif)
 
 ***
 
-##### Super Links ³¬Á´½Ó:
+##### Super Links è¶…é“¾æ¥:
 
-![setting](./src/images/link/setting.png) Setting ³¬Á´½ÓÉèÖÃ
+![setting](./src/images/link/setting.png) Setting è¶…é“¾æ¥è®¾ç½®
 
-![/cancel-link](./src/images/link/cancel-link.png) Cancel Super Link È¡Ïû³¬Á´½Ó
+![/cancel-link](./src/images/link/cancel-link.png) Cancel Super Link å–æ¶ˆè¶…é“¾æ¥
 
 ![link demo](./demo/demo-link.gif)
 
 ***
 
-##### Image Í¼Æ¬:
+##### Image å›¾ç‰‡:
 
-![setting](./src/images/image/setting.png) Setting Í¼ÏñÉèÖÃ
+![setting](./src/images/image/setting.png) Setting å›¾åƒè®¾ç½®
 
-![biger](./src/images/image/biger.png) Increase size ³ß´çÔö´ó
+![biger](./src/images/image/biger.png) Increase size å°ºå¯¸å¢å¤§
 
-![smaller](./src/images/image/smaller.png) Shrink size ³ß´çËõĞ¡
+![smaller](./src/images/image/smaller.png) Shrink size å°ºå¯¸ç¼©å°
 
-![upload](./src/images/image/upload.png) Upload image from user local device ´ÓÓÃ»§±¾µØÉÏ´«Í¼Æ¬
+![upload](./src/images/image/upload.png) Upload image from user local device ä»ç”¨æˆ·æœ¬åœ°ä¸Šä¼ å›¾ç‰‡
 
 ***
 
-##### List ÁĞ±í:
+##### List åˆ—è¡¨:
 
-![setting](./src/images/list/setting.png) Setting ÁĞ±íÉèÖÃ
+![setting](./src/images/list/setting.png) Setting åˆ—è¡¨è®¾ç½®
 
-![newLi](./src/images/list/newLi.png) Add New List Item Ìí¼ÓĞÂµÄÁĞ±íÏî
+![newLi](./src/images/list/newLi.png) Add New List Item æ·»åŠ æ–°çš„åˆ—è¡¨é¡¹
 
 
 
