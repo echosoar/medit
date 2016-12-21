@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/echosoar/medit/issues"
   },
-  "homepage": "https://github.com/echosoar/medit",
+  "homepage": "https://medit.js.org",
   "devDependencies": {
     "babel-plugin-transform-es2015-classes": "^6.18.0",
     "copy-webpack-plugin": "^4.0.1",
