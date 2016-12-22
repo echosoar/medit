@@ -35,6 +35,15 @@ header {
 	background: #2B3A42 url(../images/bg.png);
 	padding-top: 42px;
 	position:relative;
+	text-align:center;
+}
+
+#usegif {
+	width:292px;
+	height: 448px;
+	margin:0px auto;
+	position:relative;
+	top:40px;
 }
 
 #git {

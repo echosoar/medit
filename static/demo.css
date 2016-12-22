@@ -2,18 +2,63 @@
 body{
 	font-family:微软雅黑,黑体,Helvetica,华文黑体;
 	margin:0;
+	background: #339933 url(../images/bg.png);
 	
 }
-
+#medit {
+	padding: 10px;
+	border:1px solid #ccc;
+	height:300px;
+	margin:0 auto;
+	overflow: auto;
+	max-width:360px;
+	border-radius:3px;
+}
 #container {
 	width: 100%;
 	margin: 0 auto;
 	height: 600px;
-	background: #396 url(../images/bg.png);
+	background: transparent;
 	padding-top: 42px;
 	position:relative;
 }
+.btn_container {
+	text-align:center;
+	padding-top:20px;
+}
+.btn{
+	display:inline-block;
+	width:40%;
+	max-width:200px;
+	height:40px;
+	line-height:40px;
+	text-align:center;
+	color:#fff;
+	font-size:13px;
+	background:#69f;
+	margin:0 2%;
+	border-radius:5px;
+}
 
+#res {
+	padding:50px 10px;
+	margin: 10px auto;
+	position:relative;
+}
+#res_title {
+	background: #2B3A42 url(../images/bg.png);
+	background-size:200px;
+	color:#fff;
+	height:40px;
+	width:94%;
+	padding:0 3%;
+	line-height:40px;
+	position:absolute;
+	top:0;
+	left:0;
+	
+	font-size:13px;
+}
 
 footer {
 	width:100%;
