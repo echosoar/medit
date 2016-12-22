@@ -8,6 +8,7 @@ header {
 	height: 42px;
 	background: #fff;
 	position:fixed;
+	z-index:4;
 	width:100%;
 	text-align:center;
 }
@@ -33,10 +34,13 @@ header {
 	height: 600px;
 	background: #2B3A42 url(../images/bg.png);
 	padding-top: 42px;
+	position:relative;
 }
 
 #git {
-	padding-top:540px;
+	position:absolute;
+	bottom:30px;
+	width:100%;
 	text-align:center;
 }
 #git a {

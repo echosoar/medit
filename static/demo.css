@@ -1,0 +1,26 @@
+@charset "utf-8";
+body{
+	font-family:微软雅黑,黑体,Helvetica,华文黑体;
+	margin:0;
+	
+}
+
+#container {
+	width: 100%;
+	margin: 0 auto;
+	height: 600px;
+	background: #396 url(../images/bg.png);
+	padding-top: 42px;
+	position:relative;
+}
+
+
+footer {
+	width:100%;
+	text-align:center;
+	font-size:13px;
+	color:#333;
+	padding:20px 0;
+	vertical-align: middle;
+	
+}
