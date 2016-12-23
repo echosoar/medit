@@ -1,4 +1,5 @@
-require("./medit.css")
+	require("./medit.css");
+
 	var obj = window;
 	
 	var meditToolImage = obj.meditToolImage || "./";// 工具条图片位置
@@ -417,7 +418,7 @@ require("./medit.css")
 							target = " checked";
 						}
 
-						var html = '链接地址 Link Address:<br /><input type="text" id="medit-settingPage-input-link"'+hrefHtml+'/><br /><br /><input type="checkbox" id="medit-settingPage-check-link"'+target+'>新窗口打开 Open in a new window';
+						var html = '<input type="text" id="medit-settingPage-input-link"'+hrefHtml+' placeholder="链接地址 Link Address"/><label><input type="checkbox" id="medit-settingPage-check-link"'+target+'><span>新窗口打开 Open in a new window</span></label>';
 						settingPageDisplay('超链接设置 Link Setting',html,function(){
 							var href = getNodeById("medit-settingPage-input-link");
 							if(href){
@@ -493,7 +494,7 @@ require("./medit.css")
 						var width = node.getAttribute("width");
 						var height = node.getAttribute("height");
 						var address = node.getAttribute("src");
-						var html = '宽度 Width:<br /><input type="text" id="medit-settingPage-image-width" value="'+width+'"><br /><br />高度 Height:<br /><input type="text" id="medit-settingPage-image-height" value="'+height+'"><br /><br />图像地址 Address:<br /><input type="text" id="medit-settingPage-image-address" value="'+address+'">';
+						var html = '<div class="medit-settingPage-image-dataInfo"><span>宽度 Width:</span><input type="text" id="medit-settingPage-image-width" value="'+width+'"><span>高度 Height:</span><input type="text" id="medit-settingPage-image-height" value="'+height+'"><span>图像地址 Address:</span><input type="text" id="medit-settingPage-image-address" value="'+address+'"><div>';
 						settingPageDisplay('图像设置 Image Setting',html,function(){
 							var width = getNodeById("medit-settingPage-image-width").value;
 							if(width && width>0){
@@ -694,7 +695,16 @@ require("./medit.css")
 					doWhat:function(node){
 						var type = node.getAttribute("type").toLowerCase();
 						var nodeType = node.nodeName.toLowerCase();
-						var html = '无序列表 Unorder List：<br /><input type="radio" class="medit-list-mode-style-ul" value="disc" name="medit-list-mode-style"'+(type=="disc"?" checked":"")+'>disc 实心圆<br /><input type="radio" class="medit-list-mode-style-ul" value="circle" name="medit-list-mode-style"'+(type=="circle"?" checked":"")+'>circle 空心圆<br /><input type="radio" class="medit-list-mode-style-ul" value="square" name="medit-list-mode-style"'+(type=="square"?" checked":"")+'>square 实心方块<br /><hr />有序列表 Order List：<br /><input type="radio" class="medit-list-mode-style-ol" value="1" name="medit-list-mode-style"'+(type=="1"?" checked":"")+'>1、2、3、4<br /><input type="radio" class="medit-list-mode-style-ol" value="a" name="medit-list-mode-style"'+(type=="a"?" checked":"")+'>a、b、c、d<br /><input type="radio" class="medit-list-mode-style-ol" value="A" name="medit-list-mode-style"'+(type=="A"?" checked":"")+'>A、B、C、D<br /><input type="radio" value="i" class="medit-list-mode-style-ol" name="medit-list-mode-style"'+(type=="i"?" checked":"")+'>i, ii, iii, iv<br /><input type="radio" class="medit-list-mode-style-ol" value="I" name="medit-list-mode-style"'+(type=="I"?" checked":"")+'>I, II, III, IV';
+						var html = '<div class="medit-list-mode-style-innerTitle">无序列表 Unorder List：</div>'+
+							'<label><input type="radio" class="medit-list-mode-style-ul" value="disc" name="medit-list-mode-style"'+(type=="disc"?" checked":"")+'><span>disc 实心圆</span></label>'+
+							'<label><input type="radio" class="medit-list-mode-style-ul" value="circle" name="medit-list-mode-style"'+(type=="circle"?" checked":"")+'><span>circle 空心圆</span></label>'+
+							'<label><input type="radio" class="medit-list-mode-style-ul" value="square" name="medit-list-mode-style"'+(type=="square"?" checked":"")+'><span>square 实心方块</span></label>'+
+							'<div class="medit-list-mode-style-innerTitle">有序列表 Order List：</div>'+
+							'<label><input type="radio" class="medit-list-mode-style-ol" value="1" name="medit-list-mode-style"'+(type=="1"?" checked":"")+'><span>1、2、3、4</span></label>'+
+							'<label><input type="radio" class="medit-list-mode-style-ol" value="a" name="medit-list-mode-style"'+(type=="a"?" checked":"")+'><span>a、b、c、d</span></label>'+
+							'<label><input type="radio" class="medit-list-mode-style-ol" value="A" name="medit-list-mode-style"'+(type=="A"?" checked":"")+'><span>A、B、C、D</span></label>'+
+							'<label><input type="radio" value="i" class="medit-list-mode-style-ol" name="medit-list-mode-style"'+(type=="i"?" checked":"")+'><span>i, ii, iii, iv</span></label>'+
+							'<label><input type="radio" class="medit-list-mode-style-ol" value="I" name="medit-list-mode-style"'+(type=="I"?" checked":"")+'><span>I, II, III, IV</span></label>';
 						settingPageDisplay('列表类型 List Mode',html,function(){
 							var radio = getNodeById("medit-settingPage-content").getElementsByTagName("input");
 							var input = null;
@@ -1007,8 +1017,9 @@ require("./medit.css")
 	
 		var html = [];
 		html.push(title?'<div id="medit-settingPage-title">'+title+'</div>':'');
+		html.push('<i id="medit-settingPage-button-cancel"></i>');
 		html.push('<div id="medit-settingPage-content">'+content+'</div>');
-		html.push('<div id="medit-settingPage-button"><i id="medit-settingPage-button-ok">确定 Ok</i><i id="medit-settingPage-button-cancel">取消 Cancel</i></div>');
+		html.push('<div id="medit-settingPage-button"><i id="medit-settingPage-button-ok">确定 Ok</i></div>');
 		getNodeById("medit-settingPage-main").innerHTML = html.join("");
 		settingPageOk = okCallBack;
 		settingPage.style.display = "block";

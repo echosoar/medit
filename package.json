@@ -30,6 +30,7 @@
     "eslint": "~3.4.0",
     "eslint-plugin-babel": "^3.2.0",
     "eslint-plugin-react": "~4.2.3",
+    "optimist": "^0.6.1",
     "resolve-url-loader": "^1.6.1",
     "url-loader": "~0.5.7",
     "webpack": "~1.12.14"
