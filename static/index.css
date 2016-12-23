@@ -1,6 +1,6 @@
 @charset "utf-8";
 body{
-	font-family:Î¢ÈíÑÅºÚ,ºÚÌå,Helvetica,»ªÎÄºÚÌå;
+	font-family:å¾®è½¯é›…é»‘,é»‘ä½“,Helvetica,åæ–‡é»‘ä½“;
 	margin:0;
 	
 }
@@ -39,11 +39,25 @@ header {
 }
 
 #usegif {
-	width:292px;
-	height: 448px;
+	max-width:90%;
+	background:url(https://www.iwenku.net/images.gif) no-repeat center;
+	background-size:contain;
+	height: 413px;
+	width:734px;
 	margin:0px auto;
 	position:relative;
-	top:40px;
+	top:60px;
+}
+#usegif:before {
+	content:'ç‚¹å‡»ä¸Šå›¾å°è¯• Medit Demo';
+	position:absolute;
+	bottom:-42px;
+	color:#fff;
+	font-size:13px;
+	color:#fff;
+	left:0;
+	width:100%;
+	text-align:center;
 }
 
 #git {
