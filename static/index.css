@@ -44,8 +44,11 @@ header {
 	height: 413px;
 	width:734px;
 	margin:0px auto;
-	position:relative;
-	top:60px;
+	position:absolute;
+	left:0;
+	right:0;
+	z-index:4;
+	top:100px;
 }
 #usegif:before {
 	content:'点击上图尝试 Medit Demo';
@@ -57,6 +60,16 @@ header {
 	left:0;
 	width:100%;
 	text-align:center;
+}
+#pleaseWaiting{
+	position:absolute;
+	left:0;
+	width:100%;
+	font-size:12px;
+	text-align:center;
+	color:#ccc;
+	top:300px;
+	z-index:0;
 }
 
 #git {

@@ -6,7 +6,7 @@ body{
 	
 }
 #medit {
-	padding: 10px;
+	padding: 10px 2%;
 	border:1px solid #ccc;
 	height:340px;
 	margin:0 auto;
@@ -23,12 +23,17 @@ body{
 	position:relative;
 }
 .btn_container {
-	text-align:center;
-	padding-top:20px;
+	white-space:nowrap;
+	padding-top:10px;
+	width:94%;
+	margin:0 auto;
+	height:60px;
 }
 .btn{
+	float:left;
 	display:inline-block;
-	width:40%;
+	width:32%;
+	margin-left:2%;
 	max-width:200px;
 	height:40px;
 	line-height:40px;
@@ -36,10 +41,11 @@ body{
 	color:#fff;
 	font-size:13px;
 	background:#69f;
-	margin:0 2%;
 	border-radius:5px;
 }
-
+.btn:first-child {
+	margin-left:0;
+}
 #res {
 	padding:50px 10px;
 	margin: 10px auto;

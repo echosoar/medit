@@ -12,6 +12,7 @@
 			<div class="btn_container">
 				<div class="btn" onClick="getContent()">预览 Preview</div>
 				<div class="btn" onClick="cancel()">清空 Cancel</div>
+				<div class="btn" onClick="go()">GitHub</div>
 			</div>
 			<div id="autoSaveInfo"></div>
 			<div id="res"></div>
@@ -25,6 +26,10 @@
 			}
 			function cancel(){
 				me.clear();
+			}
+			
+			function go(){
+				location.href='https://github.com/echosoar/medit';
 			}
 			me.image({
 				size: 102400000,
