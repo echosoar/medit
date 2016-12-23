@@ -6,6 +6,22 @@
 		<link rel="stylesheet" href="./static/demo.css"/>
 		<meta charset="utf-8"/>
 	</head>
+	<script>
+		function IsPC()  
+		{  
+		   var userAgentInfo = navigator.userAgent;  
+		   var Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod");  
+		   var flag = true;  
+		   for (var v = 0; v < Agents.length; v++) {  
+			   if (userAgentInfo.indexOf(Agents[v]) > 0) { flag = false; break; }  
+		   }  
+		   return flag;  
+		}    
+		if(IsPC()){
+			alert("Medit.js是一个专注于移动端的富文本编辑器，请使用移动设备访问Demo！\n https://medit.js.org/demo.html");
+			location="./index.html";
+		}
+		</script>
 	<body>
 		<div id="container">
 			<div id="medit" class="medit">点此开始使用 Medit</div>
@@ -43,6 +59,7 @@
 			});
 			</script>
 		</div>
+		
 	</body>
 </html>
 
