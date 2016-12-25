@@ -1507,8 +1507,8 @@ medit.prototype.editContainFocus = function(e) {
 					globalSelectionContent = {
 						handle: selectionHandle,
 						node: selectionHandle.anchorNode.parentNode,
-						start: selectionHandle.anchorOffset,
-						end: selectionHandle.focusOffset
+						start: selectionHandle.anchorOffset<selectionHandle.focusOffset?selectionHandle.anchorOffset:selectionHandle.focusOffset,
+						end: selectionHandle.anchorOffset>selectionHandle.focusOffset?selectionHandle.anchorOffset:selectionHandle.focusOffset
 					}
 					globalSelectionHandle = setTimeout(selectionCheckTimeout, 100);
 				}else{
