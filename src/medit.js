@@ -1036,6 +1036,15 @@ var mainDo = function(degree, type, target) {
 		var thisNode = getNodeById("medit-" + contain.nowNodeId + "-" + meditId); // 这里有个已经修复的bug，比如在超链接中，是在当前结点外部包了一层，那么thisNode需要更新到外层结点
 		
 		nowMode = thisNode.getAttribute("data-meditMode");
+		
+		if( mode[nowMode].selected ){
+			if(globalSelectionContent && globalSelectionContent.node == thisNode && globalSelectionContent.end!=globalSelectionContent.start ){ // 原生自带文本选择处理
+				var html = globalSelectionContent.node.innerHTML.split("");
+				html.splice(globalSelectionContent.end,0,'</span>');
+				html.splice(globalSelectionContent.start,0,'<span class="medit-text-select">');
+				globalSelectionContent.node.innerHTML = html.join("");
+			}
+		}
 		if(degree == 1) {
 			switch(type){
 				case 'delete':
@@ -1114,12 +1123,6 @@ var mainDo = function(degree, type, target) {
 		}else{
 			
 			if( mode[nowMode].selected ){
-				if(globalSelectionContent && globalSelectionContent.node == thisNode){ // 原生自带文本选择处理
-					var html = globalSelectionContent.node.innerHTML.split("");
-					html.splice(globalSelectionContent.end,0,'</span>');
-					html.splice(globalSelectionContent.start,0,'<span class="medit-text-select">');
-					globalSelectionContent.node.innerHTML = html.join("");
-				}
 				thisNode = mode[nowMode].selected(thisNode);
 			}
 			
@@ -1253,6 +1256,29 @@ var medit = function(node) {
 
 	gevent(this.node, ["touchstart"], function(e){
 		mainTouchPoint = e.targetTouches[0];
+		
+		if(window.getSelection){ // 原生手势长按选择
+			if(globalSelectionHandle)clearTimeout(globalSelectionHandle);
+			var selectionHandle = window.getSelection();
+			var selectionCheckTimeout = function(){
+				if(selectionHandle && selectionHandle.anchorNode && selectionHandle.anchorNode == selectionHandle.focusNode && selectionHandle.anchorNode.parentNode==nowNode){
+					globalSelectionContent = {
+						handle: selectionHandle,
+						node: selectionHandle.anchorNode.parentNode,
+						start: selectionHandle.anchorOffset<selectionHandle.focusOffset?selectionHandle.anchorOffset:selectionHandle.focusOffset,
+						end: selectionHandle.anchorOffset>selectionHandle.focusOffset?selectionHandle.anchorOffset:selectionHandle.focusOffset
+					}
+					globalSelectionHandle = setTimeout(selectionCheckTimeout, 100);
+				}else{
+					if(globalSelectionContent){
+						globalSelectionContent.handle.removeAllRanges();
+						globalSelectionContent = null;
+					}
+					if(globalSelectionHandle)clearTimeout(globalSelectionHandle);
+				}	
+			}
+			selectionCheckTimeout();
+		}
 	});
 	
 	gevent(this.node, ["touchmove"], function(e){
@@ -1496,30 +1522,6 @@ medit.prototype.editContainFocus = function(e) {
 		
 		if(mode[meditNodeMode].focus){
 			mode[meditNodeMode].focus(target);
-		}
-		
-	
-		if(window.getSelection){ // 原生手势长按选择
-			if(globalSelectionHandle)clearTimeout(globalSelectionHandle);
-			var selectionHandle = window.getSelection();
-			var selectionCheckTimeout = function(){
-				if(selectionHandle && selectionHandle.anchorNode && selectionHandle.anchorNode == selectionHandle.focusNode && selectionHandle.anchorNode.parentNode==target){
-					globalSelectionContent = {
-						handle: selectionHandle,
-						node: selectionHandle.anchorNode.parentNode,
-						start: selectionHandle.anchorOffset<selectionHandle.focusOffset?selectionHandle.anchorOffset:selectionHandle.focusOffset,
-						end: selectionHandle.anchorOffset>selectionHandle.focusOffset?selectionHandle.anchorOffset:selectionHandle.focusOffset
-					}
-					globalSelectionHandle = setTimeout(selectionCheckTimeout, 100);
-				}else{
-					if(globalSelectionContent){
-						globalSelectionContent.handle.removeAllRanges();
-						globalSelectionContent = null;
-					}
-					if(globalSelectionHandle)clearTimeout(globalSelectionHandle);
-				}	
-			}
-			selectionCheckTimeout();
 		}
 	}
 }
