@@ -31,6 +31,7 @@ var nowNode = null; // 当前选择的可编辑结点
 var nodeFocusTimeout = null; // nodeFocus延时 
 
 var globalSelectionContent = null; // 缓存长按选择区域
+var globalSelectionHandle = null;
 
 var commonImageType = {
 	"jpeg":"image/jpeg",
@@ -1499,20 +1500,26 @@ medit.prototype.editContainFocus = function(e) {
 		
 	
 		if(window.getSelection){ // 原生手势长按选择
+			if(globalSelectionHandle)clearTimeout(globalSelectionHandle);
 			var selectionHandle = window.getSelection();
-			if(selectionHandle && selectionHandle.anchorNode && selectionHandle.anchorNode == selectionHandle.focusNode && selectionHandle.anchorNode.parentNode==target){
-				globalSelectionContent = {
-					handle: selectionHandle,
-					node: selectionHandle.anchorNode.parentNode,
-					start: selectionHandle.anchorOffset,
-					end: selectionHandle.focusOffset
-				}
-			}else{
-				if(globalSelectionContent){
-					globalSelectionContent.handle.removeAllRanges();
-					globalSelectionContent = null;
-				}
-			}	
+			var selectionCheckTimeout = function(){
+				if(selectionHandle && selectionHandle.anchorNode && selectionHandle.anchorNode == selectionHandle.focusNode && selectionHandle.anchorNode.parentNode==target){
+					globalSelectionContent = {
+						handle: selectionHandle,
+						node: selectionHandle.anchorNode.parentNode,
+						start: selectionHandle.anchorOffset,
+						end: selectionHandle.focusOffset
+					}
+					globalSelectionHandle = setTimeout(selectionCheckTimeout, 100);
+				}else{
+					if(globalSelectionContent){
+						globalSelectionContent.handle.removeAllRanges();
+						globalSelectionContent = null;
+					}
+					if(globalSelectionHandle)clearTimeout(globalSelectionHandle);
+				}	
+			}
+			selectionCheckTimeout();
 		}
 	}
 }
