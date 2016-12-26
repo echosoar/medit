@@ -31,6 +31,22 @@
 <Script>var meditToolImage = "../build/";</script>
 <script src="../build/medit.min.js"></script>
 <script>
+medit.extend({
+	name: 'time',
+	icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAClklEQVRYR8WXjW0VQQyExxUAHUAFJBWQVACpgFABoQJCBZAKgAqSVECogKQCSAVABUZf8B73s393QXorPa2ebs87Httjn2nHy3Z8v1YBcPfHkp5JeiHpYfzw4Vf8LiR9NbMfvY51AXD3A0lvJbH3rCtJ78yMvbqqANwdL99LOh5ZuZGEp3PjgIOZp6OznHtlZjCUXUUA7r4n6aMkdtZnSactegP0B0kv473rAMG+WFkAcfmXiPEtnplZ1kDJs7DxKRiBgcOcjQWA8IDL8Ry6D0oURlKqxErYIlSEBQcAMQlHDgCooQ/P92rxc3eHATOrhZI8SiAuzOxozNrkxaDtWxzYb9HeAwBbM7uwMCTwHABZ+5yEM7Nx5mdD3QsgQCRmr8zsMBkcAES8fsaDJ61sD6PNEKSLIl++x/9HKbRjAHhM2d2YWSq9qoisYSAAk4gkJNoAI/+k2N2p3dehYKd1/fr7dAMA7KKoQ4jHDJAY6PyArgViAwCU8jz6xZ2s5wBMsrQGIgFAITPnqHc8Heo+egoac21m+/8TQAnnGzMjtClkeA0AOmaRgclLDQYoW4SmtI7H1eTu1RCkJDwzs5NW/Lc8d/dqEqYyHOKz5ZIGY9UyhMpVQrQGYFOIoq6TXC6axprLcmfdPdm+NDNy4W7NewEzX5LL7nJsgZs1o4nM59pxSkbql47YPWAWPCe0OMW+aHKlgWQ8RBxtBdEz3JRGMtDi+YMYtwHRnHDHDITqIbvY+h3DzYLN3kkG24gOIlUNSWQ7DSfNE4x1zJTZ93rGcsSDLpkWhgDDngZV2jcJTHazp3UWk/T6sXxGJ0YBkkbtVuJ3jfCLMmxZjaSiieDx/CuJHIERRq6ix/M7uj7NWsDu83znAP4A8SpJMGG4znIAAAAASUVORK5CYII=',
+	doWhat: function(node) {
+		console.log(node);
+		return node;
+	},
+	focus: function(node){
+		
+	},
+	blur: function(node) {
+		
+	}
+})
+</script>
+<script>
 var me = medit(document.getElementById("medit"));
 function getContent(){
 	var res = me.getContent();

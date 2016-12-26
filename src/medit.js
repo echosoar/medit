@@ -45,6 +45,21 @@ var getNodeById = function(id){
 	return document.getElementById(id);
 }
 
+var fun_deep_clone = function (parent, child) {
+	child = child || {};
+	for(var i in parent) {
+		if(parent.hasOwnProperty(i)) {
+			if(typeof parent[i] === "object") {
+				child[i] = (Object.prototype.toString.call(parent[i]) === "[object Array]") ? [] : {};
+				extendDeep(parent[i], child[i]);
+			} else {
+				child[i] = parent[i];
+			}
+		}
+	}
+	return child;
+}
+
 var returnButtonHtml = function(from){
 	return '<span id="medit-tool-button-'+from+'" class="medit-tool-button  medit-tool-return" data-meditToolStyle="return" data-meditToolDegree="1">&nbsp;</span>';
 }
@@ -1522,6 +1537,29 @@ medit.prototype.editContainFocus = function(e) {
 		
 		if(mode[meditNodeMode].focus){
 			mode[meditNodeMode].focus(target);
+		}
+	}
+}
+
+medit.extend = function(obj) { // 扩展方法 会向doWhat方法中传入当前结点，然后需要返回一个新的结点
+	if(obj && obj.icon && obj.doWhat && obj.focus && obj.blur && obj.name){
+		if(!mode[obj.name]){
+			mode[obj.name] = fun_deep_clone(obj);
+			mode[obj.name].doWhat = function(node){
+				mode[node.getAttribute("data-meditmode")].blur(node);
+				var newNode = obj.doWhat(node);
+				if(newNode) {
+					newNode.setAttribute("data-meditmode", obj.name);
+					mode[obj.name].focus(newNode);
+					nodeFocus(newNode);
+					nowNode = newNode;
+					toolBarModeSetting(obj.name,obj.setting||[]);
+					container[meditId].updateId();
+					nowMode = obj.name;
+				}
+			}
+		}else{
+			throw new Error(obj.name + ' has already exist!');
 		}
 	}
 }
