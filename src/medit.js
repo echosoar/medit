@@ -51,7 +51,7 @@ var fun_deep_clone = function (parent, child) {
 		if(parent.hasOwnProperty(i)) {
 			if(typeof parent[i] === "object") {
 				child[i] = (Object.prototype.toString.call(parent[i]) === "[object Array]") ? [] : {};
-				extendDeep(parent[i], child[i]);
+				fun_deep_clone(parent[i], child[i]);
 			} else {
 				child[i] = parent[i];
 			}
@@ -110,6 +110,7 @@ setting: [Array(Object)] 当前模块可以进行哪些操作
 	
 
 */
+var nativeMode = ["text", "br", "link", "image", "list", "li"];
 var mode = {
 	"text": {
 		icon: meditToolImage + 'images/mode/text.png',
@@ -1560,6 +1561,16 @@ medit.extend = function(obj) { // 扩展方法 会向doWhat方法中传入当前
 			}
 		}else{
 			throw new Error(obj.name + ' has already exist!');
+		}
+	}
+}
+
+
+medit.nativeSetting = function(execFun){ // 原生自带功能配置接口
+	for(var i =0; i<nativeMode.length; i++) {
+		var res = execFun(fun_deep_clone(mode[nativeMode[i]]), nativeMode[i] );
+		if(res){
+			mode[nativeMode[i]] = res;
 		}
 	}
 }
