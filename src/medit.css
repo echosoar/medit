@@ -32,6 +32,10 @@
 	font-family:微软雅黑,黑体,Helvetica,华文黑体;
 }
 
+#medit-tool.medit-tool-inner {
+	position:relative;
+}
+
 #medit [data-meditMode=br] {
 	height: 14px;
 	width: 20px;

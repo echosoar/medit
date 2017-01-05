@@ -1,5 +1,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
 <style>
+
+#meditToolBar {
+	position:fixed;
+	z-index:100;
+	width:90%;
+	left: 5%;
+	top: 0;
+	height:40px;
+}
 #medit {
 	padding: 10px;
 	border:1px solid #ccc;
@@ -23,6 +32,7 @@
 	word-break:break-all;
 }
 </style>
+<div id="meditToolBar"></div>
 <div id="medit" class="medit"></div>
 <div class="btn" onClick="getContent()">预览 Preview</div>
 <div class="btn" onClick="cancel()">取消 Cancel</div>
@@ -51,7 +61,7 @@ medit.nativeSetting(function(mode, modeName){
 })
 </script>
 <script>
-var me = medit(document.getElementById("medit"));
+var me = medit(document.getElementById("medit"), document.getElementById("meditToolBar"));
 function getContent(){
 	var res = me.getContent();
 	document.getElementById("res").innerHTML = '<hr />预览 Preview:<hr />' + res;

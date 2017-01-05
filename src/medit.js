@@ -1245,10 +1245,17 @@ var selectModeContent = function(isAdd){
 	}
 }
 	
-var medit = function(node) {
-	if(!(this instanceof medit)) return new medit(node);
+var medit = function(node, toolBarContainer) {
+	if(!(this instanceof medit)) return new medit(node, toolBarContainer);
 	
 	if(!node || node.nodeType != 1)return false;
+	
+	if(toolBarContainer && toolBarContainer.nodeType == 1) {
+		console.log(toolBar)
+		toolBar.parentNode.removeChild(toolBar);
+		toolBar.setAttribute("class", "medit-tool-inner");
+		toolBarContainer.appendChild(toolBar);
+	}
 	
 	this.node = node;
 	this.nodeCount = 0; // 容器所有子元素数目
