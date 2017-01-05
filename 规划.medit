@@ -4,8 +4,8 @@ Medit 2.0 需要和已改进内容
 2. 优化原有icon和样式 √
 3. 暴露出功能扩展接口 √				medit.extend
 4. 暴露出自带功能配置接口 √ 		medit.nativeSetting
-5. 自由配置toolbar位置 
+5. 自由配置toolbar位置 √
 6. 优化弹层ok样式 √
 7. toorbar根据元素显示已选择哪些操作
-8. 外部调用内置弹层方法
+8. 外部调用内置弹层方法 
 

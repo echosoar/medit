@@ -1549,6 +1549,13 @@ medit.prototype.editContainFocus = function(e) {
 	}
 }
 
+medit.settingPage = function(title, content, callBack) {
+	settingPageDisplay(title, content, function(){
+		callBack();
+		settingPage.style.display = "none";
+	})
+}
+
 medit.extend = function(obj) { // 扩展方法 会向doWhat方法中传入当前结点，然后需要返回一个新的结点
 	if(obj && obj.icon && obj.doWhat && obj.focus && obj.blur && obj.name){
 		if(!mode[obj.name]){
