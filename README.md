@@ -24,11 +24,11 @@ Demo: [Medit Demo](https://medit.js.org/demo.html)
 ***
 ### 如何使用：
 
-+ 第一步，引入medit.js文件，如果不下载使用icon包的话可能会导致部分功能性icon无法显示，icon存放于 _github/medit/build/images_ 下
++ 第一步，引入medit.js文件，如果不下载使用icon包的话可能会导致部分功能性icon无法显示，icon存放于 __github/medit/build/images__ 下
 ```html
 <script src="https://medit.js.org/build/medit.min.js"></script>
 ```
-> 在第一步和第二步之间可以选择性的引入medit插件，也可以自己来书写medit插件，medit提供了两个方法，一个是 _medit.extend_ 方法来配置扩展插件，另外还有一个 _medit.nativeSetting_ 方法来配置内部功能，详情请看下面的 medit类方法。
+> 在第一步和第二步之间可以选择性的引入medit插件，也可以自己来书写medit插件，medit提供了两个方法，一个是 __medit.extend__ 方法来配置扩展插件，另外还有一个 __medit.nativeSetting__ 方法来配置内部功能，详情请看下面的 medit类方法。
 
 + 第二步，创建medit实例
 ```html
@@ -86,7 +86,7 @@ Demo: [Medit Demo](https://medit.js.org/demo.html)
 
 + medit.extend(config) 
   功能扩展方法，可以通过这个方法实现medit插件和功能扩展。
-  config是一个对象，其中必须包括 _图标: icon_ 、 _其它类型模块转换为此类型模块时动作: obj.doWhat_ 、 _模块得到焦点时动作: obj.focus_ 、_模块失去焦点时动作: obj.blur_ 和 _模块名称: obj.name_ 这五个属性。其中icon可以是远程url，也可以是dataURL；name必须保持唯一，不能与内置功能名称产生冲突。
+  config是一个对象，其中必须包括 __图标: icon__ 、 __其它类型模块转换为此类型模块时动作: doWhat__ 、 __模块得到焦点时动作: focus__ 、__模块失去焦点时动作: blur__ 和 __模块名称: name__ 这五个属性。其中icon可以是远程url，也可以是dataURL；name必须保持唯一，不能与内置功能名称产生冲突。
 
  下面是一个功能模块的完整配置属性：
  ```javscript 
