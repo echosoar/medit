@@ -77,8 +77,11 @@ Demo: [Medit Demo](https://medit.js.org/demo.html)
 		error:function(){} // 上传失败回调
 	}
   ```
+
 ***
+
 ### medit类方法
+
 目前有三个medit类方法，所谓类方法就是直接通过medit类进行调用而不是通过medit实例进行调用。
 
 + medit.extend(config) 
