@@ -1565,6 +1565,7 @@ medit.extend = function(obj) { // 扩展方法 会向doWhat方法中传入当前
 				var newNode = obj.doWhat(node);
 				if(newNode) {
 					newNode.setAttribute("data-meditmode", obj.name);
+					newNode.setAttribute("data-medit", "true");
 					mode[obj.name].focus(newNode);
 					nodeFocus(newNode);
 					nowNode = newNode;
