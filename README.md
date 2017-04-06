@@ -1,5 +1,5 @@
 ![logo](./images/logo.png)
-# Medit v2.0
+# Medit v2.0.0
 
 A creative WYSIWYG rich text editor for mobile device by javascript.
 
@@ -12,7 +12,7 @@ Demo: [Medit Demo](https://medit.js.org/demo.html)
 ##### 为了更专注做一个更具价值和体验的移动端富文本编辑器，所以Medit目前不支持Pc端使用，仅支持移动端。
 
 ***
-### Medit2.0 较上一版本更新内容
+### Medit2.0.0 较上一版本更新内容
 
 1. 更易用的内容选择方式，目前已支持选取内容块后手势左右滑动选择、通过手机原生自带长按选择进行编辑操作。
 2. 优化编辑器样式，把原有的图标、弹层和编辑器内部标识都进行了优化。
