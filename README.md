@@ -147,4 +147,4 @@ medit.nativeSetting(function(mode, modeName){
 ```
 ***
 
-© 2017 echosoar@ [iwenku.net](https://www.iwenku.net/index.html)
+© 2017 echosoar@ [iwenku.net](http://iwenku.net/)
