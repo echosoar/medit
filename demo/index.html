@@ -40,7 +40,6 @@
 <div id="res"></div>
 <Script>var meditToolImage = "../build/";</script>
 <script src="../build/medit.min.js"></script>
-<script src="../../medit-plugin-blockquote/index.js"></script>
 <script>
 medit.extend({
 	name: 'time',
@@ -83,13 +82,18 @@ me.autoSave("edit", function(data, time){
 	document.getElementById("autoSaveInfo").innerHTML = "Auto save at " + (new Date(time)).toString().replace(/\(.*\)/,"");
 });
 me.image({
+	path: 'https://sm.ms/api/upload',
 	size: 102400000,
-	ext: ["png","jpeg","jpg"],
+	ext: false,
 	success:function(res){
 		console.log(res);
 	},
 	error:function(msg){
 		alert("error : " + msg);
+	},
+	params: {
+		id: '123455',
+		name: 'echosoar'
 	}
 });
 </script>

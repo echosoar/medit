@@ -584,10 +584,11 @@ var mode = {
 						var type = file.type;
 						var config = container[meditId].imageUpload;
 						var ext = {};
-						config.ext.forEach(function(v){ ext[commonImageType[v]] = true; });
+						
+						config.ext && config.ext.forEach(function(v){ ext[commonImageType[v]] = true; });
 
 						if(config.size == 0 || config.size>=size){
-							if(ext[type]){
+							if(!config.ext || ext[type]){
 								var http = getXhr();
 								var form = new FormData(getNodeById("medit-image-upload-form"));
 								getNodeById("medit-settingPage-button").style.display = "none";
@@ -599,6 +600,10 @@ var mode = {
 									getNodeById("medit-settingPage-content").innerHTML = '<div id="medit-settingPage-content-img-uploading">图片上传中 Image uploading...'+ progress +'<br /><i id="medit-settingPage-content-img-uploading-progress" style="width:' + progress + ';"></i>'+success+'</div>';
 								}
 								
+								Object.keys(config.params).map(function(key) {
+									form.append(key, config.params[key]);
+								});
+
 								http.open("POST",config.path);
 								http.send(form);
 								
@@ -644,12 +649,17 @@ var mode = {
 						var type = file.type;
 
 						var ext = {};
-						config.ext.forEach(function(v){ ext[commonImageType[v]] = true; });
+						config.ext && config.ext.forEach(function(v){ ext[commonImageType[v]] = true; });
 						
-						if(config.size == 0 || config.size>=size){
-							if(ext[type]){ btn.innerHTML = name;
-							}else{ config.error("image type limit "+config.ext.join(",")); }
-						}else{ config.error("image size limit "+config.size); }
+						if (config.size == 0 || config.size>=size){
+							if (!config.ext || ext[type]){ 
+								btn.innerHTML = name;
+							} else { 
+								config.error("image type limit "+config.ext.join(",")); 
+							}
+						} else { 
+							config.error("image size limit "+config.size); 
+						}
 					}
 				}
 			},
@@ -1251,7 +1261,6 @@ var medit = function(node, toolBarContainer) {
 	if(!node || node.nodeType != 1)return false;
 	
 	if(toolBarContainer && toolBarContainer.nodeType == 1) {
-		console.log(toolBar)
 		toolBar.parentNode.removeChild(toolBar);
 		toolBar.setAttribute("class", "medit-tool-inner");
 		toolBarContainer.appendChild(toolBar);
@@ -1267,6 +1276,7 @@ var medit = function(node, toolBarContainer) {
 	
 	this.imageUpload = { // 默认图片上传设置，由于是文件上传，所以在跨域方法仅支持CORS
 		path:'https://sm.ms/api/upload',
+		params: {},
 		name:'smfile',
 		size:0,
 		timeout:0,
