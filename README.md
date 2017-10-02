@@ -1,6 +1,8 @@
 ![logo](./images/logo.png)
 # Medit v2.0.0
 
+**收简历啦，你离天猫只差一份简历：tengfei.ytf@alibaba-inc.com 微信：7425176 **
+
 A creative WYSIWYG rich text editor for mobile device by javascript.
 
 一个创新型的移动端所见即所得富文本编辑器。
