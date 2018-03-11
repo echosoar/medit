@@ -1,100 +1,42 @@
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8" />
+<script src="../build/main.js"></script>
 <style>
+body {
+  margin: 0;
+  height: 100%;
+}
+.editor {
+  padding: 10px;
+  min-height: 100%;
+}
 
-#meditToolBar {
-	position:fixed;
-	z-index:100;
-	width:90%;
-	left: 5%;
-	top: 0;
-	height:40px;
+.meditEditor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  height: 20px;
+  outline: none;
 }
-#medit {
-	padding: 10px;
-	border:1px solid #ccc;
-	height:360px;
-	margin-top:48px;
-	overflow: auto;
+
+span {
+  line-height: 20px;
+  min-height: 20px;
+  min-width: 1px;
+  outline: none;
+  word-break: break-all;
+  text-decoration: none;
 }
-.btn {
-	padding: 6px 10px;
-	background: #e5e5e5;
-	border-radius: 3px;
-	margin-top: 5px;
-	text-align: center;
-}
-#autoSaveInfo{
-	padding: 10px 0;
-	text-align:right;
-	font-size:12px;
-}
-#res{
-	word-break:break-all;
+
+.medit-span-text-edit {
+  padding: 0 16px;
+  background: #def;
 }
 </style>
-<div id="meditToolBar"></div>
-<div id="medit" class="medit"></div>
-<div class="btn" onClick="getContent()">预览 Preview</div>
-<div class="btn" onClick="cancel()">取消 Cancel</div>
-<div id="autoSaveInfo"></div>
-<div id="res"></div>
-<Script>var meditToolImage = "../build/";</script>
-<script src="../build/medit.min.js"></script>
+<div class="toolBar" id="J_toolBar"></div>
+<div class="editor" id="J_editor">
+</div>
 <script>
-medit.extend({
-	name: 'time',
-	icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAClklEQVRYR8WXjW0VQQyExxUAHUAFJBWQVACpgFABoQJCBZAKgAqSVECogKQCSAVABUZf8B73s393QXorPa2ebs87Httjn2nHy3Z8v1YBcPfHkp5JeiHpYfzw4Vf8LiR9NbMfvY51AXD3A0lvJbH3rCtJ78yMvbqqANwdL99LOh5ZuZGEp3PjgIOZp6OznHtlZjCUXUUA7r4n6aMkdtZnSactegP0B0kv473rAMG+WFkAcfmXiPEtnplZ1kDJs7DxKRiBgcOcjQWA8IDL8Ry6D0oURlKqxErYIlSEBQcAMQlHDgCooQ/P92rxc3eHATOrhZI8SiAuzOxozNrkxaDtWxzYb9HeAwBbM7uwMCTwHABZ+5yEM7Nx5mdD3QsgQCRmr8zsMBkcAES8fsaDJ61sD6PNEKSLIl++x/9HKbRjAHhM2d2YWSq9qoisYSAAk4gkJNoAI/+k2N2p3dehYKd1/fr7dAMA7KKoQ4jHDJAY6PyArgViAwCU8jz6xZ2s5wBMsrQGIgFAITPnqHc8Heo+egoac21m+/8TQAnnGzMjtClkeA0AOmaRgclLDQYoW4SmtI7H1eTu1RCkJDwzs5NW/Lc8d/dqEqYyHOKz5ZIGY9UyhMpVQrQGYFOIoq6TXC6axprLcmfdPdm+NDNy4W7NewEzX5LL7nJsgZs1o4nM59pxSkbql47YPWAWPCe0OMW+aHKlgWQ8RBxtBdEz3JRGMtDi+YMYtwHRnHDHDITqIbvY+h3DzYLN3kkG24gOIlUNSWQ7DSfNE4x1zJTZ93rGcsSDLpkWhgDDngZV2jcJTHazp3UWk/T6sXxGJ0YBkkbtVuJ3jfCLMmxZjaSiieDx/CuJHIERRq6ix/M7uj7NWsDu83znAP4A8SpJMGG4znIAAAAASUVORK5CYII=',
-	doWhat: function(node) {
-		console.log(node);
-		return node;
-	},
-	setting: [{
-		name: 'time',
-		icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAClklEQVRYR8WXjW0VQQyExxUAHUAFJBWQVACpgFABoQJCBZAKgAqSVECogKQCSAVABUZf8B73s393QXorPa2ebs87Httjn2nHy3Z8v1YBcPfHkp5JeiHpYfzw4Vf8LiR9NbMfvY51AXD3A0lvJbH3rCtJ78yMvbqqANwdL99LOh5ZuZGEp3PjgIOZp6OznHtlZjCUXUUA7r4n6aMkdtZnSactegP0B0kv473rAMG+WFkAcfmXiPEtnplZ1kDJs7DxKRiBgcOcjQWA8IDL8Ry6D0oURlKqxErYIlSEBQcAMQlHDgCooQ/P92rxc3eHATOrhZI8SiAuzOxozNrkxaDtWxzYb9HeAwBbM7uwMCTwHABZ+5yEM7Nx5mdD3QsgQCRmr8zsMBkcAES8fsaDJ61sD6PNEKSLIl++x/9HKbRjAHhM2d2YWSq9qoisYSAAk4gkJNoAI/+k2N2p3dehYKd1/fr7dAMA7KKoQ4jHDJAY6PyArgViAwCU8jz6xZ2s5wBMsrQGIgFAITPnqHc8Heo+egoac21m+/8TQAnnGzMjtClkeA0AOmaRgclLDQYoW4SmtI7H1eTu1RCkJDwzs5NW/Lc8d/dqEqYyHOKz5ZIGY9UyhMpVQrQGYFOIoq6TXC6axprLcmfdPdm+NDNy4W7NewEzX5LL7nJsgZs1o4nM59pxSkbql47YPWAWPCe0OMW+aHKlgWQ8RBxtBdEz3JRGMtDi+YMYtwHRnHDHDITqIbvY+h3DzYLN3kkG24gOIlUNSWQ7DSfNE4x1zJTZ93rGcsSDLpkWhgDDngZV2jcJTHazp3UWk/T6sXxGJ0YBkkbtVuJ3jfCLMmxZjaSiieDx/CuJHIERRq6ix/M7uj7NWsDu83znAP4A8SpJMGG4znIAAAAASUVORK5CYII=',
-		doWhat: function(node){
-			medit.settingPage("时间插件测试","Time test",function(){
-				
-			});
-		}
-	}],
-	focus: function(node){
-		
-	},
-	blur: function(node) {
-		
-	}
-})
-
-medit.nativeSetting(function(mode, modeName){
-	console.log(mode, modeName);
-})
+var Meditor = new Medit(document.getElementById('J_editor'), document.getElementById('J_toolBar'));
 </script>
-<script>
-var me = medit(document.getElementById("medit"), document.getElementById("meditToolBar"));
-function getContent(){
-	var res = me.getContent();
-	document.getElementById("res").innerHTML = '<hr />预览 Preview:<hr />' + res;
-}
-function cancel(){
-	me.clear();
-}
-me.autoSave("edit", function(data, time){
-	document.getElementById("autoSaveInfo").innerHTML = "Auto save at " + (new Date(time)).toString().replace(/\(.*\)/,"");
-});
-me.image({
-	path: 'https://sm.ms/api/upload',
-	size: 102400000,
-	ext: false,
-	success:function(res){
-		console.log(res);
-	},
-	error:function(msg){
-		alert("error : " + msg);
-	},
-	params: {
-		id: '123455',
-		name: 'echosoar'
-	}
-});
-</script>
-<input type="checkbox" id="medit-settingPage-check-link"'+target+'><span>新窗口打开 Open in a new window</span>

@@ -1,58 +1,47 @@
 {
   "name": "medit",
-  "version": "1.0.0",
-  "description": "A creative WYSIWYG rich text editor for mobile device.",
-  "main": "medit.js",
+  "version": "3.0.0",
+  "description": "Medit V3",
+  "license": "MIT",
+  "contributors": [],
+  "repository": "",
   "scripts": {
-    "dev": "webpack --config webpack.config.dev.js --watch",
-    "build": "webpack --config webpack.config.min.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/echosoar/medit.git"
-  },
-  "keywords": [
-    "WYSIWYG",
-    "mobile",
-    "rich",
-    "text",
-    "editor"
-  ],
-  "author": "echosoar",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/echosoar/medit/issues"
-  },
-  "homepage": "https://medit.js.org",
-  "devDependencies": {
-    "babel-plugin-transform-es2015-classes": "^6.18.0",
-    "copy-webpack-plugin": "^4.0.1",
-    "eslint": "~3.4.0",
-    "eslint-plugin-babel": "^3.2.0",
-    "eslint-plugin-react": "~4.2.3",
-    "optimist": "^0.6.1",
-    "resolve-url-loader": "^1.6.1",
-    "url-loader": "~0.5.7",
-    "webpack": "~1.12.14"
+    "dev": "webpack --config ./webpack.config.js --watch",
+    "build": "NODE_ENV='production' webpack --config ./webpack.config.js -p"
   },
   "dependencies": {
-    "autoprefixer": "~6.3.4",
-    "babel-core": "^6.14.0",
-    "babel-eslint": "^6.1.2",
-    "babel-loader": "~6.2.4",
-    "babel-plugin-transform-object-rest-spread": "~6.6.5",
-    "babel-polyfill": "^6.3.14",
-    "babel-preset-es2015": "^6.14.0",
-    "css-loader": "~0.23.1",
+    "webpack": "^3.6.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^7.1.4",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "css-loader": "^0.28.7",
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb-base": "^12.0.1",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-import-resolver-webpack": "^0.8.3",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "file-loader": "~0.8.5",
+    "i18n-webpack-plugin": "^1.0.0",
     "less": "~2.6.1",
     "less-loader": "~2.2.2",
-    "loader-utils": "~0.2.12",
-    "md5": "~2.0.0",
-    "node-sass": "^3.6.0",
-    "postcss-loader": "~0.8.2",
-    "precss": "~1.4.0",
-    "sass-loader": "^3.2.0",
-    "style-loader": "~0.13.0"
+    "node-sass": "^4.5.3",
+    "postcss-loader": "^2.0.6",
+    "react-hot-loader": "^3.0.0-beta.7",
+    "react-test-renderer": "^16.0.0",
+    "sass-lint": "^1.11.1",
+    "sass-loader": "^6.0.6",
+    "sasslint-webpack-plugin": "^1.0.4",
+    "style-loader": "^0.18.2",
+    "uglify-js": "^3.1.9"
   }
 }
