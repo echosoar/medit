@@ -32,12 +32,7 @@ class Input {
   }
 
   keydown(e) {
-    if (e.key.toLowerCase() == 'enter') {
-      e.preventDefault();
-      e.stopPropagation();
-      this.blur();
-      this.config.enter && this.config.enter();
-    }
+    this.config.keydown && this.config.keydown(e, this);
   }
 }
 

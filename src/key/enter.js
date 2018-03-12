@@ -6,8 +6,6 @@
    */
 let Enter = function() {
   let { data, lineIndex, childIndex, _Selection: Selection } = this;
-  console.log(lineIndex, childIndex, Selection)
-
   let nowEle =  data[lineIndex].child[childIndex].ele;
   let caretPos = Selection.getCaretPos(nowEle);
   let textLen = nowEle.innerText.length;
@@ -18,9 +16,9 @@ let Enter = function() {
     this.insertNewSpan();
   } else {
 
-    let toNextChildIndex = childIndex + 1;
+    let toNextChildIndex = childIndex;
     
-    if (caretPos != textLen) {
+    if (caretPos != textLen && caretPos != 0) {
       let text = nowEle.innerText;
       let preSpanText = text.substring(0, caretPos);
       let nextSpanText = text.substring(caretPos, textLen);
@@ -31,20 +29,22 @@ let Enter = function() {
       nowEle.innerText = nextSpanText;
       nowEle.parentNode.insertBefore(cloneNode, nowEle);
       this.data[lineIndex].child.splice(childIndex, 0, this.insertNewSpanInfo({ele: cloneNode, index: cloneNodeIndex}));
+      toNextChildIndex = childIndex + 1;
+    } else if (caretPos == textLen) {
+      toNextChildIndex = childIndex + 1;
+    }
 
-      toNextChildIndex = childIndex;
-    } 
 
     this.initLine(lineIndex + 1);
-    this.data[this.lineIndex].child = this.data[this.lineIndex - 1].child.splice(toNextChildIndex + 1);
+    this.data[this.lineIndex].child = this.data[this.lineIndex - 1].child.splice(toNextChildIndex);
 
     this.data[this.lineIndex].child.map(child => {
       child.ele.parentNode.removeChild(child.ele);
       this.data[this.lineIndex].ele.appendChild(child.ele);
     });
-
+    this.childIndex = 0;
     this.data[this.lineIndex].child[0].input.focus();
-
+    
   }
 
   console.log(this.data);

@@ -2,15 +2,13 @@ const Touch = require('./core/touch');
 const Input = require('./core/input');
 const Utils = require('./core/utils');
 const Selection = require('./core/selection');
-const Enter = require('./core/enter');
+const KeyDown = require('./key');
 
 class Medit {
   constructor(box, toolBarBox) {
     if (!box) return;
     this.box = box;
     this.toolBarBox = toolBarBox;
-
-    
     this.data = [];
     this.eleIndex = 0;
     this.lineIndex = 0;
@@ -127,15 +125,10 @@ class Medit {
       ele: spanEle.ele,
       input: new Input(spanEle.ele, {
         blur: this.inputBlur.bind(this),
-        enter: this.inputEnter.bind(this)
+        keydown: KeyDown.bind(this)
       }),
       index: spanEle.index
     };
-  }
-  
-  inputEnter() {
-    Enter.call(this);
-    
   }
 
   initSpan(child) {
