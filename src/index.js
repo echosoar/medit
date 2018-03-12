@@ -19,6 +19,7 @@ class Medit {
     this.paragraphIndent = 4;
     this.paragraphLastIndent = 4;
     this.textIndent = 2;
+    this.isSelecting = true;
 
     this.init();
     this.initLine();
@@ -76,28 +77,68 @@ class Medit {
   }
 
   handleTouchMove(posi) {
-    
     let nowEle =  this.data[this.lineIndex].child[this.childIndex].ele;
     let caretPos = Selection.getCaretPos(nowEle);
     let size = parseInt((posi.horizontalDistance - this.moveExecLength)/ this.moveSingleCharLen);
-    if (Math.abs(size) >= 1) {
-      this.moveExecLength = posi.horizontalDistance;
-      let writeInfo = Selection.getElement(this.data, this.lineIndex, this.childIndex, size, caretPos);
-      if (writeInfo) {
-        if (this.lineIndex != writeInfo.lineIndex || this.childIndex != writeInfo.childIndex) {
-          this.data[this.lineIndex].child[this.childIndex].input.blur();
-          this.lineIndex = writeInfo.lineIndex;
-          this.childIndex = writeInfo.childIndex;
-          this.data[this.lineIndex].child[this.childIndex].input.focus();
+
+    if (!this.isSelecting) {
+      if (Math.abs(size) >= 1) {
+        this.moveExecLength = posi.horizontalDistance;
+        let writeInfo = Selection.getElement(this.data, this.lineIndex, this.childIndex, size, caretPos);
+        if (writeInfo) {
+          if (this.lineIndex != writeInfo.lineIndex || this.childIndex != writeInfo.childIndex) {
+            this.data[this.lineIndex].child[this.childIndex].input.blur();
+            this.lineIndex = writeInfo.lineIndex;
+            this.childIndex = writeInfo.childIndex;
+            this.data[this.lineIndex].child[this.childIndex].input.focus();
+          }
+          Selection.setCaretPos(writeInfo.ele, writeInfo.pos);
         }
-        Selection.setCaretPos(writeInfo.ele, writeInfo.pos);
       }
+    } else {
+      if (Math.abs(size) >= 1) {
+        if (this.selectingStartNode == null) {
+          this.selectingStartNode = nowEle;
+          this.selectingStartIndex = caretPos;
+          this.selectingSelection = window.getSelection();
+        }
+
+        this.selectingStartRange = document.createRange();
+        this.moveExecLength = posi.horizontalDistance;
+        let writeInfo = Selection.getElement(this.data, this.lineIndex, this.childIndex, size, caretPos);
+
+        if (writeInfo.lineIndex < this.lineIndex || 
+          (writeInfo.lineIndex == this.lineIndex && writeInfo.childIndex < this.childIndex) ||
+          (writeInfo.lineIndex == this.lineIndex && writeInfo.childIndex == this.childIndex && writeInfo.pos < this.selectingStartIndex)
+        ) {
+          this.selectingStartRange.setStart(writeInfo.ele.childNodes[0], writeInfo.pos);
+          this.selectingStartRange.setEnd(this.selectingStartNode.childNodes[0], this.selectingStartIndex);
+        } else {
+          this.selectingStartRange.setStart(this.selectingStartNode.childNodes[0], this.selectingStartIndex);
+          this.selectingStartRange.setEnd(writeInfo.ele.childNodes[0], writeInfo.pos);
+        }
+
+        this.selectingSelection.removeAllRanges();
+        this.selectingSelection.addRange(this.selectingStartRange);
+      }
+  
+      
+
+      
       
     }
+    
   }
 
   handleTouchEnd() {
     this.moveExecLength = 0;
+    if (!this.isSelecting) {
+      
+    } else {
+      this.selectingStartNode = null;
+      this.selectingStartIndex = null;
+      this.selectingStartRange = null;
+    }
   }
 
   // 失去输入光标
