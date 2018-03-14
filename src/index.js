@@ -72,6 +72,10 @@ class Medit {
       if (indexInfo) {
         this.lineIndex = indexInfo.lineIndex;
         this.childIndex = indexInfo.childIndex;
+
+        this.selectingStartNode = null;
+        this.selectingStartIndex = null;
+        this.selectingStartRange = null;
       }
     }
   }
@@ -102,10 +106,12 @@ class Medit {
           this.selectingStartIndex = caretPos;
           this.selectingSelection = window.getSelection();
         }
-
+        
         this.selectingStartRange = document.createRange();
-        this.moveExecLength = posi.horizontalDistance;
-        let writeInfo = Selection.getElement(this.data, this.lineIndex, this.childIndex, size, caretPos);
+        let writeInfo = Selection.getElement(this.data, this.lineIndex, this.childIndex, size, this.selectingStartIndex, this.isSelecting);
+
+        if (!writeInfo) return;
+        
 
         if (writeInfo.lineIndex < this.lineIndex || 
           (writeInfo.lineIndex == this.lineIndex && writeInfo.childIndex < this.childIndex) ||
@@ -120,6 +126,7 @@ class Medit {
 
         this.selectingSelection.removeAllRanges();
         this.selectingSelection.addRange(this.selectingStartRange);
+
       }
   
       
@@ -135,9 +142,11 @@ class Medit {
     if (!this.isSelecting) {
       
     } else {
-      this.selectingStartNode = null;
-      this.selectingStartIndex = null;
-      this.selectingStartRange = null;
+      // 移动完成后不取消选区，应该是点取消选择或其他按钮后取消
+      // this.selectingStartNode = null;
+      // this.selectingStartIndex = null;
+      // this.selectingStartRange = null;
+      
     }
   }
 

@@ -37,9 +37,10 @@ Selection.setCaretPos = (node, pos) => {
 }
 
 // 获取从当前元素移动size后的元素位置
-Selection.getElement = (data, lineIndex, childIndex, size, nowCaretPos) => {
+Selection.getElement = (data, lineIndex, childIndex, size, nowCaretPos, isSelect) => {
   let nowEleWidth = data[lineIndex].child[childIndex].ele.innerText.length;
   let moveWidth = size + nowCaretPos;
+  console.log(moveWidth)
   if (moveWidth >= 0 && moveWidth <= nowEleWidth) {
     return {
       ele: data[lineIndex].child[childIndex].ele,
@@ -59,12 +60,16 @@ Selection.getElement = (data, lineIndex, childIndex, size, nowCaretPos) => {
         if (ele.className.indexOf('medit-span-text') != -1) {
           let nowTextWidth = ele.innerText.length;
           moveWidth += nowTextWidth;
+          let pos = moveWidth + 1;
+          if (isSelect) {
+            pos = moveWidth;
+          }
           if (moveWidth >= 0) {
             return {
               ele,
               lineIndex: l,
               childIndex: c,
-              pos: moveWidth + 1
+              pos
             }
           }
         }
@@ -82,12 +87,16 @@ Selection.getElement = (data, lineIndex, childIndex, size, nowCaretPos) => {
         if (ele.className.indexOf('medit-span-text') != -1) {
           let nowTextWidth = ele.innerText.length;
           let temMoveWidth = moveWidth - nowTextWidth;
+          let pos = moveWidth - 1;
+          if (isSelect) {
+            pos = moveWidth;
+          }
           if (temMoveWidth <= 0) {
             return {
               ele,
               lineIndex: l,
               childIndex: c,
-              pos: moveWidth - 1
+              pos
             }
           } else {
             moveWidth -= nowTextWidth;
