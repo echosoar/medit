@@ -153,4 +153,4 @@ medit.nativeSetting(function(mode, modeName){
 ```
 ***
 
-© 2017 echosoar@ [iwenku.net](http://iwenku.net/)
+© MIT License
